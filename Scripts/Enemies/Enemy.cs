@@ -6,10 +6,18 @@
 public partial class Enemy : SpawnableObject
 {
 
-    /// <summary>
-    /// The amount of points added to the player's score when destroyed.
-    /// </summary>
-    public int PointsValue;
+	/// <summary>
+	/// Total count of spawned enemies during the current round.
+	/// </summary>
+	public static int Count;
+	/// <summary>
+	/// Count of currently active enemies.
+	/// </summary>
+	public static int ActiveCount;
+	/// <summary>
+	/// The amount of points added to the player's score when destroyed.
+	/// </summary>
+	public int PointsValue;
     /// <summary>
     /// The amount of damage the player recieves from this object's attack.
     /// </summary>
@@ -24,11 +32,20 @@ public partial class Enemy : SpawnableObject
     [Tooltip("1/(2*n), n=0 is 100%")]
     private int SpecialAttackChance;
 
-    protected override void OnDestroy()
+	protected override void Start()
+	{
+		base.Start();
+
+		ActiveCount++;
+		Count++;
+	}
+
+	protected override void OnDestroy()
     {
         base.OnDestroy();
-        if (!gameController.GameOver) gameController.AddScore(PointsValue);
-    }
+        if (!gameController.gameOver) gameController.AddScore(PointsValue);
+		ActiveCount--;
+	}
 
 
     protected virtual void Attack()

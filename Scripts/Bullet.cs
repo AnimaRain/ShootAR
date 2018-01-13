@@ -2,7 +2,15 @@
 
 public class Bullet : SpawnableObject
 {
-    private static TVScript TVScreen;
+	/// <summary>
+	/// Total count of spawned enemies during the current round.
+	/// </summary>
+	public static int Count;
+	/// <summary>
+	/// Count of currently active enemies.
+	/// </summary>
+	public static int ActiveCount;
+	private static TVScript TVScreen;
 
     protected override void Awake()
     {
@@ -20,8 +28,8 @@ public class Bullet : SpawnableObject
         transform.position = Camera.main.transform.position;
         GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
-        gameController.Bullets--;
-        gameController.CountText.text = gameController.Bullets.ToString();
+        Count--;
+        gameController.CountText.text = Count.ToString();
     }
 
     private void OnCollisionEnter(Collision col)

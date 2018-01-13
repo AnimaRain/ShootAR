@@ -27,12 +27,12 @@ public class Capsule : SpawnableObject
             /* If a capsule is destroyed the player gains bullets.
              * If it is is not destroyed at the end of the round, the game-
              * controller destroys it and the player gains 50 points.*/
-            if (!gameController.GameOver)
+            if (!gameController.gameOver)
             {
-                gameController.Bullets += 4;
-                gameController.CountText.text = gameController.Bullets.ToString();
+                Bullet.Count += 4;
+                gameController.CountText.text = Bullet.Count.ToString();
             }
-            else if(gameController.RoundWon)
+            else if(gameController.roundWon)
             {
                 gameController.AddScore(50);
             }

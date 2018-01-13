@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,8 +11,6 @@ public class GameController : MonoBehaviour
     public WebCamTexture Cam;   //Rear Camera
     [HideInInspector]
     public bool arReady;
-    [HideInInspector]
-    public bool GameOver;
     public Button FireButton;
     public Bullet Bullet;
     public Text CountText;
@@ -22,22 +19,24 @@ public class GameController : MonoBehaviour
     public Text ScoreText;
     [HideInInspector]
     public int Level;
-    public int Bullets;
     public Dictionary<string, Spawner> Spawner;
-    public Dictionary<System.Type, int> ActiveCounter;
     [HideInInspector]
-    public bool RoundWon;
+    public bool roundWon;
+	[HideInInspector]
+	public bool gameOver;
 
-    [Range(0,6)]
+	[Range(0,6)]
     private int Health;
     private int Score;
     private TVScript TVScreen;
     private bool ExitTap;
 
-    #endregion
+	public readonly Vector3 playerPosition = new Vector3(0,0,0);
+
+	#endregion
 
 
-    private void Awake()
+	private void Awake()
     {
 #if UNITY_ANDROID
 
@@ -96,13 +95,8 @@ public class GameController : MonoBehaviour
             }
         }
 
-        ActiveCounter = new Dictionary<System.Type, int>
-        {
-            { typeof(Bullet), 0 }   //initializing the counter for active bullets here, because the game-controller needs it for checking the "Game Over" state.
-        };
-
         Health = 3;
-        GameOver = false;
+        gameOver = false;
         arReady = true;
     }
 
@@ -121,15 +115,15 @@ public class GameController : MonoBehaviour
     {
 
         //Round Won
-        if (Spawner["Podpod"].SpawnCount == Spawner["Podpod"].SpawnLimit && CountTotalActiveEnemies() == 0 && !GameOver)
+        if (Spawner["Podpod"].SpawnCount == Spawner["Podpod"].SpawnLimit && Enemy.ActiveCount == 0 && !gameOver)
         {
-            RoundWon = true;
+            roundWon = true;
             CenterText.text = "Round Clear!";
             ClearLevel();
         }
 
         //Defeat
-        if (ActiveCounter[typeof(Bullet)] == 0 && Bullets == 0 && CountTotalActiveEnemies() > 0 && !GameOver)
+        if (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0 && !gameOver)
         {
             CenterText.text = "You survived " + (Level - 1) + " rounds";
             ClearLevel();
@@ -143,19 +137,19 @@ public class GameController : MonoBehaviour
         if (ExitTap == false)
         {
             //Fire Bullet
-            if (!GameOver)
+            if (!gameOver)
             {
-                if (Bullets > 0)
+                if (Bullet.Count > 0)
                 {
                     Instantiate(Bullet, Camera.main.transform.position, Camera.main.transform.rotation);
                 }
             }
 
             //Tap To Continue
-            if (GameOver)
+            if (gameOver)
             {
                 //Defeat, tap to restart
-                if (Bullets == 0 || Health == 0)
+                if (Bullet.Count == 0 || Health == 0)
                 {
                     Cam.Stop();
                     SceneManager.LoadScene("FreakyTVGame");
@@ -163,10 +157,10 @@ public class GameController : MonoBehaviour
                 //Next Round tap
                 else
                 {
-                    GameOver = false;
+                    gameOver = false;
                     CenterText.text = "";
                     ButtonText.text = "";
-                    Bullets += 6;
+                    Bullet.Count += 6;
                     AdvanceLevel();
                 }
             }
@@ -180,7 +174,7 @@ public class GameController : MonoBehaviour
     private void AdvanceLevel()
     {
         Level++;
-        CountText.text = Bullets.ToString();
+        CountText.text = Bullet.Count.ToString();
         foreach (var spawner in Spawner)
         {
             spawner.Value.SpawnCount = 0;
@@ -197,7 +191,8 @@ public class GameController : MonoBehaviour
                     break;
             }
         }
-        RoundWon = false;
+		Delta.DeltaAttackReady = true;
+		roundWon = false;
     }
 
     /// <summary>
@@ -211,26 +206,12 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// Calculates the total amount of currently spawned active enemies.
-    /// </summary>
-    /// <returns>Total count of active Enemy type objects.</returns>
-    private int CountTotalActiveEnemies()
-    {
-        int x = 0;
-        foreach (System.Type k in ActiveCounter.Keys)
-        {
-            if (k.IsSubclassOf(typeof(Enemy))) x += ActiveCounter[k];
-        }
-        return x;
-    }
-
-    /// <summary>
     /// Deactivates spawners, destroys all spawned objects.
     /// Mainly used when a round ends.
     /// </summary>
     private void ClearLevel()
     {
-        GameOver = true;
+        gameOver = true;
 
         foreach (Spawner spawner in Spawner.Values)
             spawner.StopCoroutine("Spawn");
@@ -254,7 +235,7 @@ public class GameController : MonoBehaviour
         
         if (Health <= 0)
         {
-            GameOver = true;
+            gameOver = true;
         }
     }
 }
