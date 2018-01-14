@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
-public class Delta : Pyoopyoo
+public partial class Delta : Pyoopyoo
 {
 	private const int LinkLimit = 2;
 	private Delta[] Link;
+	public static Vector3[] DeltaTrianglePoint;
 	/// <summary>
 	/// Tells if the Delta attack is allowed to be launched.
 	/// All Delta enemies share the same value.
@@ -15,14 +17,17 @@ public class Delta : Pyoopyoo
 
 	public bool linkOpen;
 	private int linkCounter;
+	public bool inPosition;
 
 
 	protected override void Start()
 	{
 		base.Start();
 
+		DeltaTrianglePoint.Initialize();
 		linkOpen = true;
 		Link = new Delta[2];
+
 		LinkWithDeltas();
 	}
 
@@ -52,6 +57,39 @@ public class Delta : Pyoopyoo
 
 			//Ask otherDelta to link back.
 			if (linkBack) otherDelta.LinkWith(this, false);
+
+			//When links with two other Deltas have been made, create the triangle
+			if (!linkOpen)
+			{
+				/* Create the Delta Attack triangle:
+				 * Find the mean of the distances of the three Deltas from
+				 * the player. The mean is the distance ("d") from the player,
+				 * while "a" is the distance between two Deltas.
+				 * Choose a random point with "d" being the max distance, and
+				 * create an equilateral triangle. The three vertices are the
+				 * points where the Deltas will move before attacking. */
+
+				float[] distance = new float[linkCounter];
+				distance[0] = GetDistanceFromPlayer();
+				for (int i = 0; i < linkCounter; i++)
+				{
+					distance[i + 1] = Link[i].GetDistanceFromPlayer();
+				}
+				float sum = 0;
+				for (int i = 0; i < linkCounter; i++)
+					sum = distance[i];
+				float d = sum / linkCounter;    //distance from a vertex (Delta) to the center of the triangle (player).
+				float a = d * Mathf.Sqrt(3);    //distance from a vertex (Delta) to another vertex of the triangle (linked Delta).
+
+				//Create the triangle.
+				for (int i = 0; i < linkCounter; i++)
+				{
+					do
+					{
+						DeltaTrianglePoint[i] = Random.insideUnitSphere * d;
+					} while (Mathf.Sqrt(Mathf.Pow(DeltaTrianglePoint[i].x, 2) + Mathf.Pow(DeltaTrianglePoint[i].y, 2) + Mathf.Pow(DeltaTrianglePoint[i].z, 2)) >= 15f);
+				}
+			}
 		}
 	}
 
@@ -83,7 +121,7 @@ public class Delta : Pyoopyoo
 
 		/* Find other Delta type enemies and create links among this
 		 * and two others. */
-		foreach (Delta otherDelta in others)
+			foreach (Delta otherDelta in others)
 		{
 			//Check if otherDelta is not this object and it has open links left.
 			if (otherDelta != this) LinkWith(otherDelta);
@@ -101,32 +139,17 @@ public class Delta : Pyoopyoo
 		if (!linkOpen)
 		{
 			#region DeltaAttack
-			/* Find the mean of the distances of the three Deltas from
-			 * the player. The mean is the distance ("d") from the player,
-			 * while "a" being the distance between two Deltas.
-			 * Choose a random point and by using those parameters, create 
-			 * an equilateral triangle. The three vertices are the points,
-			 * where the Deltas will move before attacking.
-			 * When everyone is in position, start charging the attack. The
+			
+			/* When everyone is in position, start charging the attack. The
 			 * time required for the charge is relevant to the distance from
 			 * the player. */
 
-			CreateDeltaAttackTriangle(this);
-
-			Vector3[] point = new Vector3[linkCounter];
-			for (int i = 0; i < linkCounter; i++)
-			{
-				do
-				{
-					point[i] = Random.insideUnitSphere * d;
-				} while (Mathf.Sqrt(Mathf.Pow(point[i].x, 2) + Mathf.Pow(point[i].y, 2) + Mathf.Pow(point[i].z, 2)) >= 10);
-			}
-
 			//The enemies move to the points to form the triangle.
-			StartCoroutine(nameof(MoveTo), point[0]);
+			StartCoroutine(nameof(MoveTo), DeltaTrianglePoint[0]);
 			for (int i = 0; i < linkCounter; i++)
 			{
-				Link[i].StartCoroutine(nameof(MoveTo), point[i]);
+				Link[i].StartCoroutine(nameof(MoveTo), DeltaTrianglePoint[i]);
+
 			}
 
 			IsCharging = true;
@@ -154,40 +177,5 @@ public class Delta : Pyoopyoo
 			}
 		}
 		return res;
-	}
-
-	/// <summary>
-	/// Create the triangle for the delta attack
-	/// </summary>
-	/// <param name="delta"></param>
-	public static void CreateDeltaAttackTriangle(Delta delta)
-	{
-		int l = delta.linkCounter;
-
-		float[] distance = new float[l];
-		distance[0] = delta.GetDistanceFromPlayer();
-		for (int i = 0; i < l; i++)
-		{
-			distance[i + 1] = delta.Link[i].GetDistanceFromPlayer();
-		}
-		float sum = 0;
-		for (int i = 0; i < l; i++)
-			sum = distance[i];
-		float d = sum / l;    //distance from a vertice (Delta) to the center of the triangle (player).
-		float a = d * Mathf.Sqrt(3);    //distance from a vertice (Delta) to another vertice of the triangle (linked Delta).
-	}
-}
-
-public class DeltaTriangle
-{
-	public Vector3 Position { private set; get; }
-	/// <summary>
-	/// Distance from a vertice (Delta) to the center of the triangle (player).
-	/// </summary>
-	public Vector3 VerticeDistance { private set; get; }
-
-	public DeltaTriangle(Vector3 position)
-	{
-		Position = position;
 	}
 }
