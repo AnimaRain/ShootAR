@@ -139,43 +139,21 @@ public partial class Delta : Pyoopyoo
 		if (!linkOpen)
 		{
 			#region DeltaAttack
-			
+
 			/* When everyone is in position, start charging the attack. The
 			 * time required for the charge is relevant to the distance from
 			 * the player. */
 
 			//The enemies move to the points to form the triangle.
-			StartCoroutine(nameof(MoveTo), DeltaTrianglePoint[0]);
+			StartCoroutine("MoveTo", DeltaTrianglePoint[0]);
 			for (int i = 0; i < linkCounter; i++)
 			{
-				Link[i].StartCoroutine(nameof(MoveTo), DeltaTrianglePoint[i]);
+				Link[i].StartCoroutine("MoveTo", DeltaTrianglePoint[i]);
 
 			}
 
 			IsCharging = true;
 			#endregion
 		}
-	}
-
-	/// <summary>
-	/// Returns the distance of the object from the player.
-	/// Turns the object toward player and raycasts towards player.
-	/// </summary>
-	/// <returns>The distance from the player or infinity on fail</returns>
-	private float GetDistanceFromPlayer()
-	{
-		transform.LookAt(gameController.playerPosition);
-		RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward);
-
-		float res = Mathf.Infinity;
-		foreach (RaycastHit hit in hits)
-		{
-			if (hit.collider.CompareTag("Player"))
-			{
-				res = hit.distance;
-				break;
-			}
-		}
-		return res;
 	}
 }

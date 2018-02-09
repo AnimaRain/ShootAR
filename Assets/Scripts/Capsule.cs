@@ -4,7 +4,7 @@ public class Capsule : SpawnableObject
 {
     private Vector3 rotation;
 
-    protected override void Start()
+    protected void Start()
     {
         rotation = new Vector3(15, 30, 45);
     }
@@ -18,10 +18,8 @@ public class Capsule : SpawnableObject
 
     }
 
-    protected override void OnDestroy()
+    protected void OnDestroy()
     {
-        base.OnDestroy();
-
         if (gameController != null)
         {
             /* If a capsule is destroyed the player gains bullets.

@@ -20,10 +20,8 @@ public class Bullet : SpawnableObject
             TVScreen = GameObject.FindGameObjectWithTag("TVScreen").GetComponent<TVScript>();
     }
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-
         transform.rotation = Camera.main.transform.rotation;
         transform.position = Camera.main.transform.position;
         GetComponent<Rigidbody>().velocity = transform.forward * Speed;
