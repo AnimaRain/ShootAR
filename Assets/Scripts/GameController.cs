@@ -191,7 +191,6 @@ public class GameController : MonoBehaviour
                     break;
             }
         }
-		Delta.DeltaAttackReady = true;
 		roundWon = false;
     }
 
