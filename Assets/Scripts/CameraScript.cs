@@ -10,7 +10,9 @@ public class CameraScript : MonoBehaviour
     private float v;
     private GameObject cameraContainer;     //The main camera rotates relative to this container.
     private GameController gameController;
-    private Quaternion calibrationRotation;
+#if UNITY_ANDROID
+	private Quaternion calibrationRotation;
+#endif
 
     void Awake()
     {
@@ -31,7 +33,9 @@ public class CameraScript : MonoBehaviour
         cameraContainer.transform.SetPositionAndRotation(transform.position, transform.rotation);
         transform.SetParent(cameraContainer.transform);
         cameraContainer.transform.Rotate(90f, -90f, 0f);
-        calibrationRotation = new Quaternion(0, 0, 1, 0);
+#if UNITY_ANDROID
+		calibrationRotation = new Quaternion(0, 0, 1, 0);
+#endif
     }
 
     void Update()

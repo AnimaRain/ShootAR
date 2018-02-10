@@ -95,6 +95,7 @@ public class GameController : MonoBehaviour
             }
         }
 
+		Bullet.Count = 10;
         Health = 3;
         gameOver = false;
         arReady = true;
@@ -113,21 +114,23 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
+		if (!gameOver)
+		{
+			//Round Won
+			if (Spawner["Podpod"].SpawnCount == Spawner["Podpod"].SpawnLimit && Enemy.ActiveCount == 0)
+			{
+				roundWon = true;
+				CenterText.text = "Round Clear!";
+				ClearLevel();
+			}
 
-        //Round Won
-        if (Spawner["Podpod"].SpawnCount == Spawner["Podpod"].SpawnLimit && Enemy.ActiveCount == 0 && !gameOver)
-        {
-            roundWon = true;
-            CenterText.text = "Round Clear!";
-            ClearLevel();
-        }
-
-        //Defeat
-        if (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0 && !gameOver)
-        {
-            CenterText.text = "You survived " + (Level - 1) + " rounds";
-            ClearLevel();
-        }
+			//Defeat
+			else if (Health == 0 || Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0)
+			{
+				CenterText.text = "You survived " + (Level - 1) + " rounds";
+				ClearLevel();
+			}
+		}
     }
 
 
