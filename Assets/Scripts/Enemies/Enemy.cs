@@ -38,6 +38,13 @@ public partial class Enemy : SpawnableObject
 		Count++;
 	}
 
+	protected virtual void FixedUpdate()
+	{
+		//Orbits around player.
+		float pos = transform.position.magnitude;
+		transform.RotateAround(Camera.main.transform.position, transform.up, Speed * Time.deltaTime);
+	}
+
 	protected virtual void OnDestroy()
     {
         if (!gameController.gameOver) gameController.AddScore(PointsValue);
@@ -49,11 +56,15 @@ public partial class Enemy : SpawnableObject
 		/*TODO:
 		 * Write code here.
 		 * Use Bezier Curves (maybe) to move around the player. */
+
+
 	}
 
 	protected virtual void Attack()
     {
-        AttackSFX.Play();
+        /*TODO:
+		 * Uncomment next line. */
+		//AttackSFX.Play();
         gameController.DamagePlayer(Damage);
         if (Random.Range(0, SpecialAttackChance) == SpecialAttackChance) SpecialAttack();
     }

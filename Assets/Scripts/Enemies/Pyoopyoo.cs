@@ -16,9 +16,10 @@ public class Pyoopyoo: Enemy
         Shoot();
     }
 
-    protected virtual void FixedUpdate()
+    protected override void FixedUpdate()
     {
-        if (firedBullet != null && firedBullet.hit) Attack();
+		base.FixedUpdate();
+		if (firedBullet != null && firedBullet.hit) Attack();
     }
 
 
