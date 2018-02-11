@@ -27,6 +27,7 @@ public class Bullet : SpawnableObject
         GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
         Count--;
+		ActiveCount++;
         gameController.CountText.text = Count.ToString();
     }
 
@@ -50,4 +51,9 @@ public class Bullet : SpawnableObject
             }
         }
     }
+
+	protected void OnDestroy()
+	{
+		ActiveCount--;
+	}
 }
