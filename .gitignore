@@ -300,6 +300,9 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+# Security
+*.keystore
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
