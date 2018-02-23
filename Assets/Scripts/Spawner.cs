@@ -16,7 +16,7 @@ public class Spawner : MonoBehaviour
     /// <summary>
     /// Counts how many times ObjectToSpawn spawned.
     /// </summary>
-    //[HideInInspector]
+    [HideInInspector]
     public int SpawnCount;
 
     private Vector3 spawnPosition;

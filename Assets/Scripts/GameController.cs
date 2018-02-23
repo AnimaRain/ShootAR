@@ -125,7 +125,7 @@ public class GameController : MonoBehaviour
 			}
 
 			//Defeat
-			else if (Health == 0 || Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0)
+			else if (Health == 0 || (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0))
 			{
 				CenterText.text = "You survived " + (Level - 1) + " rounds";
 				ClearLevel();
@@ -134,8 +134,7 @@ public class GameController : MonoBehaviour
     }
 
 
-
-    private void OnButtonDown()
+	private void OnButtonDown()
     {
         if (ExitTap == false)
         {
@@ -203,8 +202,11 @@ public class GameController : MonoBehaviour
     /// <param name="points">The amount of pointts to add.</param>
     public void AddScore(int points)
     {
-        Score += points;
-        ScoreText.text = "Score: " + Score;
+		if (ScoreText != null)
+		{
+			Score += points;
+			ScoreText.text = "Score: " + Score;
+		}
     }
 
     /// <summary>
