@@ -17,7 +17,7 @@ public class Boopboop : Enemy
     /// </summary>
     protected void MoveToPlayer()
     {
-        transform.LookAt(gameController.playerPosition);
+        transform.LookAt(gameController.PlayerPosition);
         transform.forward = transform.position;
         GetComponent<Rigidbody>().velocity = transform.forward * Speed;
     }

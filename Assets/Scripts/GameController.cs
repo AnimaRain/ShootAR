@@ -24,14 +24,16 @@ public class GameController : MonoBehaviour
     public bool roundWon;
 	[HideInInspector]
 	public bool gameOver;
-
 	[Range(0,6)]
     private int Health;
     private int Score;
     private TVScript TVScreen;
     private bool ExitTap;
 
-	public readonly Vector3 playerPosition = new Vector3(0,0,0);
+	public readonly Vector3 PlayerPosition = new Vector3(0,0,0);
+	private const float ShotCooldown = 0.35f;
+
+	private float nextFire;
 
 	#endregion
 
@@ -141,9 +143,10 @@ public class GameController : MonoBehaviour
             //Fire Bullet
             if (!gameOver)
             {
-                if (Bullet.Count > 0)
+                if (Bullet.Count > 0 && Time.time > nextFire)
                 {
-                    Instantiate(Bullet, Camera.main.transform.position, Camera.main.transform.rotation);
+					nextFire = Time.time + ShotCooldown;
+					Instantiate(Bullet, Camera.main.transform.position, Camera.main.transform.rotation);
                 }
             }
 
@@ -231,7 +234,7 @@ public class GameController : MonoBehaviour
 
     /// <summary>
     /// Player's health decreases by the designated amount.
-    /// If heatlh reaches zero, the game is over. Negative value heals them.
+    /// If heatlh reaches zero, the game is over. Negative value restores.
     /// </summary>
     public void DamagePlayer(int damage)
     {
