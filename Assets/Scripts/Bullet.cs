@@ -18,6 +18,8 @@ public class Bullet : SpawnableObject
                 		
         if (TVScreen == null)
             TVScreen = GameObject.FindGameObjectWithTag("TVScreen").GetComponent<TVScript>();
+
+		if (Count < 0) Destroy(this);
     }
 
     protected void Start()

@@ -38,7 +38,7 @@ public class Pyoopyoo: Enemy
 	/// <returns>The distance from the player or infinity on fail</returns>
 	protected float GetDistanceFromPlayer()
 	{
-		transform.LookAt(gameController.playerPosition);
+		transform.LookAt(gameController.PlayerPosition);
 		RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward);
 
 		float res = Mathf.Infinity;
