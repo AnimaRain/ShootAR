@@ -25,13 +25,6 @@ public partial class Enemy : SpawnableObject
     public int Damage;
     public AudioSource AttackSFX;
 
-    /// <summary>
-    /// Multiplier of the divider of the chance fraction.
-    /// 1/(2*n), n=0 is 100%
-    /// </summary>
-    [Tooltip("1/(2*n), n=0 is 100%")]
-    private int SpecialAttackChance;
-
 	protected virtual void Start()
 	{
 		ActiveCount++;
@@ -59,15 +52,4 @@ public partial class Enemy : SpawnableObject
 
 
 	}
-
-	protected virtual void Attack()
-    {
-        /*TODO:
-		 * Uncomment next line. */
-		//AttackSFX.Play();
-        gameController.DamagePlayer(Damage);
-        if (Random.Range(0, SpecialAttackChance) == SpecialAttackChance) SpecialAttack();
-    }
-
-    protected virtual void SpecialAttack() { }
 }

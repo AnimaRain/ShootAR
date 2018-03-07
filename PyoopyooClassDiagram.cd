@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="EnemyBullet">
+    <Position X="0.5" Y="16.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Enemies\EnemyBullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameController">
+    <Position X="7.5" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIQAEAAAICQACIgACIEAAAAQAEBAAAABAABAAARQIMA=</HashCode>
+      <FileName>Assets\Scripts\GameController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Bullet" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="Spawner" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Player">
+    <Position X="4.5" Y="12.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAQAAAAAAAAAAAgAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Player.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="gameController" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Pyoopyoo">
+    <Position X="0.5" Y="13.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAAgAABAAAAAAAAAAAAIAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Assets\Scripts\Enemies\Pyoopyoo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Bullet" />
+      <Field Name="firedBullet" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Enemy">
+    <Position X="0.5" Y="9" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAACAAiAAAAAEAEAAAAQAAIBIAAAAAACAAAACAAA=</HashCode>
+      <FileName>Assets\Scripts\Enemies\Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Spawner">
+    <Position X="4.75" Y="2.75" Width="2.25" />
+    <AssociationLine Name="ObjectToSpawn" Type="SpawnableObject" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.75" Y="4.562" />
+        <Point X="3.5" Y="4.562" />
+        <Point X="3.5" Y="6.5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAABAAAIAAgAAAAEAAABAAAAABAAAAQRAAQAABEA=</HashCode>
+      <FileName>Assets\Scripts\Spawner.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ObjectToSpawn" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="SpawnableObject">
+    <Position X="2.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAABAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\SpawnableObject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="gameController" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Bullet">
+    <Position X="3.75" Y="9" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAACAAAAAAAAAAAAQAAEAAAAAIAAAAAAACAEA=</HashCode>
+      <FileName>Assets\Scripts\Bullet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

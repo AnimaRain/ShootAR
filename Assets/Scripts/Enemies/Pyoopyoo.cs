@@ -27,7 +27,8 @@ public class Pyoopyoo: Enemy
     {
         if (firedBullet == null)
         {
-            firedBullet = Instantiate(Bullet, transform.forward * 10, transform.rotation);
+			firedBullet.damage = Damage;
+			firedBullet = Instantiate(Bullet, transform.forward * 10, transform.rotation);
         }
     }
 

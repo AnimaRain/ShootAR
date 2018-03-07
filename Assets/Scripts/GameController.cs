@@ -24,8 +24,6 @@ public class GameController : MonoBehaviour
     public bool roundWon;
 	[HideInInspector]
 	public bool gameOver;
-	[Range(0,6)]
-    private int Health;
     private int Score;
     private TVScript TVScreen;
     private bool ExitTap;
@@ -230,19 +228,5 @@ public class GameController : MonoBehaviour
         }
 
         ButtonText.text = "Tap to continue";
-    }
-
-    /// <summary>
-    /// Player's health decreases by the designated amount.
-    /// If heatlh reaches zero, the game is over. Negative value restores.
-    /// </summary>
-    public void DamagePlayer(int damage)
-    {
-        Health -= damage;
-        
-        if (Health <= 0)
-        {
-            gameOver = true;
-        }
     }
 }

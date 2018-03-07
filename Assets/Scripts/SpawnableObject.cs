@@ -6,7 +6,7 @@
 public class SpawnableObject : MonoBehaviour
 {
     /// <summary>
-    /// The speed this object is moving.
+    /// The speed at which this object is moving.
     /// </summary>
     public float Speed;
 

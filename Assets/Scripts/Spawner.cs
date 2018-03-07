@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject ObjectToSpawn;
-    public float RateOfSpawn;
+	public SpawnableObject ObjectToSpawn;
+	public float RateOfSpawn;
     /// <summary>
     /// Distance away from player.
     /// </summary>
