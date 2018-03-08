@@ -16,18 +16,12 @@ public class Pyoopyoo: Enemy
         Shoot();
     }
 
-    protected override void FixedUpdate()
-    {
-		base.FixedUpdate();
-		if (firedBullet != null && firedBullet.hit) Attack();
-    }
-
 
     protected virtual void Shoot()
     {
         if (firedBullet == null)
         {
-			firedBullet.damage = Damage;
+			firedBullet.Damage = Damage;
 			firedBullet = Instantiate(Bullet, transform.forward * 10, transform.rotation);
         }
     }

@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿/* TODO:
+ *	Check if roundWon and gameOver conditions are used in the correct places.
+ */
+
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -27,6 +31,7 @@ public class GameController : MonoBehaviour
     private int Score;
     private TVScript TVScreen;
     private bool ExitTap;
+	private Player player;
 
 	public readonly Vector3 PlayerPosition = new Vector3(0,0,0);
 	private const float ShotCooldown = 0.35f;
@@ -75,28 +80,29 @@ public class GameController : MonoBehaviour
             ExitTap = true;
         }
 
-        /* Creating a dictionary of all spawners by setting the name of
+        /* Create a dictionary of all spawners by setting the name of
          * their assigned ObjectToSpawn as a key and the spawner itself
-         * as the value. All spawners must be children of the game object
-         * "Spawners". Also, deactivating them, to keep them from spawning
+         * as the value. Also, deactivating them, to keep them from spawning
          * objects before the game is ready.*/
         Spawner = new Dictionary<string, Spawner>();
-        Spawner[] spawnerParent = GameObject.Find("Spawners").GetComponentsInChildren<Spawner>();
-        if (spawnerParent == null)
+        Spawner[] spawners = GameObject.Find("Spawners").GetComponents<Spawner>();
+        if (spawners == null)
         {
-            Debug.Log("Could not find Object \"Spawners\". All spawners must be children of \"Spawners\".");
+            Debug.Log("Could not find Object \"Spawners\" or no Spawner scripts where attached to it.");
         }
         else
         {
-            foreach (Spawner spawner in spawnerParent)
+            foreach (Spawner spawner in spawners)
             {
                 string type = spawner.ObjectToSpawn.name;
                 Spawner.Add(type, spawner);
             }
         }
 
+		player = GameObject.Find("Player").GetComponent<Player>();
+		if (player == null)
+			Debug.Log("Player object not found");
 		Bullet.Count = 10;
-        Health = 3;
         gameOver = false;
         arReady = true;
     }
@@ -125,7 +131,7 @@ public class GameController : MonoBehaviour
 			}
 
 			//Defeat
-			else if (Health == 0 || (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0))
+			else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0))
 			{
 				CenterText.text = "You survived " + (Level - 1) + " rounds";
 				ClearLevel();
@@ -152,7 +158,7 @@ public class GameController : MonoBehaviour
             if (gameOver)
             {
                 //Defeat, tap to restart
-                if (Bullet.Count == 0 || Health == 0)
+                if (Bullet.Count == 0 || player.Health == 0)
                 {
                     Cam.Stop();
                     SceneManager.LoadScene("FreakyTVGame");

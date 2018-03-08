@@ -4,7 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 	[Range(0, 6)]
-	private int Health;
+	public int Health;
 
 	private GameController gameController;
 
