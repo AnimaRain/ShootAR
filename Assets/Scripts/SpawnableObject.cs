@@ -18,4 +18,12 @@ public class SpawnableObject : MonoBehaviour
             gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
     }
 
+	/** <summary>
+	 *  Object orbits around a defined point by an angle based on its speed.
+	 *  </summary> */
+	protected void OrbitAround(Vector3 point)
+	{
+		transform.LookAt(point);
+		transform.RotateAround(point, transform.up, Speed * Time.deltaTime);
+	}
 }
