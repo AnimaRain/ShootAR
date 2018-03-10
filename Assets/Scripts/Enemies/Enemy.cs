@@ -33,9 +33,9 @@ public partial class Enemy : SpawnableObject
 
 	protected virtual void FixedUpdate()
 	{
-		//Orbits around player.
+		//Orbit around player.
 		float pos = transform.position.magnitude;
-		transform.RotateAround(Camera.main.transform.position, transform.up, Speed * Time.deltaTime);
+		transform.RotateAround(Vector3.zero, transform.rotation.eulerAngles, Speed * Time.deltaTime);
 	}
 
 	protected virtual void OnDestroy()

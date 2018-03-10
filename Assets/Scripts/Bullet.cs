@@ -25,7 +25,7 @@ public class Bullet : SpawnableObject
     protected void Start()
     {
         transform.rotation = Camera.main.transform.rotation;
-        transform.position = Camera.main.transform.position;
+        transform.position = Vector3.zero;
         GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
         Count--;

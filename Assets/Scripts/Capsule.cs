@@ -14,8 +14,7 @@ public class Capsule : SpawnableObject
         //rotation
         transform.Rotate(rotation * Time.deltaTime);
         //orbit
-        transform.RotateAround(Camera.main.transform.position, Vector3.up, 20 * Time.deltaTime);
-
+        transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
     }
 
     protected void OnDestroy()

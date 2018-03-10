@@ -33,7 +33,6 @@ public class GameController : MonoBehaviour
     private bool ExitTap;
 	private Player player;
 
-	public readonly Vector3 PlayerPosition = new Vector3(0,0,0);
 	private const float ShotCooldown = 0.35f;
 
 	private float nextFire;
@@ -150,7 +149,7 @@ public class GameController : MonoBehaviour
                 if (Bullet.Count > 0 && Time.time > nextFire)
                 {
 					nextFire = Time.time + ShotCooldown;
-					Instantiate(Bullet, Camera.main.transform.position, Camera.main.transform.rotation);
+					Instantiate(Bullet, Vector3.zero, Camera.main.transform.rotation);
                 }
             }
 

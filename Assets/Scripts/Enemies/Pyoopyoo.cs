@@ -25,26 +25,4 @@ public class Pyoopyoo: Enemy
 			firedBullet = Instantiate(Bullet, transform.forward * 10, transform.rotation);
         }
     }
-
-	/// <summary>
-	/// Returns the distance of the object from the player.
-	/// (The object turns towards player.)
-	/// </summary>
-	/// <returns>The distance from the player or infinity on fail</returns>
-	protected float GetDistanceFromPlayer()
-	{
-		transform.LookAt(gameController.PlayerPosition);
-		RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward);
-
-		float res = Mathf.Infinity;
-		foreach (RaycastHit hit in hits)
-		{
-			if (hit.collider.CompareTag("Player"))
-			{
-				res = hit.distance;
-				break;
-			}
-		}
-		return res;
-	}
 }
