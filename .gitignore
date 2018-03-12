@@ -110,7 +110,9 @@ artifacts/
 *_p.c
 *_i.h
 *.ilk
-*.meta
+#Commented next line since Unity manual suggests adding .meta files to version
+#control when using an external tool (in this case Git)
+#*.meta
 *.obj
 *.pch
 *.pgc
