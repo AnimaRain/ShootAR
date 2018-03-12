@@ -195,8 +195,9 @@ GameObject:
   - component: {fileID: 33891824913971346}
   - component: {fileID: 23127203613988332}
   - component: {fileID: 136608325998891070}
+  - component: {fileID: 114169644063578644}
   m_Layer: 10
-  m_Name: APR-Bot
+  m_Name: AprBot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1699,6 +1700,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1667534377049336}
   m_Mesh: {fileID: 4300054, guid: 23b2bd5ac12bffc4fb73d4fc9e07648f, type: 3}
+--- !u!114 &114169644063578644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424650949644760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 298494dd626e8ec4d914e86c74d99bab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 5
+  PointsValue: 100
+  Damage: 1
+  AttackSFX: {fileID: 0}
 --- !u!136 &136608325998891070
 CapsuleCollider:
   m_ObjectHideFlags: 1
