@@ -1,0 +1,247 @@
+fileFormatVersion: 2
+guid: 23b2bd5ac12bffc4fb73d4fc9e07648f
+timeCreated: 1455491428
+licenseType: Store
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: tobedeleted
+    100002: //RootNode
+    100004: tobedeleted_coolkartrobot
+    100006: tobedeleted_backwheel
+    100008: tobedeleted_beam
+    100010: tobedeleted_coolkartrobot1
+    100012: tobedeleted_frontwheel
+    100014: tobedeleted_kart
+    100016: tobedeleted_robot_ship
+    100018: tobedeleted_ship
+    100020: Little_robot
+    100022: tobedeleted_Lbackwheel
+    100024: tobedeleted_Lfrontwheel
+    100026: tobedeleted_Rbackwheel
+    100028: tobedeleted_Rfrontwheel
+    100030: vehicle_kart_steeringwheel
+    100032: char_enemy_robot01_arm_left
+    100034: char_enemy_robot01_arm_right
+    100036: char_enemy_robot01_eye_left
+    100038: char_enemy_robot01_eye_left_lid
+    100040: char_enemy_robot01_eye_left_pupil
+    100042: char_enemy_robot01_eye_right
+    100044: char_enemy_robot01_eye_right_lid
+    100046: char_enemy_robot01_eye_right_pupil
+    100048: char_enemy_robot01_finger_left1
+    100050: char_enemy_robot01_finger_left2
+    100052: char_enemy_robot01_finger_left3
+    100054: char_enemy_robot01_finger_right1
+    100056: char_enemy_robot01_finger_right2
+    100058: char_enemy_robot01_finger_right3
+    100060: char_enemy_robot01_propeller
+    100062: char_enemy_robot01_tail
+    100064: char_enemy_robot01_wrist_left
+    100066: char_enemy_robot01_wrist_right
+    400000: tobedeleted
+    400002: //RootNode
+    400004: tobedeleted_coolkartrobot
+    400006: tobedeleted_backwheel
+    400008: tobedeleted_beam
+    400010: tobedeleted_coolkartrobot1
+    400012: tobedeleted_frontwheel
+    400014: tobedeleted_kart
+    400016: tobedeleted_robot_ship
+    400018: tobedeleted_ship
+    400020: Little_robot
+    400022: tobedeleted_Lbackwheel
+    400024: tobedeleted_Lfrontwheel
+    400026: tobedeleted_Rbackwheel
+    400028: tobedeleted_Rfrontwheel
+    400030: vehicle_kart_steeringwheel
+    400032: char_enemy_robot01_arm_left
+    400034: char_enemy_robot01_arm_right
+    400036: char_enemy_robot01_eye_left
+    400038: char_enemy_robot01_eye_left_lid
+    400040: char_enemy_robot01_eye_left_pupil
+    400042: char_enemy_robot01_eye_right
+    400044: char_enemy_robot01_eye_right_lid
+    400046: char_enemy_robot01_eye_right_pupil
+    400048: char_enemy_robot01_finger_left1
+    400050: char_enemy_robot01_finger_left2
+    400052: char_enemy_robot01_finger_left3
+    400054: char_enemy_robot01_finger_right1
+    400056: char_enemy_robot01_finger_right2
+    400058: char_enemy_robot01_finger_right3
+    400060: char_enemy_robot01_propeller
+    400062: char_enemy_robot01_tail
+    400064: char_enemy_robot01_wrist_left
+    400066: char_enemy_robot01_wrist_right
+    2300000: tobedeleted_coolkartrobot
+    2300002: tobedeleted_backwheel
+    2300004: tobedeleted_beam
+    2300006: tobedeleted_coolkartrobot1
+    2300008: tobedeleted_frontwheel
+    2300010: tobedeleted_kart
+    2300012: tobedeleted_robot_ship
+    2300014: tobedeleted_ship
+    2300016: Little_robot
+    2300018: tobedeleted_Lbackwheel
+    2300020: tobedeleted_Lfrontwheel
+    2300022: tobedeleted_Rbackwheel
+    2300024: tobedeleted_Rfrontwheel
+    2300026: //RootNode
+    2300028: vehicle_kart_steeringwheel
+    2300030: char_enemy_robot01_arm_left
+    2300032: char_enemy_robot01_arm_right
+    2300034: char_enemy_robot01_eye_left
+    2300036: char_enemy_robot01_eye_left_lid
+    2300038: char_enemy_robot01_eye_left_pupil
+    2300040: char_enemy_robot01_eye_right
+    2300042: char_enemy_robot01_eye_right_lid
+    2300044: char_enemy_robot01_eye_right_pupil
+    2300046: char_enemy_robot01_finger_left1
+    2300048: char_enemy_robot01_finger_left2
+    2300050: char_enemy_robot01_finger_left3
+    2300052: char_enemy_robot01_finger_right1
+    2300054: char_enemy_robot01_finger_right2
+    2300056: char_enemy_robot01_finger_right3
+    2300058: char_enemy_robot01_propeller
+    2300060: char_enemy_robot01_tail
+    2300062: char_enemy_robot01_wrist_left
+    2300064: char_enemy_robot01_wrist_right
+    3300000: tobedeleted_coolkartrobot
+    3300002: tobedeleted_backwheel
+    3300004: tobedeleted_beam
+    3300006: tobedeleted_coolkartrobot1
+    3300008: tobedeleted_frontwheel
+    3300010: tobedeleted_kart
+    3300012: tobedeleted_robot_ship
+    3300014: tobedeleted_ship
+    3300016: Little_robot
+    3300018: tobedeleted_Lbackwheel
+    3300020: tobedeleted_Lfrontwheel
+    3300022: tobedeleted_Rbackwheel
+    3300024: tobedeleted_Rfrontwheel
+    3300026: //RootNode
+    3300028: vehicle_kart_steeringwheel
+    3300030: char_enemy_robot01_arm_left
+    3300032: char_enemy_robot01_arm_right
+    3300034: char_enemy_robot01_eye_left
+    3300036: char_enemy_robot01_eye_left_lid
+    3300038: char_enemy_robot01_eye_left_pupil
+    3300040: char_enemy_robot01_eye_right
+    3300042: char_enemy_robot01_eye_right_lid
+    3300044: char_enemy_robot01_eye_right_pupil
+    3300046: char_enemy_robot01_finger_left1
+    3300048: char_enemy_robot01_finger_left2
+    3300050: char_enemy_robot01_finger_left3
+    3300052: char_enemy_robot01_finger_right1
+    3300054: char_enemy_robot01_finger_right2
+    3300056: char_enemy_robot01_finger_right3
+    3300058: char_enemy_robot01_propeller
+    3300060: char_enemy_robot01_tail
+    3300062: char_enemy_robot01_wrist_left
+    3300064: char_enemy_robot01_wrist_right
+    4300000: tobedeleted_coolkartrobot
+    4300002: tobedeleted_ship
+    4300004: tobedeleted_beam
+    4300006: tobedeleted_kart
+    4300008: tobedeleted_robot_ship
+    4300010: tobedeleted_frontwheel
+    4300012: tobedeleted_backwheel
+    4300014: tobedeleted_coolkartrobot1
+    4300016: Little_robot
+    4300018: tobedeleted_Rbackwheel
+    4300020: tobedeleted_Rfrontwheel
+    4300022: tobedeleted_Lfrontwheel
+    4300024: tobedeleted_Lbackwheel
+    4300026: vehicle_kart_A01
+    4300028: vehicle_kart_steeringwheel
+    4300030: vehicle_kart_A0
+    4300032: polymsh
+    4300034: char_enemy_robot01
+    4300036: char_enemy_robot01_arm_left
+    4300038: char_enemy_robot01_wrist_left
+    4300040: char_enemy_robot01_finger_left2
+    4300042: char_enemy_robot01_finger_left3
+    4300044: char_enemy_robot01_finger_left1
+    4300046: char_enemy_robot01_arm_right
+    4300048: char_enemy_robot01_wrist_right
+    4300050: char_enemy_robot01_finger_right2
+    4300052: char_enemy_robot01_finger_right1
+    4300054: char_enemy_robot01_finger_right3
+    4300056: char_enemy_robot01_propeller
+    4300058: char_enemy_robot01_eye_left_lid
+    4300060: char_enemy_robot01_eye_left
+    4300062: char_enemy_robot01_eye_left_pupil
+    4300064: char_enemy_robot01_eye_right_lid
+    4300066: char_enemy_robot01_eye_right
+    4300068: char_enemy_robot01_eye_right_pupil
+    4300070: char_enemy_robot01_tail
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 4
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
