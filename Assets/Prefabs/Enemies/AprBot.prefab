@@ -1714,7 +1714,9 @@ MonoBehaviour:
   Speed: 5
   PointsValue: 100
   Damage: 1
-  AttackSFX: {fileID: 0}
+  AttackSfx: {fileID: 0}
+  DeathSfx: {fileID: 0}
+  Explosion: {fileID: 0}
 --- !u!136 &136608325998891070
 CapsuleCollider:
   m_ObjectHideFlags: 1

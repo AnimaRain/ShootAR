@@ -23,8 +23,20 @@ public partial class Enemy : SpawnableObject
     /// </summary>
     [Range(-6,6)]
     public int Damage;
-	public AudioSource AttackSFX;
+	public AudioClip AttackSfx;
+	public AudioClip DeathSfx;
+	public GameObject Explosion;
+	
+	private AudioSource sfx;
 
+
+	protected override void Awake()
+	{
+		base.Awake();
+
+		//Create an audio source to play the audio clips
+		sfx = new AudioSource();
+	}
 
 	protected virtual void Start()
 	{
@@ -40,6 +52,11 @@ public partial class Enemy : SpawnableObject
     protected virtual void OnDestroy()
     {
         if (!gameController.gameOver) gameController.AddScore(PointsValue);
+
+		//Explosion special effects
+		Instantiate(Explosion, transform.position, transform.rotation);
+		sfx.PlayOneShot(DeathSfx, 0.5f);
+
 		ActiveCount--;
 	}
 

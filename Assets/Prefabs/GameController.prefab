@@ -51,15 +51,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c49814e0675af5747a040d6c2f6aab75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UICanvas: {fileID: 1275340896054770, guid: 16d114ed3cd9e0d4a9c71cb8bc0e7bf3, type: 2}
+  PauseCanvas: {fileID: 1479657103354522, guid: 5a56e7e7df93e1f49b279c8f477979a1,
+    type: 2}
   Cam: {fileID: 0}
   arReady: 0
-  GameOver: 0
-  FireButton: {fileID: 0}
+  FireButton: {fileID: 114716670128867396, guid: 16d114ed3cd9e0d4a9c71cb8bc0e7bf3,
+    type: 2}
   Bullet: {fileID: 114966587524179450, guid: 95057ef19f604694e91f6e666846db2f, type: 2}
-  CountText: {fileID: 0}
-  CenterText: {fileID: 0}
+  CountText: {fileID: 114472687725914790, guid: 16d114ed3cd9e0d4a9c71cb8bc0e7bf3,
+    type: 2}
+  CenterText: {fileID: 114616080768338326, guid: 16d114ed3cd9e0d4a9c71cb8bc0e7bf3,
+    type: 2}
   ButtonText: {fileID: 0}
-  ScoreText: {fileID: 0}
+  ScoreText: {fileID: 114546981146286184, guid: 16d114ed3cd9e0d4a9c71cb8bc0e7bf3,
+    type: 2}
+  RoundText: {fileID: 0}
   Level: 0
-  Bullets: 30
-  RoundWon: 0
+  WinSfx: {fileID: 8300000, guid: 25ec12bee3d72a8479e6c560cc1624ea, type: 3}
+  PauseSfx: {fileID: 8300000, guid: 5feec34d02e08e24f83e43fafffb70d8, type: 3}
+  roundWon: 0
+  gameOver: 0

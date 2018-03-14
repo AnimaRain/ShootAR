@@ -26,16 +26,18 @@ public class GameController : MonoBehaviour
 	public Text RoundText;
 	[HideInInspector]
 	public int Level;
-	public Dictionary<string, Spawner> Spawner;
+	public AudioClip WinSfx, PauseSfx;
+	private Dictionary<string, Spawner> Spawner;
+	private int Score;
+	private TVScript TVScreen;
+
 	[HideInInspector]
 	public bool roundWon;
 	[HideInInspector]
 	public bool gameOver;
-	private int Score;
-	private TVScript TVScreen;
-	private GameSounds gameSounds;
-	private bool ExitTap;
+	private bool exitTap;
 	private Player player;
+	private AudioSource sfx;
 
 	private const float ShotCooldown = 0.35f;
 
@@ -82,7 +84,7 @@ public class GameController : MonoBehaviour
 		{
 			Debug.Log("This device does not have a rear camera");
 			ButtonText.text = "This device does not have a rear camera! Tap to exit";
-			ExitTap = true;
+			exitTap = true;
 		}
 
 		/* Create a dictionary of all spawners by setting the name of
@@ -106,6 +108,8 @@ public class GameController : MonoBehaviour
 		player = GameObject.Find("Player").GetComponent<Player>();
 		if (player == null)
 			Debug.Log("Player object not found");
+
+		sfx = new AudioSource();
 		Bullet.Count = 10;
 		gameOver = false;
 		arReady = true;
@@ -114,7 +118,6 @@ public class GameController : MonoBehaviour
 	private void Start()
 	{
 		if (TVScreen == null) TVScreen = GameObject.Find("TVScreen").GetComponent<TVScript>();
-		if (gameSounds == null) gameSounds = GameObject.Find("GameController").GetComponent<GameSounds>();
 		ButtonText.text = "";
 		CenterText.text = "";
 		CountText.text = "";
@@ -124,7 +127,7 @@ public class GameController : MonoBehaviour
 			Level = ButtonsScript.RoundToPlay - 1;
 			ButtonsScript.RoundToPlay = 0;
 		}
-		if (!ExitTap)
+		if (!exitTap)
 		{
 			AdvanceLevel();
 		}
@@ -137,159 +140,155 @@ public class GameController : MonoBehaviour
 		if (!gameOver)
 		{
 			//Round Won
-			if (Spawner["Podpod"].SpawnCount == Spawner["Podpod"].SpawnLimit && Enemy.ActiveCount == 0)
+			if (Spawner["AprBot"].SpawnCount == Spawner["AprBot"].SpawnLimit && Enemy.ActiveCount == 0)
 			{
 				roundWon = true;
+				gameOver = true;
+				CenterText.text = "Round Clear!";
+				sfx.PlayOneShot(WinSfx, 0.7f);
 				TVScreen.CloseTV();
 				ClearLevel();
-				CenterText.text = "Round Clear!";
+				ButtonText.text = "Tap to continue";
 			}
 
 			//Defeat
 			else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0))
 			{
 				CenterText.text = "Rounds Survived : " + (Level - 1);
+				gameOver = true;
 				ClearLevel();
+				ButtonText.text = "Tap to continue";
 			}
 		}
 	}
 
-
-
-		private void OnButtonDown()
-		{
-			if (ExitTap == false)
-			{
-				//Fire Bullet
-				if (!gameOver)
-				{
-					if (Bullet.Count > 0 && Time.time > nextFire)
-					{
-						nextFire = Time.time + ShotCooldown;
-						Instantiate(Bullet, Vector3.zero, Camera.main.transform.rotation);
-					}
-				}
-
-				//Tap To Continue
-				if (gameOver)
-				{
-					//Defeat, tap to restart
-					if (Bullet.Count == 0 || player.Health == 0)
-					{
-						Cam.Stop();
-						SceneManager.LoadScene("FreakyTVGame");
-					}
-					//Next Round tap
-					else
-					{
-						gameOver = false;
-						CenterText.text = "";
-						ButtonText.text = "";
-						Bullet.Count += 6;
-						AdvanceLevel();
-					}
-				}
-			}
-			else QuitApp();
-		}
-
-		/// <summary>
-		/// Prepares for the next level.
-		/// </summary>
-		private void AdvanceLevel()
-		{
-			Level++;
-			CountText.text = Bullet.Count.ToString();
-			TVScreen.Invoke("StartTV", 10);
-			foreach (var spawner in Spawner)
-			{
-				spawner.Value.SpawnCount = 0;
-				spawner.Value.StartCoroutine("Spawn");
-
-				// Spawn Patterns
-				switch (spawner.Key.ToString())
-				{
-					case "Podpod":
-						spawner.Value.SpawnLimit = 4 * Level + 8;
-						break;
-					case "Capsule":
-						spawner.Value.SpawnLimit = Level + 2;
-						break;
-				}
-			}
-			roundWon = false;
-		}
-
-		/// <summary>
-		/// Adds points to the score and updates the GUI.
-		/// </summary>
-		/// <param name="points">The amount of pointts to add.</param>
-		public void AddScore(int points)
-		{
-			if (ScoreText != null)
-			{
-				Score += points;
-				ScoreText.text = "Score: " + Score;
-			}
-		}
-
-		/// <summary>
-		/// Deactivates spawners, destroys all spawned objects.
-		/// Mainly used when a round ends.
-		/// </summary>
-		private void ClearLevel()
-		{
-			gameOver = true;
-
-			if (roundWon)
-			{
-				gameSounds.WinningSound();
-			}
-
-			foreach (Spawner spawner in Spawner.Values)
-				spawner.StopCoroutine("Spawn");
-
-			Object[] objects = FindObjectsOfType<SpawnableObject>();
-			foreach (Object o in objects)
-			{
-				Destroy(GameObject.Find(o.name));
-			}
-
-			ButtonText.text = "Tap to continue";
-		}
-
-		public void TogglePauseMenu()
-		{
-			// not the optimal way but for the sake of readability
-			if (UICanvas.activeSelf)
-			{
-				RoundText.text = "Round : " + Level;
-				UICanvas.SetActive(false);
-				PauseCanvas.SetActive(true);
-				Time.timeScale = 0f;
-			}
-			else
-			{
-				UICanvas.SetActive(true);
-				PauseCanvas.SetActive(false);
-				Time.timeScale = 1.0f;
-			}
-
-			Debug.Log("GAMEMANAGER:: TimeScale: " + Time.timeScale);
-		}
-
-		public void QuitApp()
-		{
+	public void OnApplicationQuit()
+	{
 #if UNITY_EDITOR_WIN
-			UnityEditor.EditorApplication.isPlaying = false;
+		UnityEditor.EditorApplication.isPlaying = false;
 #endif
-			Application.Quit();
-		}
-
-		public void GoToMenu()
-		{
-			Cam.Stop();
-			SceneManager.LoadScene("MainMenu");
-		}
-
 	}
+
+
+	private void OnButtonDown()
+	{
+		if (exitTap == false)
+		{
+			//Fire Bullet
+			if (!gameOver)
+			{
+				if (Bullet.Count > 0 && Time.time > nextFire)
+				{
+					nextFire = Time.time + ShotCooldown;
+					Instantiate(Bullet, Vector3.zero, Camera.main.transform.rotation);
+				}
+			}
+
+			//Tap To Continue
+			if (gameOver)
+			{
+				//Defeat, tap to restart
+				if (Bullet.Count == 0 || player.Health == 0)
+				{
+					Cam.Stop();
+					SceneManager.LoadScene("FreakyTVGame");
+				}
+				//Next Round tap
+				else
+				{
+					gameOver = false;
+					CenterText.text = "";
+					ButtonText.text = "";
+					Bullet.Count += 6;
+					AdvanceLevel();
+				}
+			}
+		}
+		else Application.Quit();
+	}
+
+	/// <summary>
+	/// Prepares for the next level.
+	/// </summary>
+	private void AdvanceLevel()
+	{
+		Level++;
+		CountText.text = Bullet.Count.ToString();
+		TVScreen.Invoke("StartTV", 10);
+		foreach (var spawner in Spawner)
+		{
+			spawner.Value.SpawnCount = 0;
+			spawner.Value.StartCoroutine("Spawn");
+
+			// Spawn Patterns
+			switch (spawner.Key.ToString())
+			{
+				case "AprBot":
+					spawner.Value.SpawnLimit = 4 * Level + 8;
+					break;
+				case "Capsule":
+					spawner.Value.SpawnLimit = Level + 2;
+					break;
+			}
+		}
+		roundWon = false;
+	}
+
+	/// <summary>
+	/// Adds points to the score and updates the GUI.
+	/// </summary>
+	/// <param name="points">The amount of pointts to add.</param>
+	public void AddScore(int points)
+	{
+		if (ScoreText != null)
+		{
+			Score += points;
+			ScoreText.text = "Score: " + Score;
+		}
+	}
+
+	/// <summary>
+	/// Deactivates spawners, destroys all spawned objects.
+	/// Mainly used when a round ends.
+	/// </summary>
+	private void ClearLevel()
+	{
+		foreach (Spawner spawner in Spawner.Values)
+			spawner.StopCoroutine("Spawn");
+
+		Object[] objects = FindObjectsOfType<SpawnableObject>();
+		foreach (Object o in objects)
+		{
+			Destroy(GameObject.Find(o.name));
+		}
+	}
+
+	public void TogglePauseMenu()
+	{
+		sfx.PlayOneShot(PauseSfx, 1f);
+
+		// not the optimal way but for the sake of readability
+		if (UICanvas.activeSelf)
+		{
+			RoundText.text = "Round : " + Level;
+			UICanvas.SetActive(false);
+			PauseCanvas.SetActive(true);
+			Time.timeScale = 0f;
+		}
+		else
+		{
+			UICanvas.SetActive(true);
+			PauseCanvas.SetActive(false);
+			Time.timeScale = 1.0f;
+		}
+
+		Debug.Log("GAMEMANAGER:: TimeScale: " + Time.timeScale);
+	}
+
+	public void GoToMenu()
+	{
+		Cam.Stop();
+		SceneManager.LoadScene("MainMenu");
+	}
+
+}

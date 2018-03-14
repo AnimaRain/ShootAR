@@ -19,16 +19,14 @@ public class Spawner : MonoBehaviour
     [HideInInspector]
     public int SpawnCount;
 
-    private Vector3 spawnPosition;
-    private Quaternion spawnRotation;
-    private float nextSpawn, x, z;
-    private GameSounds gameSounds;
+    protected Vector3 spawnPosition;
+    protected Quaternion spawnRotation;
+    protected float nextSpawn, x, z;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        if (gameSounds == null) gameSounds = GameObject.Find("GameController").GetComponent<GameSounds>();
-        SpawnLimit = -1;    //Initial value should not be 0, to refrain from enabling "Game Over" state when the game has just started.
+        SpawnLimit = -1;    //Initial value should not be 0 to refrain from enabling "Game Over" state when the game has just started.
     }
     
 
@@ -36,7 +34,7 @@ public class Spawner : MonoBehaviour
     /// Spawn objects until the spawn-limit is reached.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator Spawn()
+    public virtual IEnumerator Spawn()
     {
         do
         {
@@ -51,14 +49,6 @@ public class Spawner : MonoBehaviour
             } while (Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2)) <= MinDistanceToSpawn);
             spawnPosition = new Vector3(x, 0, z);
             spawnRotation = Quaternion.LookRotation(-spawnPosition);
-
-            if (ObjectToSpawn.name == "Podpod")
-            {
-                GameObject Portal = Instantiate(Resources.Load("Effect_03", typeof(GameObject))) as GameObject;
-                Portal.transform.position = spawnPosition;
-                Destroy(Portal, 1);
-                gameSounds.EnemySpawning();
-            }
 
             var temp = Instantiate(ObjectToSpawn, spawnPosition, spawnRotation);   //TO DO: Remove temp variable when debug is not needed any more.        
             SpawnCount++;

@@ -3,6 +3,7 @@
 public class Capsule : SpawnableObject
 {
     private Vector3 rotation;
+	private AudioSource PickUpSfx;
 
     protected void Start()
     {
@@ -26,9 +27,10 @@ public class Capsule : SpawnableObject
              * controller destroys it and the player gains 50 points.*/
             if (!gameController.gameOver)
             {
-                Bullet.Count += 4;
-                gameController.CountText.text = Bullet.Count.ToString();
-            }
+				Bullet.Count += 4;
+				gameController.CountText.text = Bullet.Count.ToString();
+				PickUpSfx.Play();
+			}
             else if(gameController.roundWon)
             {
                 gameController.AddScore(50);
