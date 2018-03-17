@@ -261,5 +261,5 @@ MonoBehaviour:
   Damage: 1
   AttackSfx: {fileID: 8300000, guid: f1364d48e48ea4fdab44868cc9b2a10e, type: 3}
   DeathSfx: {fileID: 8300000, guid: 4e845604cdc23ae4f93292f83be4edf2, type: 3}
-  Explosion: {fileID: 0}
+  Explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
   Bullet: {fileID: 114740801551769738, guid: 29203ff5a97e7984db5f0e8ce8b82a8b, type: 2}

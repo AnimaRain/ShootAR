@@ -16,7 +16,7 @@ AudioImporter:
   normalize: 0
   preloadAudioData: 1
   loadInBackground: 0
-  ambisonic: 1
+  ambisonic: 0
   3D: 1
   userData: 
   assetBundleName: 

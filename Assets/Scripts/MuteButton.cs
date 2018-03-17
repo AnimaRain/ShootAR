@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class SoundController : MonoBehaviour
+public class MuteButton : MonoBehaviour
 {
 
     public Material SoundOffPic;

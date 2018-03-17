@@ -50,28 +50,29 @@ public class GameController : MonoBehaviour
 	{
 #if UNITY_ANDROID
 
-        //Check if we support both devices
-        //Gyroscope
-        if (!SystemInfo.supportsGyroscope)
-        {
-            Debug.Log("This device does not have Gyroscope");
-            ButtonText.text = "This device does not have Gyroscope! Tap to exit";
-            ExitTap = true;
-        }
+		//Check if we support both devices
+		//Gyroscope
+		if (!SystemInfo.supportsGyroscope)
+		{
+			Debug.Log("This device does not have Gyroscope");
+			CenterText.text = "This device does not have Gyroscope!";
+			ButtonText.text = "Tap to exit";
+			exitTap = true;
+		}
 
-        //Enable gyro
-        Input.gyro.enabled = true;
+		//Enable gyro
+		Input.gyro.enabled = true;
 
-        //Back Camera
-        for (int i = 0; i < WebCamTexture.devices.Length; i++)
-        {
-            if (!WebCamTexture.devices[i].isFrontFacing)
-            {
+		//Back Camera
+		for (int i = 0; i < WebCamTexture.devices.Length; i++)
+		{
+			if (!WebCamTexture.devices[i].isFrontFacing)
+			{
 
-                Cam = new WebCamTexture(WebCamTexture.devices[i].name, Screen.width, Screen.height);
-                break;
-            }
-        }
+				Cam = new WebCamTexture(WebCamTexture.devices[i].name, Screen.width, Screen.height);
+				break;
+			}
+		}
 
 #endif
 
@@ -83,7 +84,8 @@ public class GameController : MonoBehaviour
 		if (Cam == null)
 		{
 			Debug.Log("This device does not have a rear camera");
-			ButtonText.text = "This device does not have a rear camera! Tap to exit";
+			CenterText.text = "This device does not have a rear camera!";
+			ButtonText.text = "Tap to exit";
 			exitTap = true;
 		}
 
@@ -98,9 +100,20 @@ public class GameController : MonoBehaviour
 		}
 		else
 		{
+#if DEBUG
+			Debug.Log(string.Format("spawners #START#\nLength:{0}\n", spawners.Length));
+			for (int i = 0; i < spawners.Length; i++)
+			{
+				Debug.Log(string.Format("FIELD: {2}\tKEY: {0}\tVALUE: {1}", i, spawners[i], spawners));
+			}
+			Debug.Log("spawners #END#");
+#endif
 			foreach (Spawner spawner in spawners)
 			{
 				string type = spawner.ObjectToSpawn.name;
+#if DEBUG
+				Debug.Log(string.Format("DICTIONARY \"Spawners\":\tKEY: {0}\tVALUE: {1}\nTYPE_CHECK: {2}", type, spawner, spawner.ObjectToSpawn.name));
+#endif
 				Spawner.Add(type, spawner);
 			}
 		}

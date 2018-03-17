@@ -6,20 +6,22 @@ public class EnemySpawner : Spawner
 	public AudioClip SpawnSfx;
 	public GameObject Portal;
 
-	private AudioSource sfx;
+	protected AudioSource sfx;
 
 	protected override void Awake()
 	{
 		base.Awake();
 
-		sfx = new AudioSource();
+		sfx = gameObject.AddComponent<AudioSource>();
+		sfx.clip = SpawnSfx;
+		sfx.volume = 0.5f;
 	}
 
 	public override IEnumerator Spawn()
 	{
 		//Spawn special effects
 		Instantiate(Portal, transform.position, transform.rotation);
-		sfx.PlayOneShot(SpawnSfx, 0.5f);
+		sfx.Play();
 
 		base.Spawn();
 		yield return new WaitForSeconds(0f);

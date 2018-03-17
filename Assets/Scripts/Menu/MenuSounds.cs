@@ -15,14 +15,14 @@ public class MenuSounds : MonoBehaviour {
 
     public void SelectSound()
     {
-        if (SoundController.SoundEnabled)
+        if (MuteButton.SoundEnabled)
         {
             SFX.PlayOneShot(Select, 1.5F);
         }
     }
     public void BackSound()
     {
-        if (SoundController.SoundEnabled)
+        if (MuteButton.SoundEnabled)
         {
             SFX.PlayOneShot(Back, 1.2F);
         }

@@ -21,7 +21,7 @@ public class Spawner : MonoBehaviour
 
     protected Vector3 spawnPosition;
     protected Quaternion spawnRotation;
-    protected float nextSpawn, x, z;
+    protected float x, z;
 
 
     protected virtual void Awake()

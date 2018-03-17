@@ -8,6 +8,7 @@ public class Capsule : SpawnableObject
     protected void Start()
     {
         rotation = new Vector3(15, 30, 45);
+		PickUpSfx = GetComponent<AudioSource>();
     }
 
     private void Update()

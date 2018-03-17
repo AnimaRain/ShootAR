@@ -1,11 +1,14 @@
 fileFormatVersion: 2
 guid: ee3e5db0ca1670c4ea8fd2d5dc5d6739
-timeCreated: 1521215645
+timeCreated: 1521222058
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ObjectToSpawn: {instanceID: 0}
+  - SpawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
+  - Portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
