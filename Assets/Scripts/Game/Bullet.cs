@@ -15,7 +15,7 @@ public class Bullet : SpawnableObject
 
     protected override void Awake()
     {
-		if (Count < 0) Destroy(this);
+		if (Count < 0) Destroy(gameObject);
 
 		base.Awake();
 

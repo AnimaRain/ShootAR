@@ -5,6 +5,6 @@ public class EnemyBullet : Boopboop
 	protected override void OnTriggerEnter(Collider other)
 	{
 		base.OnTriggerEnter(other);
-		Destroy(this);
+		Destroy(gameObject);
 	}
 }

@@ -35,7 +35,7 @@ public partial class Enemy : SpawnableObject
 		base.Awake();
 
 		//Create an audio source to play the audio clips
-		sfx = new AudioSource();
+		sfx = gameObject.AddComponent<AudioSource>();
 	}
 
 	protected virtual void Start()
