@@ -5,6 +5,13 @@
 /// </summary>
 public class Boopboop : Enemy
 {
+	protected override void Start()
+	{
+		base.Start();
+
+		MoveToPlayer();
+	}
+
 	/// <summary>
 	/// Enemy rotates and moves towards player.
 	/// </summary>
