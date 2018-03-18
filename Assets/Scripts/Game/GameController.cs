@@ -152,7 +152,7 @@ public class GameController : MonoBehaviour
 		if (!gameOver)
 		{
 			//Round Won
-			if (Spawner["AprBot"].SpawnCount == Spawner["AprBot"].SpawnLimit && Enemy.ActiveCount == 0)
+			if (Spawner["Crasher"].SpawnCount == Spawner["Crasher"].SpawnLimit && Enemy.ActiveCount == 0)
 			{
 				roundWon = true;
 				gameOver = true;
@@ -225,7 +225,6 @@ public class GameController : MonoBehaviour
 	private void AdvanceLevel()
 	{
 		Level++;
-		CountText.text = Bullet.Count.ToString();
 		TVScreen.Invoke("StartTV", 10);
 		foreach (var spawner in Spawner)
 		{
@@ -235,7 +234,7 @@ public class GameController : MonoBehaviour
 			// Spawn Patterns
 			switch (spawner.Key.ToString())
 			{
-				case "AprBot":
+				case "Crasher":
 					spawner.Value.SpawnLimit = 4 * Level + 8;
 					break;
 				case "Drone":
