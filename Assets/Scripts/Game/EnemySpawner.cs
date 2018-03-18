@@ -14,16 +14,17 @@ public class EnemySpawner : Spawner
 
 		sfx = gameObject.AddComponent<AudioSource>();
 		sfx.clip = SpawnSfx;
-		sfx.volume = 0.5f;
+		sfx.volume = 0.2f;
 	}
 
 	public override IEnumerator Spawn()
 	{
+		base.Spawn();
+
 		//Spawn special effects
-		Instantiate(Portal, transform.position, transform.rotation);
+		Instantiate(Portal, spawnPosition, spawnRotation);
 		sfx.Play();
 
-		base.Spawn();
 		yield return new WaitForSeconds(0f);
 	}
 }
