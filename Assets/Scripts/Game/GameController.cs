@@ -92,22 +92,22 @@ public class GameController : MonoBehaviour
          * their assigned ObjectToSpawn as a key and the spawner itself
          * as the value.*/
 		Spawner = new Dictionary<string, Spawner>();
-		Spawner[] spawners = GameObject.Find("Spawners").GetComponents<Spawner>();
-		if (spawners == null)
+		Spawner[] spawnerParent = GameObject.Find("Spawners").GetComponentsInChildren<Spawner>();
+		if (spawnerParent == null)
 		{
 			Debug.Log("Could not find Object \"Spawners\" or no Spawner scripts where attached to it.");
 		}
 		else
 		{
 #if DEBUG
-			Debug.Log(string.Format("spawners #START#\nLength:{0}\n", spawners.Length));
-			for (int i = 0; i < spawners.Length; i++)
+			Debug.Log(string.Format("spawnerParent #START#\nLength:{0}\n", spawnerParent.Length));
+			for (int i = 0; i < spawnerParent.Length; i++)
 			{
-				Debug.Log(string.Format("FIELD: {2}\tKEY: {0}\tVALUE: {1}", i, spawners[i], spawners));
+				Debug.Log(string.Format("FIELD: {2}\tKEY: {0}\tVALUE: {1}", i, spawnerParent[i], spawnerParent));
 			}
-			Debug.Log("spawners #END#");
+			Debug.Log("spawnerParent #END#");
 #endif
-			foreach (Spawner spawner in spawners)
+			foreach (Spawner spawner in spawnerParent)
 			{
 				string type = spawner.ObjectToSpawn.name;
 #if DEBUG

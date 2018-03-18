@@ -113,100 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &94472418
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1711733272364658, guid: d4da007e017dade458300c7112329fba,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 94472422}
-  - component: {fileID: 94472421}
-  - component: {fileID: 94472420}
-  - component: {fileID: 94472419}
-  m_Layer: 0
-  m_Name: Spawners
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &94472419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114643786380693616, guid: d4da007e017dade458300c7112329fba,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 94472418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectToSpawn: {fileID: 114786631525062386, guid: 16fc9f9a7572d884da8cbe81c7d11097,
-    type: 2}
-  RateOfSpawn: 15
-  MaxDistanceToSpawn: 50
-  MinDistanceToSpawn: 25
-  SpawnLimit: 0
-  SpawnCount: 0
-  SpawnSfx: {fileID: 0}
-  Portal: {fileID: 0}
---- !u!114 &94472420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 94472418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectToSpawn: {fileID: 114964183672774884, guid: b61d74442990e8349b2ba008d9253c9c,
-    type: 2}
-  RateOfSpawn: 3
-  MaxDistanceToSpawn: 50
-  MinDistanceToSpawn: 25
-  SpawnLimit: 0
-  SpawnCount: 0
-  SpawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
-  Portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
---- !u!114 &94472421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 94472418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectToSpawn: {fileID: 0}
-  RateOfSpawn: 3
-  MaxDistanceToSpawn: 50
-  MinDistanceToSpawn: 25
-  SpawnLimit: 0
-  SpawnCount: 0
-  SpawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
-  Portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
---- !u!4 &94472422
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 94472418}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 611866787}
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &107753530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -847,34 +753,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 604656078}
---- !u!1 &611866786
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 611866787}
-  m_Layer: 0
-  m_Name: CrusherSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &611866787
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 611866786}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 94472422}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &657967871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,6 +1513,48 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 16d114ed3cd9e0d4a9c71cb8bc0e7bf3, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1001 &974198255
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358618953139994, guid: d4da007e017dade458300c7112329fba, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: d4da007e017dade458300c7112329fba, type: 2}
   m_IsPrefabParent: 0
 --- !u!224 &1081772624 stripped
 RectTransform:

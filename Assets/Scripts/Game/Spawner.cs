@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour
     {
         SpawnLimit = -1;    //Initial value should not be 0 to refrain from enabling "Game Over" state when the game has just started.
 
-		if (SpawnSfx == null)
+		if (SpawnSfx != null)
 		{
 			sfx = gameObject.AddComponent<AudioSource>();
 			sfx.clip = SpawnSfx;
@@ -61,9 +61,9 @@ public class Spawner : MonoBehaviour
             spawnRotation = Quaternion.LookRotation(-spawnPosition);
 
 			//Spawn special effects
-			if (Portal)
+			if (Portal !=null)
 				Instantiate(Portal, spawnPosition, spawnRotation);
-			if (SpawnSfx)
+			if (SpawnSfx != null)
 				sfx.Play();
 
 			var temp = Instantiate(ObjectToSpawn, spawnPosition, spawnRotation);   //TO DO: Remove temp variable when debug is not needed any more.        
