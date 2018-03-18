@@ -37,29 +37,6 @@ public class Bullet : SpawnableObject
 		gameController.CountText.text = Count.ToString();
 	}
 
-	/* TODO: Check 'OnCollisionEnter' and 'OnTriggerEnter' and choose one
-	 * or probably a merged version of both of them. */
-	private void OnCollisionEnter(Collision col)
-	{
-		GameObject other = col.gameObject;
-		if (other.CompareTag("Enemy") || other.CompareTag("Capsule"))
-		{
-			Destroy(other);
-			Destroy(gameObject);
-		}
-		else if (other.tag == "Remote")
-		{
-			if (TVScreen.tvon)
-			{
-				TVScreen.CloseTV();
-			}
-			else
-			{
-				TVScreen.StartTV();
-			}
-		}
-	}
-
 	private void OnTriggerEnter(Collider col)
     {
         if (col.CompareTag("Enemy") || col.CompareTag("Capsule"))
