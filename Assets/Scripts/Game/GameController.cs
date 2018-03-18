@@ -1,6 +1,5 @@
-﻿/* TODO:
- *	Check if roundWon and gameOver conditions are used in the correct places.
- */
+﻿/* TODO: Check if roundWon and gameOver conditions are used in the correct
+ * places. */
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -238,6 +237,9 @@ public class GameController : MonoBehaviour
 			{
 				case "AprBot":
 					spawner.Value.SpawnLimit = 4 * Level + 8;
+					break;
+				case "Drone":
+					spawner.Value.SpawnLimit = 3 * Level + 6;
 					break;
 				case "Capsule":
 					spawner.Value.SpawnLimit = Level + 2;

@@ -37,8 +37,7 @@ public class Bullet : SpawnableObject
 		gameController.CountText.text = Count.ToString();
 	}
 
-	/**TODO:
-	 * Check 'OnCollisionEnter' and 'OnTriggerEnter' and choose one
+	/* TODO: Check 'OnCollisionEnter' and 'OnTriggerEnter' and choose one
 	 * or probably a merged version of both of them. */
 	private void OnCollisionEnter(Collision col)
 	{
