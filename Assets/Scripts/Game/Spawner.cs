@@ -36,8 +36,8 @@ public class Spawner : MonoBehaviour
     /// <returns></returns>
     public virtual IEnumerator Spawn()
     {
-        do
-        {
+		while (SpawnCount < SpawnLimit)
+		{
             yield return new WaitForSeconds(RateOfSpawn);
             //The following do-while assigns random coordinates for the
             //next spawn according to the defined range. Then, the object's
@@ -55,6 +55,6 @@ public class Spawner : MonoBehaviour
 #if DEBUG
             temp.name = ObjectToSpawn.name + SpawnCount;
 #endif
-        } while (SpawnCount < SpawnLimit);
+        };
     }
 }
