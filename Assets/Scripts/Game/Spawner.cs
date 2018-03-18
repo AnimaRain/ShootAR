@@ -18,23 +18,33 @@ public class Spawner : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public int SpawnCount;
+	public AudioClip SpawnSfx;
+	public GameObject Portal;
 
-    protected Vector3 spawnPosition;
-    protected Quaternion spawnRotation;
-    protected float x, z;
+	private Vector3 spawnPosition;
+    private Quaternion spawnRotation;
+    private float x, z;
+	private AudioSource sfx;
 
 
-    protected virtual void Awake()
+	private void Awake()
     {
         SpawnLimit = -1;    //Initial value should not be 0 to refrain from enabling "Game Over" state when the game has just started.
-    }
+
+		if (SpawnSfx == null)
+		{
+			sfx = gameObject.AddComponent<AudioSource>();
+			sfx.clip = SpawnSfx;
+			sfx.volume = 0.2f;
+		}
+	}
     
 
     /// <summary>
     /// Spawn objects until the spawn-limit is reached.
     /// </summary>
     /// <returns></returns>
-    public virtual IEnumerator Spawn()
+    public IEnumerator Spawn()
     {
 		while (SpawnCount < SpawnLimit)
 		{
@@ -50,7 +60,13 @@ public class Spawner : MonoBehaviour
             spawnPosition = new Vector3(x, 0, z);
             spawnRotation = Quaternion.LookRotation(-spawnPosition);
 
-            var temp = Instantiate(ObjectToSpawn, spawnPosition, spawnRotation);   //TO DO: Remove temp variable when debug is not needed any more.        
+			//Spawn special effects
+			if (Portal)
+				Instantiate(Portal, spawnPosition, spawnRotation);
+			if (SpawnSfx)
+				sfx.Play();
+
+			var temp = Instantiate(ObjectToSpawn, spawnPosition, spawnRotation);   //TO DO: Remove temp variable when debug is not needed any more.        
             SpawnCount++;
 #if DEBUG
             temp.name = ObjectToSpawn.name + SpawnCount;
