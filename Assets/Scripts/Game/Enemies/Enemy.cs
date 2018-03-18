@@ -51,12 +51,14 @@ public partial class Enemy : SpawnableObject
 
     protected virtual void OnDestroy()
     {
-        if (!gameController.gameOver) gameController.AddScore(PointsValue);
+		if (!gameController.gameOver)
+		{
+			gameController.AddScore(PointsValue);
 
-		//Explosion special effects
-		Instantiate(Explosion, transform.position, transform.rotation);
-		sfx.PlayOneShot(DeathSfx, 0.5f);
-
+			//Explosion special effects
+			Instantiate(Explosion, transform.position, transform.rotation);
+			sfx.PlayOneShot(DeathSfx, 0.5f);
+		}
 		ActiveCount--;
 	}
 
