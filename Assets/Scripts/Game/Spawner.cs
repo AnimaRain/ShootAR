@@ -21,9 +21,7 @@ public class Spawner : MonoBehaviour
 	public AudioClip SpawnSfx;
 	public GameObject Portal;
 
-	private Vector3 spawnPosition;
-    private Quaternion spawnRotation;
-    private float x, z;
+	private float x, z;
 	private AudioSource sfx;
 
 
@@ -57,16 +55,16 @@ public class Spawner : MonoBehaviour
                 x = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
                 z = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
             } while (Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2)) <= MinDistanceToSpawn);
-            spawnPosition = new Vector3(x, 0, z);
-            spawnRotation = Quaternion.LookRotation(-spawnPosition);
+            transform.position = new Vector3(x, 0, z);
+            transform.rotation = Quaternion.LookRotation(-transform.position);
 
 			//Spawn special effects
 			if (Portal !=null)
-				Instantiate(Portal, spawnPosition, spawnRotation);
+				Instantiate(Portal, transform.position, transform.rotation);
 			if (SpawnSfx != null)
 				sfx.Play();
 
-			var temp = Instantiate(ObjectToSpawn, spawnPosition, spawnRotation);   //TO DO: Remove temp variable when debug is not needed any more.        
+			var temp = Instantiate(ObjectToSpawn, transform.position, transform.rotation);   //TO DO: Remove temp variable when debug is not needed any more.        
             SpawnCount++;
 #if DEBUG
             temp.name = ObjectToSpawn.name + SpawnCount;
