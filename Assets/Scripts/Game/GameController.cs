@@ -229,19 +229,18 @@ public class GameController : MonoBehaviour
 		foreach (var spawner in Spawner)
 		{
 			spawner.Value.SpawnCount = 0;
-			spawner.Value.StartCoroutine("Spawn");
 
 			// Spawn Patterns
 			switch (spawner.Key.ToString())
 			{
 				case "Crasher":
-					spawner.Value.SpawnLimit = 4 * Level + 8;
+					spawner.Value.Spawn(4 * Level + 8);
 					break;
 				case "Drone":
-					spawner.Value.SpawnLimit = 3 * Level + 6;
+					spawner.Value.Spawn(3 * Level + 6);
 					break;
 				case "Capsule":
-					spawner.Value.SpawnLimit = Level + 2;
+					spawner.Value.Spawn(Level + 2);
 					break;
 			}
 		}

@@ -71,4 +71,14 @@ public class Spawner : MonoBehaviour
 #endif
         };
     }
+
+	/// <summary>
+	/// Automatically start a Spawn coroutine after setting the spawn limit
+	/// </summary>
+	/// <param name="limit">Number of objects to spawn</param>
+	public void Spawn(int limit)
+	{
+		SpawnLimit = limit;
+		StartCoroutine(Spawn());
+	}
 }
