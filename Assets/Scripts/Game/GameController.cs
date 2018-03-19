@@ -121,7 +121,7 @@ public class GameController : MonoBehaviour
 		if (player == null)
 			Debug.Log("Player object not found");
 
-		sfx = new AudioSource();
+		sfx = gameObject.AddComponent<AudioSource>();
 		Bullet.Count = 10;
 		gameOver = false;
 		arReady = true;
