@@ -55,16 +55,16 @@ public class Spawner : MonoBehaviour
                 x = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
                 z = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
             } while (Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2)) <= MinDistanceToSpawn);
-            transform.position = new Vector3(x, 0, z);
-            transform.rotation = Quaternion.LookRotation(-transform.position);
+            transform.localPosition = new Vector3(x, 0, z);
+            transform.localRotation = Quaternion.LookRotation(-transform.localPosition);
 
 			//Spawn special effects
 			if (Portal !=null)
-				Instantiate(Portal, transform.position, transform.rotation);
+				Instantiate(Portal, transform.localPosition, transform.localRotation);
 			if (SpawnSfx != null)
 				sfx.Play();
 
-			var temp = Instantiate(ObjectToSpawn, transform.position, transform.rotation);   //TO DO: Remove temp variable when debug is not needed any more.        
+			var temp = Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);   //TO DO: Remove temp variable when debug is not needed any more.        
             SpawnCount++;
 #if DEBUG
             temp.name = ObjectToSpawn.name + SpawnCount;

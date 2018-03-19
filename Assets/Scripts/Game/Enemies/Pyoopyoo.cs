@@ -6,14 +6,19 @@
 public class Pyoopyoo: Enemy
 {
     public EnemyBullet Bullet;
+	/// <summary>
+	/// the position where the bullets will get fired from
+	/// </summary>
+	public Transform BulletSpawnPoint;
 
     private EnemyBullet firedBullet;
 
     protected virtual void Update()
     {
-        /* TODO: Make AI decide when to shoot, how to move, and targeting
+		/* TODO: Make AI decide when to shoot, how to move, and targeting
          * the player.*/
-        Shoot();
+		//Debug
+		if (Time.realtimeSinceStartup >= 63) Shoot();
     }
 
 
@@ -21,7 +26,7 @@ public class Pyoopyoo: Enemy
     {
         if (firedBullet == null)
         {
-			firedBullet = Instantiate(Bullet, transform.forward * 0.2f, transform.rotation);
+			firedBullet = Instantiate(Bullet, BulletSpawnPoint.localPosition, BulletSpawnPoint.localRotation);
 			firedBullet.Damage = Damage;
 		}
     }
