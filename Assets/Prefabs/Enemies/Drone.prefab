@@ -150,7 +150,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -230,7 +230,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 1
   BypassEffects: 0
@@ -308,3 +308,4 @@ MonoBehaviour:
   DeathSfx: {fileID: 8300000, guid: 4e845604cdc23ae4f93292f83be4edf2, type: 3}
   Explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
   Bullet: {fileID: 114740801551769738, guid: 29203ff5a97e7984db5f0e8ce8b82a8b, type: 2}
+  BulletSpawnPoint: {fileID: 4375857931890688}

@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 23127203613988332}
   - component: {fileID: 136608325998891070}
   - component: {fileID: 114196088740870168}
+  - component: {fileID: 54277507484313166}
   m_Layer: 10
   m_Name: Crasher
   m_TagString: Untagged
@@ -1700,6 +1701,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1667534377049336}
   m_Mesh: {fileID: 4300054, guid: 23b2bd5ac12bffc4fb73d4fc9e07648f, type: 3}
+--- !u!54 &54277507484313166
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1424650949644760}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &114196088740870168
 MonoBehaviour:
   m_ObjectHideFlags: 1
