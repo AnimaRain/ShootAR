@@ -95,31 +95,20 @@ public class GameController : MonoBehaviour
 		Spawner[] spawnerParent = GameObject.Find("Spawners").GetComponentsInChildren<Spawner>();
 		if (spawnerParent == null)
 		{
-			Debug.Log("Could not find Object \"Spawners\" or no Spawner scripts where attached to it.");
+			Debug.LogError("Could not find Object \"Spawners\" or no Spawner scripts where attached to it.");
 		}
 		else
 		{
-#if DEBUG
-			Debug.Log(string.Format("spawnerParent #START#\nLength:{0}\n", spawnerParent.Length));
-			for (int i = 0; i < spawnerParent.Length; i++)
-			{
-				Debug.Log(string.Format("FIELD: {2}\tKEY: {0}\tVALUE: {1}", i, spawnerParent[i], spawnerParent));
-			}
-			Debug.Log("spawnerParent #END#");
-#endif
 			foreach (Spawner spawner in spawnerParent)
 			{
 				string type = spawner.ObjectToSpawn.name;
-#if DEBUG
-				Debug.Log(string.Format("DICTIONARY \"Spawners\":\tKEY: {0}\tVALUE: {1}\nTYPE_CHECK: {2}", type, spawner, spawner.ObjectToSpawn.name));
-#endif
 				Spawner.Add(type, spawner);
 			}
 		}
 
 		player = GameObject.Find("Player").GetComponent<Player>();
 		if (player == null)
-			Debug.Log("Player object not found");
+			Debug.LogError("Player object not found");
 
 		sfx = gameObject.AddComponent<AudioSource>();
 		Bullet.Count = 10;
@@ -200,7 +189,7 @@ public class GameController : MonoBehaviour
 			if (gameOver)
 			{
 				//Defeat, tap to restart
-				if (Bullet.Count == 0 || player.Health == 0)
+				if (Bullet.Count == 0 || player.Health <= 0)
 				{
 					Cam.Stop();
 					SceneManager.LoadScene("FreakyTVGame");
