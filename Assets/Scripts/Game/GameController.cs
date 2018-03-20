@@ -165,13 +165,16 @@ public class GameController : MonoBehaviour
 
 	public void OnApplicationQuit()
 	{
+		gameOver = true;
+		ClearLevel();
+
 #if UNITY_EDITOR_WIN
 		UnityEditor.EditorApplication.isPlaying = false;
 #endif
 	}
 
 
-	private void OnButtonDown()
+	public void OnButtonDown()
 	{
 		if (exitTap == false)
 		{
