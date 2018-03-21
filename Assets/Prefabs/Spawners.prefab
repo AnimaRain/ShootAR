@@ -142,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectToSpawn: {fileID: 114964183672774884, guid: b61d74442990e8349b2ba008d9253c9c,
     type: 2}
-  RateOfSpawn: 3
+  RateOfSpawn: 5
   MaxDistanceToSpawn: 50
   MinDistanceToSpawn: 25
   SpawnLimit: 0
