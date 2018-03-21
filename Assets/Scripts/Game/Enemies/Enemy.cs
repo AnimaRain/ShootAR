@@ -26,7 +26,7 @@ public partial class Enemy : SpawnableObject
 	public AudioClip AttackSfx;
 	public GameObject Explosion;
 	
-	private AudioSource sfx;
+	protected AudioSource sfx;
 
 
 	protected override void Awake()
@@ -34,7 +34,7 @@ public partial class Enemy : SpawnableObject
 		base.Awake();
 
 		//Create an audio source to play the audio clips
-		sfx = gameObject.AddComponent<AudioSource>();
+		sfx = GetComponent<AudioSource>();
 	}
 
 	protected virtual void Start()

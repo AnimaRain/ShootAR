@@ -26,6 +26,7 @@ public class Pyoopyoo: Enemy
     {
         if (firedBullet == null)
         {
+			sfx.Play();
 			firedBullet = Instantiate(Bullet, BulletSpawnPoint.localPosition, BulletSpawnPoint.localRotation);
 			firedBullet.Damage = Damage;
 		}
