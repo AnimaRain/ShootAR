@@ -24,7 +24,6 @@ public partial class Enemy : SpawnableObject
     [Range(-6,6)]
     public int Damage;
 	public AudioClip AttackSfx;
-	public AudioClip DeathSfx;
 	public GameObject Explosion;
 	
 	private AudioSource sfx;
@@ -57,7 +56,6 @@ public partial class Enemy : SpawnableObject
 
 			//Explosion special effects
 			Instantiate(Explosion, transform.position, transform.rotation);
-			sfx.PlayOneShot(DeathSfx, 0.5f);
 		}
 		ActiveCount--;
 	}
