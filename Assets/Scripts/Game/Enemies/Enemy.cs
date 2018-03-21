@@ -18,14 +18,14 @@ public partial class Enemy : SpawnableObject
 	/// The amount of points added to the player's score when destroyed.
 	/// </summary>
 	public int PointsValue;
-    /// <summary>
-    /// The amount of damage the player recieves from this object's attack.
-    /// </summary>
-    [Range(-6,6)]
-    public int Damage;
-	public AudioClip AttackSfx;
-	public GameObject Explosion;
-	
+	/// <summary>
+	/// The amount of damage the player recieves from this object's attack.
+	/// </summary>
+	[Range(-6, 6)]
+	public int Damage;
+	[SerializeField] protected AudioClip AttackSfx;
+	[SerializeField] protected GameObject Explosion;
+
 	protected AudioSource sfx;
 
 
@@ -34,7 +34,11 @@ public partial class Enemy : SpawnableObject
 		base.Awake();
 
 		//Create an audio source to play the audio clips
-		sfx = GetComponent<AudioSource>();
+		sfx = gameObject.AddComponent<AudioSource>();
+		sfx.clip = AttackSfx;
+		sfx.volume = 0.3f;
+		sfx.playOnAwake = false;
+		sfx.maxDistance = 10f;
 	}
 
 	protected virtual void Start()
@@ -48,8 +52,8 @@ public partial class Enemy : SpawnableObject
 		OrbitAround(Vector3.zero);
 	}
 
-    protected virtual void OnDestroy()
-    {
+	protected virtual void OnDestroy()
+	{
 		if (!gameController.gameOver)
 		{
 			gameController.AddScore(PointsValue);
