@@ -676,6 +676,7 @@ MonoBehaviour:
   ButtonText: {fileID: 691084847}
   ScoreText: {fileID: 1185042125}
   RoundText: {fileID: 107753530}
+  PauseButton: {fileID: 2125751302}
   Level: 0
   WinSfx: {fileID: 8300000, guid: 25ec12bee3d72a8479e6c560cc1624ea, type: 3}
   PauseSfx: {fileID: 8300000, guid: 5feec34d02e08e24f83e43fafffb70d8, type: 3}
