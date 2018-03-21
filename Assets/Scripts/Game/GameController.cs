@@ -23,6 +23,8 @@ public class GameController : MonoBehaviour
 	public Text ButtonText;
 	public Text ScoreText;
 	public Text RoundText;
+	[SerializeField]
+	private Button PauseButton;
 	[HideInInspector]
 	public int Level;
 	public AudioClip WinSfx, PauseSfx;
@@ -123,6 +125,7 @@ public class GameController : MonoBehaviour
 		CenterText.text = "";
 		CountText.text = "";
 		FireButton.onClick.AddListener(OnButtonDown);
+		PauseButton.onClick.AddListener(TogglePauseMenu);
 		if (ButtonsScript.RoundToPlay != 0)
 		{
 			Level = ButtonsScript.RoundToPlay - 1;
