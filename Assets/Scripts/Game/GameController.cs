@@ -299,4 +299,11 @@ public class GameController : MonoBehaviour
 		SceneManager.LoadScene("MainMenu");
 	}
 
+
+#if DEBUG
+	private void OnGUI()
+	{
+		GUILayout.Label(string.Format("Game Over: {0}\nRound Over: {1}", gameOver, roundWon));
+	}
+#endif
 }

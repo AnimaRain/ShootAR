@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23173616453199396}
   - component: {fileID: 114964183672774884}
   - component: {fileID: 54883796879106894}
+  - component: {fileID: 136045155009768204}
   m_Layer: 0
   m_Name: Drone
   m_TagString: Untagged
@@ -52,7 +53,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1025185535730270}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -16.746758, y: 12.557021, z: 15.797637}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4375857931890688}
@@ -146,3 +147,16 @@ MonoBehaviour:
   Explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
   Bullet: {fileID: 114740801551769738, guid: 29203ff5a97e7984db5f0e8ce8b82a8b, type: 2}
   BulletSpawnPoint: {fileID: 4375857931890688}
+--- !u!136 &136045155009768204
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1025185535730270}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.1488948
+  m_Height: 3.8727636
+  m_Direction: 2
+  m_Center: {x: -0.007229328, y: -0.18072414, z: 0.11566305}
