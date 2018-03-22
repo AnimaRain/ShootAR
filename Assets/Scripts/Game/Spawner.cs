@@ -18,8 +18,10 @@ public class Spawner : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public int SpawnCount;
-	public AudioClip SpawnSfx;
-	public GameObject Portal;
+	[SerializeField]
+	private AudioClip SpawnSfx;
+	[SerializeField]
+	private GameObject Portal;
 
 	private float x, z;
 	private AudioSource sfx;

@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class CameraScript : MonoBehaviour
 {
 
-    public RawImage Background;
+	[SerializeField]
+	private RawImage Background;
 
     private float h;
     private float v;

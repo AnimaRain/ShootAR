@@ -10,14 +10,15 @@ public class GameController : MonoBehaviour
 {
 	#region Definitions
 
-	public GameObject UICanvas;
-	public GameObject PauseCanvas;
-	[HideInInspector]
+	[SerializeField]
+	private GameObject UICanvas;
+	[SerializeField]
+	private GameObject PauseCanvas;
 	public WebCamTexture Cam;   //Rear Camera
-	[HideInInspector]
-	public bool arReady;
-	public Button FireButton;
-	public Bullet Bullet;
+	[SerializeField]
+	private Button FireButton;
+	[SerializeField]
+	private Bullet Bullet;
 	public Text CountText;
 	public Text CenterText;
 	public Text ButtonText;
@@ -27,15 +28,16 @@ public class GameController : MonoBehaviour
 	private Button PauseButton;
 	[HideInInspector]
 	public int Level;
-	public AudioClip WinSfx, PauseSfx;
+	[SerializeField]
+	private AudioClip WinSfx, PauseSfx;
 	private Dictionary<string, Spawner> Spawner;
 	private int Score;
 	private TVScript TVScreen;
 
 	[HideInInspector]
-	public bool roundWon;
+	public bool arReady;
 	[HideInInspector]
-	public bool gameOver;
+	public bool gameOver, roundWon;
 	private bool exitTap;
 	private Player player;
 	private AudioSource sfx;

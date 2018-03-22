@@ -2,8 +2,11 @@
 
 public class FitScript : MonoBehaviour
 {
-    public Camera cam;
-    public Transform planeObject;
+	[SerializeField]
+	private Camera cam;
+	[SerializeField]
+    private Transform planeObject;
+
     void Start()
     {
         var scale = planeObject.localScale;
