@@ -57,10 +57,11 @@ public class CameraScript : MonoBehaviour
 #endif
     }
 
-    private void OnGUI()
-    {
-#if DEBUG
-        GUILayout.Label(string.Format("Gyro attitude: {0}\nCamera attitude: {1}\nCamera local attitude: {2}", Input.gyro.attitude, transform.rotation, transform.localRotation));
-#endif
-    }
+//Debug: Camera rotation
+//    private void OnGUI()
+//    {
+//#if DEBUG
+//        GUILayout.Label(string.Format("Gyro attitude: {0}\nCamera attitude: {1}\nCamera local attitude: {2}", Input.gyro.attitude, transform.rotation, transform.localRotation));
+//#endif
+//    }
 }
