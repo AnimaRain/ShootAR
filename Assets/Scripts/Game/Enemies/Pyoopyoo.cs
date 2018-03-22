@@ -3,32 +3,25 @@
 /// <summary>
 /// Long-Ranged class of Enemy
 /// </summary>
-public class Pyoopyoo: Enemy
+public partial class Pyoopyoo : Enemy
 {
-    public EnemyBullet Bullet;
+	[SerializeField]
+	protected EnemyBullet Bullet;
 	/// <summary>
 	/// the position where the bullets will get fired from
 	/// </summary>
-	public Transform BulletSpawnPoint;
+	[SerializeField]
+	protected Transform BulletSpawnPoint;
 
-    private EnemyBullet firedBullet;
+	/// <summary>
+	/// The last bullet that was fired by this enemy
+	/// </summary>
+	protected EnemyBullet lastBullet;
 
-    protected virtual void Update()
-    {
-		/* TODO: Make AI decide when to shoot, how to move, and targeting
-         * the player.*/
-		//Debug
-		if (Time.realtimeSinceStartup >= 63) Shoot();
-    }
-
-
-    protected virtual void Shoot()
-    {
-        if (firedBullet == null)
-        {
-			sfx.Play();
-			firedBullet = Instantiate(Bullet, BulletSpawnPoint.localPosition, BulletSpawnPoint.localRotation);
-			firedBullet.Damage = Damage;
-		}
-    }
+	protected virtual void Shoot()
+	{
+		sfx.Play();
+		lastBullet = Instantiate(Bullet, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
+		lastBullet.Damage = Damage;
+	}
 }

@@ -39,17 +39,18 @@ public partial class Enemy : SpawnableObject
 		sfx.volume = 0.3f;
 		sfx.playOnAwake = false;
 		sfx.maxDistance = 10f;
-	}
-
-	protected virtual void Start()
-	{
 		ActiveCount++;
 		Count++;
 	}
 
-	protected virtual void FixedUpdate()
+	/// <summary>
+	/// Enemy moves towards a point using the physics engine.
+	/// </summary>
+	protected void MoveTo(Vector3 point)
 	{
-		OrbitAround(Vector3.zero);
+		transform.LookAt(point);
+		transform.forward = -transform.position;
+		GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 	}
 
 	protected virtual void OnDestroy()
