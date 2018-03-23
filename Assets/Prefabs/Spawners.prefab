@@ -147,6 +147,7 @@ MonoBehaviour:
   MinDistanceToSpawn: 25
   SpawnLimit: 0
   SpawnCount: 0
+  isSpawning: 0
   SpawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
   Portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
 --- !u!114 &114209767139158460
@@ -167,6 +168,7 @@ MonoBehaviour:
   MinDistanceToSpawn: 25
   SpawnLimit: 0
   SpawnCount: 0
+  isSpawning: 0
   SpawnSfx: {fileID: 0}
   Portal: {fileID: 0}
 --- !u!114 &114352869910997322
@@ -187,5 +189,6 @@ MonoBehaviour:
   MinDistanceToSpawn: 25
   SpawnLimit: 0
   SpawnCount: 0
+  isSpawning: 0
   SpawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
   Portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}

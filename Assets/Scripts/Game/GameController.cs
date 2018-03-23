@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
 	private GameObject UICanvas;
 	[SerializeField]
 	private GameObject PauseCanvas;
+	[HideInInspector]
 	public WebCamTexture Cam;   //Rear Camera
 	[SerializeField]
 	private Button FireButton;
@@ -149,7 +150,6 @@ public class GameController : MonoBehaviour
 			if (Spawner["Crasher"].SpawnCount == Spawner["Crasher"].SpawnLimit && Enemy.ActiveCount == 0)
 			{
 				roundWon = true;
-				gameOver = true;
 				CenterText.text = "Round Clear!";
 				sfx.PlayOneShot(WinSfx, 0.7f);
 				TVScreen.CloseTV();
@@ -161,7 +161,6 @@ public class GameController : MonoBehaviour
 			else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.ActiveCount > 0))
 			{
 				CenterText.text = "Rounds Survived : " + (Level - 1);
-				gameOver = true;
 				ClearLevel();
 				ButtonText.text = "Tap to continue";
 			}
@@ -258,18 +257,23 @@ public class GameController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Deactivates spawners, destroys all spawned objects.
-	/// Mainly used when a round ends.
+	/// Deactivates spawners, destroys all spawned objects and set game over state to true. 
 	/// </summary>
 	private void ClearLevel()
 	{
-		foreach (Spawner spawner in Spawner.Values)
-			spawner.StopCoroutine("Spawn");
+		gameOver = true;
 
-		Object[] objects = FindObjectsOfType<SpawnableObject>();
-		foreach (Object o in objects)
+		foreach (Spawner spawner in Spawner.Values)
 		{
-			Destroy(GameObject.Find(o.name));
+			StopCoroutine(nameof(spawner.Spawn));
+			spawner.isSpawning = false;
+			spawner.enabled = false;
+		}
+
+		SpawnableObject[] objects = FindObjectsOfType<SpawnableObject>();
+		foreach (SpawnableObject o in objects)
+		{
+			Destroy(o.gameObject);
 		}
 	}
 

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿//TO DO: Remove local variable temp
+
+using UnityEngine;
 using System.Collections;
 
 public class Spawner : MonoBehaviour
@@ -18,6 +20,8 @@ public class Spawner : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public int SpawnCount;
+	[HideInInspector]
+	public bool isSpawning;
 	[SerializeField]
 	private AudioClip SpawnSfx;
 	[SerializeField]
@@ -46,7 +50,8 @@ public class Spawner : MonoBehaviour
     /// <returns></returns>
     public IEnumerator Spawn()
     {
-		while (SpawnCount < SpawnLimit)
+		isSpawning = true;
+		while (isSpawning && SpawnCount < SpawnLimit)
 		{
             yield return new WaitForSeconds(RateOfSpawn);
             //The following do-while assigns random coordinates for the
@@ -60,27 +65,43 @@ public class Spawner : MonoBehaviour
             transform.localPosition = new Vector3(x, 0, z);
             transform.localRotation = Quaternion.LookRotation(-transform.localPosition);
 
-			//Spawn special effects
-			if (Portal !=null)
-				Instantiate(Portal, transform.localPosition, transform.localRotation);
-			if (SpawnSfx != null)
-				sfx.Play();
+			if (isSpawning)
+			{
+				//Spawn special effects
+				if (Portal != null)
+					Instantiate(Portal, transform.localPosition, transform.localRotation);
+				if (SpawnSfx != null)
+					sfx.Play();
 
-			var temp = Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);   //TO DO: Remove temp variable when debug is not needed any more.        
-            SpawnCount++;
+				var temp = Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
+				SpawnCount++;
+				if (SpawnCount == SpawnLimit) break;
 #if DEBUG
-            temp.name = ObjectToSpawn.name + SpawnCount;
+				temp.name = ObjectToSpawn.name + SpawnCount;
 #endif
+			}
         };
+		isSpawning = false;
     }
 
 	/// <summary>
 	/// Automatically start a Spawn coroutine after setting the spawn limit
 	/// </summary>
-	/// <param name="limit">Number of objects to spawn</param>
-	public void Spawn(int limit)
+	/// <param name="SpawnLimit">Number of objects to spawn</param>
+	public void Spawn(int SpawnLimit)
 	{
-		SpawnLimit = limit;
+		this.SpawnLimit = SpawnLimit;
 		StartCoroutine(Spawn());
+	}
+
+	/// <summary>
+	/// Automatically start a Spawn coroutine after setting the spawn limit
+	/// </summary>
+	/// <param name="SpawnLimit">Number of objects to spawn</param>
+	/// <param name="RateOfSpawn">The time in seconds to wait before each spawn</param>
+	public void Spawn(int SpawnLimit, float RateOfSpawn)
+	{
+		this.RateOfSpawn = RateOfSpawn;
+		Spawn(SpawnLimit);
 	}
 }

@@ -668,7 +668,6 @@ MonoBehaviour:
   UICanvas: {fileID: 1917753327}
   PauseCanvas: {fileID: 472218348}
   Cam: {fileID: 0}
-  arReady: 0
   FireButton: {fileID: 869210693}
   Bullet: {fileID: 114966587524179450, guid: 95057ef19f604694e91f6e666846db2f, type: 2}
   CountText: {fileID: 605862816}
@@ -680,8 +679,9 @@ MonoBehaviour:
   Level: 0
   WinSfx: {fileID: 8300000, guid: 25ec12bee3d72a8479e6c560cc1624ea, type: 3}
   PauseSfx: {fileID: 8300000, guid: 5feec34d02e08e24f83e43fafffb70d8, type: 3}
-  roundWon: 0
+  arReady: 0
   gameOver: 0
+  roundWon: 0
 --- !u!4 &540221806
 Transform:
   m_ObjectHideFlags: 0

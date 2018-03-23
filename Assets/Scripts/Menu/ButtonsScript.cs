@@ -1,7 +1,5 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
-using System;
-using UnityEngine.UI;
 
 public class ButtonsScript : MonoBehaviour {
 
