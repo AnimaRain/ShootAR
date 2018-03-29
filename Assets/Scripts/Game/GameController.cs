@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
 	public Text ScoreText;
 	public Text RoundText;
 	[SerializeField]
-	private Button PauseButton;
+	private Button PauseButton, ResumeButton;
 	[HideInInspector]
 	public int Level;
 	[SerializeField]
@@ -129,6 +129,7 @@ public class GameController : MonoBehaviour
 		CountText.text = "";
 		FireButton.onClick.AddListener(OnButtonDown);
 		PauseButton.onClick.AddListener(TogglePauseMenu);
+		ResumeButton.onClick.AddListener(TogglePauseMenu);
 		if (ButtonsScript.RoundToPlay != 0)
 		{
 			Level = ButtonsScript.RoundToPlay - 1;
