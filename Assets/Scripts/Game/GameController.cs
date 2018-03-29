@@ -148,7 +148,7 @@ public class GameController : MonoBehaviour
 		if (!gameOver)
 		{
 			//Round Won
-			if (Spawner["Crasher"].SpawnCount == Spawner["Crasher"].SpawnLimit && Enemy.ActiveCount == 0)
+			if (Spawner.ContainsKey(nameof(Crasher)) ? !Spawner["Crasher"].isSpawning : true && Enemy.ActiveCount == 0)
 			{
 				roundWon = true;
 				CenterText.text = "Round Clear!";
@@ -225,19 +225,17 @@ public class GameController : MonoBehaviour
 		TVScreen.Invoke("StartTV", 10);
 		foreach (var spawner in Spawner)
 		{
-			spawner.Value.SpawnCount = 0;
-
 			// Spawn Patterns
 			switch (spawner.Key.ToString())
 			{
 				case "Crasher":
-					spawner.Value.Spawn(4 * Level + 8);
+					spawner.Value.StartSpawning(4 * Level + 8);
 					break;
 				case "Drone":
-					spawner.Value.Spawn(3 * Level + 6);
+					spawner.Value.StartSpawning(3 * Level + 6);
 					break;
 				case "Capsule":
-					spawner.Value.Spawn(Level + 2);
+					spawner.Value.StartSpawning(Level + 2);
 					break;
 			}
 		}
@@ -266,9 +264,7 @@ public class GameController : MonoBehaviour
 
 		foreach (Spawner spawner in Spawner.Values)
 		{
-			StopCoroutine(nameof(spawner.Spawn));
-			spawner.isSpawning = false;
-			spawner.enabled = false;
+			spawner.StopSpawning();
 		}
 
 		SpawnableObject[] objects = FindObjectsOfType<SpawnableObject>();

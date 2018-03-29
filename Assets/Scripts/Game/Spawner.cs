@@ -16,16 +16,16 @@ public class Spawner : MonoBehaviour
     /// </summary>
     public int SpawnLimit;
     /// <summary>
-    /// Counts how many times ObjectToSpawn spawned.
+    /// Counts how many times ObjectToSpawn spawned. Resets every time StartSpawning is called.
     /// </summary>
     [HideInInspector]
-    public int SpawnCount;
+    public int spawnCount;
 	[HideInInspector]
 	public bool isSpawning;
 	[SerializeField]
-	private AudioClip SpawnSfx;
+	private AudioClip spawnSfx;
 	[SerializeField]
-	private GameObject Portal;
+	private GameObject portal;
 
 	private float x, z;
 	private AudioSource sfx;
@@ -35,10 +35,10 @@ public class Spawner : MonoBehaviour
     {
         SpawnLimit = -1;    //Initial value should not be 0 to refrain from enabling "Game Over" state when the game has just started.
 
-		if (SpawnSfx != null)
+		if (spawnSfx != null)
 		{
 			sfx = gameObject.AddComponent<AudioSource>();
-			sfx.clip = SpawnSfx;
+			sfx.clip = spawnSfx;
 			sfx.volume = 0.2f;
 		}
 	}
@@ -51,7 +51,7 @@ public class Spawner : MonoBehaviour
     public IEnumerator Spawn()
     {
 		isSpawning = true;
-		while (isSpawning && SpawnCount < SpawnLimit)
+		while (isSpawning && spawnCount < SpawnLimit)
 		{
             yield return new WaitForSeconds(RateOfSpawn);
             //The following do-while assigns random coordinates for the
@@ -68,30 +68,35 @@ public class Spawner : MonoBehaviour
 			if (isSpawning)
 			{
 				//Spawn special effects
-				if (Portal != null)
-					Instantiate(Portal, transform.localPosition, transform.localRotation);
-				if (SpawnSfx != null)
+				if (portal != null)
+					Instantiate(portal, transform.localPosition, transform.localRotation);
+				if (spawnSfx != null)
 					sfx.Play();
 
 				var temp = Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
-				SpawnCount++;
-				if (SpawnCount == SpawnLimit) break;
+				spawnCount++;
 #if DEBUG
-				temp.name = ObjectToSpawn.name + SpawnCount;
+				temp.name = ObjectToSpawn.name + spawnCount;
 #endif
 			}
         };
 		isSpawning = false;
     }
 
+	public void StartSpawning()
+	{
+		spawnCount = 0;
+		StartCoroutine(Spawn());
+	}
+	
 	/// <summary>
 	/// Automatically start a Spawn coroutine after setting the spawn limit
 	/// </summary>
 	/// <param name="SpawnLimit">Number of objects to spawn</param>
-	public void Spawn(int SpawnLimit)
+	public void StartSpawning(int SpawnLimit)
 	{
 		this.SpawnLimit = SpawnLimit;
-		StartCoroutine(Spawn());
+		StartSpawning();
 	}
 
 	/// <summary>
@@ -99,9 +104,15 @@ public class Spawner : MonoBehaviour
 	/// </summary>
 	/// <param name="SpawnLimit">Number of objects to spawn</param>
 	/// <param name="RateOfSpawn">The time in seconds to wait before each spawn</param>
-	public void Spawn(int SpawnLimit, float RateOfSpawn)
+	public void StartSpawning(int SpawnLimit, float RateOfSpawn)
 	{
 		this.RateOfSpawn = RateOfSpawn;
-		Spawn(SpawnLimit);
+		StartSpawning(SpawnLimit);
+	}
+
+	public void StopSpawning()
+	{
+		isSpawning = false;
+		StopCoroutine(Spawn());
 	}
 }
