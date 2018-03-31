@@ -14,6 +14,6 @@ public class Drone : Pyoopyoo
 
 	protected void FixedUpdate()
 	{
-		OrbitAround(Vector3.zero);
+		//OrbitAround();
 	}
 }

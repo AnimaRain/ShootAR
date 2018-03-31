@@ -43,16 +43,6 @@ public partial class Enemy : SpawnableObject
 		Count++;
 	}
 
-	/// <summary>
-	/// Enemy moves towards a point using the physics engine.
-	/// </summary>
-	protected void MoveTo(Vector3 point)
-	{
-		transform.LookAt(point);
-		transform.forward = -transform.position;
-		GetComponent<Rigidbody>().velocity = transform.forward * Speed;
-	}
-
 	protected virtual void OnDestroy()
 	{
 		if (!gameController.gameOver)
