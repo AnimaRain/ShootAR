@@ -21,7 +21,7 @@ public partial class Enemy : SpawnableObject
 	/// <summary>
 	/// The amount of damage the player recieves from this object's attack.
 	/// </summary>
-	[Range(-6, 6)]
+	[Range(-Player.HEALTH_MAX, Player.HEALTH_MAX)]
 	public int Damage;
 	[SerializeField] protected AudioClip AttackSfx;
 	[SerializeField] protected GameObject Explosion;

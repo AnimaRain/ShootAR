@@ -3,14 +3,19 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
-	[Range(0, 6)]
+	public const System.Byte HEALTH_MAX = 6;
+
+	[Range(0, HEALTH_MAX)]
 	public int Health;
 
 	private GameController gameController;
+	[SerializeField]
+	private GameObject[] healthIndicator = new GameObject[HEALTH_MAX];
 
 	private void Awake()
 	{
-		gameController = GetComponent<GameController>();
+		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+		UpdateHealth();
 	}
 
 	/// <summary>
@@ -20,10 +25,26 @@ public class Player : MonoBehaviour
 	public void LoseHealth(int damage)
 	{
 		Health -= damage;
+		UpdateHealth();
 
 		if (Health <= 0)
 		{
 			gameController.gameOver = true;
+		}
+	}
+
+	public void UpdateHealth()
+	{
+		for (int i = 0; i < healthIndicator.Length; i++)
+		{
+			if (i < Health)
+			{
+				healthIndicator[i].SetActive(true);
+			}
+			else
+			{
+				healthIndicator[i].SetActive(false);
+			}
 		}
 	}
 }
