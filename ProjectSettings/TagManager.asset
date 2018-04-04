@@ -8,6 +8,7 @@ TagManager:
   - Capsule
   - Remote
   - TVScreen
+  - GameManager
   layers:
   - Default
   - TransparentFX
