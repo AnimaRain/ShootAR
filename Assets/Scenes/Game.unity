@@ -466,7 +466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70a8b56573473c545861d66a2a8f85df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Background: {fileID: 183891069}
 --- !u!1 &291425442
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,24 +860,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 540221804}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49814e0675af5747a040d6c2f6aab75, type: 3}
+  m_Script: {fileID: 11500000, guid: 65a66110b9f002a4fbb0b5bda95f9729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UICanvas: {fileID: 1917753327}
-  PauseCanvas: {fileID: 472218348}
-  Cam: {fileID: 0}
-  FireButton: {fileID: 869210693}
-  Bullet: {fileID: 114966587524179450, guid: 95057ef19f604694e91f6e666846db2f, type: 2}
-  CountText: {fileID: 605862816}
-  CenterText: {fileID: 2044034911}
-  ButtonText: {fileID: 691084847}
-  ScoreText: {fileID: 1185042125}
-  RoundText: {fileID: 107753530}
-  PauseButton: {fileID: 2125751302}
-  ResumeButton: {fileID: 657967873}
-  Level: 0
-  WinSfx: {fileID: 8300000, guid: 25ec12bee3d72a8479e6c560cc1624ea, type: 3}
-  PauseSfx: {fileID: 8300000, guid: 5feec34d02e08e24f83e43fafffb70d8, type: 3}
+  fireButton: {fileID: 869210693}
+  bullet: {fileID: 114966587524179450, guid: 95057ef19f604694e91f6e666846db2f, type: 2}
+  pauseButton: {fileID: 2125751302}
+  resumeButton: {fileID: 657967873}
+  level: 0
+  winSfx: {fileID: 8300000, guid: 25ec12bee3d72a8479e6c560cc1624ea, type: 3}
   arReady: 0
   gameOver: 0
   roundWon: 0
@@ -906,6 +896,7 @@ GameObject:
   - component: {fileID: 563382495}
   - component: {fileID: 563382494}
   - component: {fileID: 563382493}
+  - component: {fileID: 563382492}
   m_Layer: 0
   m_Name: Background Camera
   m_TagString: Untagged
@@ -913,6 +904,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &563382492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 563382491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88aa38b01cc5c05459df3607495da97a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+  backgroundTexture: {fileID: 183891069}
 --- !u!124 &563382493
 Behaviour:
   m_ObjectHideFlags: 0
@@ -1356,8 +1360,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eecd18e273076e845ac6a48823b50fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoundOffPic: {fileID: 2100000, guid: 8b51105550a89464d929660419c7d94f, type: 2}
-  SoundOnPic: {fileID: 2100000, guid: 28e994b1d19a6c140a6cdb4d8471cf48, type: 2}
+  soundOffPic: {fileID: 0}
+  soundOnPic: {fileID: 0}
 --- !u!114 &798877908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2010,36 +2014,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114688883888379934, guid: 43a7f556013b93a45b49b1ccc85522f3,
-        type: 2}
-      propertyPath: healthIndicator.Array.data[0]
-      value: 
-      objectReference: {fileID: 1313024860}
-    - target: {fileID: 114688883888379934, guid: 43a7f556013b93a45b49b1ccc85522f3,
-        type: 2}
-      propertyPath: healthIndicator.Array.data[1]
-      value: 
-      objectReference: {fileID: 203830544}
-    - target: {fileID: 114688883888379934, guid: 43a7f556013b93a45b49b1ccc85522f3,
-        type: 2}
-      propertyPath: healthIndicator.Array.data[2]
-      value: 
-      objectReference: {fileID: 2121599048}
-    - target: {fileID: 114688883888379934, guid: 43a7f556013b93a45b49b1ccc85522f3,
-        type: 2}
-      propertyPath: healthIndicator.Array.data[3]
-      value: 
-      objectReference: {fileID: 1437842426}
-    - target: {fileID: 114688883888379934, guid: 43a7f556013b93a45b49b1ccc85522f3,
-        type: 2}
-      propertyPath: healthIndicator.Array.data[4]
-      value: 
-      objectReference: {fileID: 1667512432}
-    - target: {fileID: 114688883888379934, guid: 43a7f556013b93a45b49b1ccc85522f3,
-        type: 2}
-      propertyPath: healthIndicator.Array.data[5]
-      value: 
-      objectReference: {fileID: 469580677}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 43a7f556013b93a45b49b1ccc85522f3, type: 2}
   m_IsPrefabParent: 0
@@ -2784,10 +2758,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40aacb337ed3b9545a5066bae8a8d6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlackScreen: {fileID: 2100000, guid: 2bc7b7ec5942b3f478665400fb3262c1, type: 2}
-  StaticScreen: {fileID: 2100000, guid: 61dc8dadc160ab745ade34d690eaf521, type: 2}
-  TVRefreshTime: 10
-  tvon: 0
 --- !u!1 &1631474874
 GameObject:
   m_ObjectHideFlags: 0
@@ -3064,7 +3034,7 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 1
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 

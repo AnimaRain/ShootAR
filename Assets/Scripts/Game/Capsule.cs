@@ -1,14 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Capsule : SpawnableObject
 {
     private Vector3 rotation;
-	private AudioSource PickUpSfx;
+	private AudioSource pickUpSfx;
+
+	private GameManager gameManager;
+	private Text bulletCountText;
 
     protected void Start()
     {
         rotation = new Vector3(15, 30, 45);
-		PickUpSfx = GetComponent<AudioSource>();
+		pickUpSfx = GetComponent<AudioSource>();
+		bulletCountText = FindObjectOfType<UiManager>().bulletCountText;
     }
 
     private void Update()
@@ -16,25 +21,25 @@ public class Capsule : SpawnableObject
         //rotation
         transform.Rotate(rotation * Time.deltaTime);
 		//orbit
-		transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
+		transform.RotateAround(Vector3.zero, Vector3.up, speed * Time.deltaTime);
 	}
 
     protected void OnDestroy()
-    {
-        if (gameController != null)
+	{
+		if (gameManager != null)
         {
-            /* If a capsule is destroyed the player gains bullets.
-             * If it is is not destroyed at the end of the round, the game-
-             * controller destroys it and the player gains 50 points.*/
-            if (!gameController.gameOver)
+            /* If a capsule is destroyed, the player gains bullets.
+             * If it is is not destroyed at the end of the round, the GameController
+			 * destroys it and the player gains 50 points.*/
+            if (!gameManager.gameOver)
             {
-				Bullet.Count += 4;
-				gameController.CountText.text = Bullet.Count.ToString();
-				PickUpSfx.Play();
+				Bullet.count += 4;
+				bulletCountText.text = Bullet.count.ToString();
+				pickUpSfx.Play();
 			}
-            else if(gameController.roundWon)
+            else if(gameManager.roundWon)
             {
-                gameController.AddScore(50);
+                gameManager.AddScore(50);
             }
         }
     }

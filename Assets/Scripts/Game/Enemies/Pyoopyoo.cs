@@ -3,15 +3,13 @@
 /// <summary>
 /// Long-Ranged class of Enemy
 /// </summary>
-public partial class Pyoopyoo : Enemy
+public class Pyoopyoo : Enemy
 {
-	[SerializeField]
-	protected EnemyBullet Bullet;
+	[SerializeField] protected EnemyBullet bullet;
 	/// <summary>
 	/// the position where the bullets will get fired from
 	/// </summary>
-	[SerializeField]
-	protected Transform BulletSpawnPoint;
+	[SerializeField] protected Transform bulletSpawnPoint;
 
 	/// <summary>
 	/// The last bullet that was fired by this enemy
@@ -21,7 +19,7 @@ public partial class Pyoopyoo : Enemy
 	protected virtual void Shoot()
 	{
 		sfx.Play();
-		lastBullet = Instantiate(Bullet, BulletSpawnPoint.position, BulletSpawnPoint.rotation);
-		lastBullet.Damage = Damage;
+		lastBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+		lastBullet.damage = damage;
 	}
 }

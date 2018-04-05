@@ -5,39 +5,37 @@ public class Bullet : SpawnableObject
 	/// <summary>
 	/// Total count of spawned enemies during the current round.
 	/// </summary>
-	public static int Count;
+	public static int count;
 	/// <summary>
 	/// Count of currently active enemies.
 	/// </summary>
-	public static int ActiveCount;
-	private static TVScript TVScreen;
-    private static AudioSource ShotSfx;
+	public static int ActiveCount { get; private set; }
+	private static TvScript tvScreen;
+    private static AudioSource shotSfx;
+	private UnityEngine.UI.Text countText;
 
-    protected override void Awake()
-    {
-		if (Count < 0) Destroy(gameObject);
-
-		base.Awake();
-
-		if (TVScreen == null)
-			TVScreen = GameObject.FindGameObjectWithTag("TVScreen").GetComponent<TVScript>();
-		if (ShotSfx == null)
-			ShotSfx = GetComponent<AudioSource>();
+	protected void Awake()
+	{
+		if (count < 0) Destroy(gameObject);
 	}
 
-    protected void Start()
+	protected void Start()
     {
-        transform.rotation = Camera.main.transform.rotation;
+		if (tvScreen == null)
+			tvScreen = GameObject.FindGameObjectWithTag("TVScreen").GetComponent<TvScript>();
+		if (shotSfx == null)
+			shotSfx = GetComponent<AudioSource>();
+		transform.rotation = Camera.main.transform.rotation;
 		transform.position = Vector3.zero;
-		ShotSfx.Play();
-		GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+		shotSfx.Play();
+		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 
-		Count--;
+		count--;
 		ActiveCount++;
-		gameController.CountText.text = Count.ToString();
+		countText.text = count.ToString();
 	}
 
-	private void OnTriggerEnter(Collider col)
+	protected void OnTriggerEnter(Collider col)
     {
         if (col.CompareTag("Enemy") || col.CompareTag("Capsule"))
         {
@@ -46,13 +44,13 @@ public class Bullet : SpawnableObject
         }
         if (col.gameObject.tag == "Remote")
         {
-            if (TVScreen.tvon)
+            if (tvScreen.tvOn)
             {
-                TVScreen.CloseTV();
+                tvScreen.CloseTv();
             }
             else
             {
-                TVScreen.StartTV();
+                tvScreen.StartTv();
             }
         }
     }

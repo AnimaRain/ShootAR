@@ -140,13 +140,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c5425ae45efd514bad269f97f378170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 8
-  PointsValue: 120
-  Damage: 1
-  AttackSfx: {fileID: 8300000, guid: f1364d48e48ea4fdab44868cc9b2a10e, type: 3}
-  Explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
-  Bullet: {fileID: 114740801551769738, guid: 29203ff5a97e7984db5f0e8ce8b82a8b, type: 2}
-  BulletSpawnPoint: {fileID: 4375857931890688}
+  speed: 10
+  pointsValue: 120
+  damage: 1
+  attackSfx: {fileID: 8300000, guid: f1364d48e48ea4fdab44868cc9b2a10e, type: 3}
+  explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
+  bullet: {fileID: 114740801551769738, guid: 29203ff5a97e7984db5f0e8ce8b82a8b, type: 2}
+  bulletSpawnPoint: {fileID: 4375857931890688}
 --- !u!136 &136045155009768204
 CapsuleCollider:
   m_ObjectHideFlags: 1

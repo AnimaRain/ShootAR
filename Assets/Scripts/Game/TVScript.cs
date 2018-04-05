@@ -1,39 +1,40 @@
 ﻿using UnityEngine;
 
-public class TVScript : MonoBehaviour {
+public class TvScript : MonoBehaviour
+{
 
-    #region Definitions
-    public Material BlackScreen;
-    public Material StaticScreen;
-    public int TVRefreshTime;
-    public bool tvon;
-    private static GameController gameController;
-    #endregion
+	[SerializeField]
+	private Material blackScreen, staticScreen;
+	private int tvRefreshTime;
+	public bool tvOn;
 
-    private void Awake()
-    {
-        if (gameController == null)
-            gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-    }
+	private GameManager gameManager;
+	
 
-    private void Start()
-    {
-        Invoke("StartTV", TVRefreshTime);
-    }
+	private void Start()
+	{
+		gameManager = FindObjectOfType<GameManager>();
+		Invoke("StartTV", tvRefreshTime);
+	}
 
-    public void CloseTV()
-    {
-        GetComponent<Renderer>().material = BlackScreen;
-        CancelInvoke("StartTV");
-        if (!gameController.gameOver)
-        Invoke("StartTV", TVRefreshTime);
-        tvon = false;
-    }
+	private void Update()
+	{
+		//TODO: while not game over, if turned off, turn on.
+	}
 
-    public void StartTV()
-    {
-        GetComponent<Renderer>().material = StaticScreen;
-        CancelInvoke("StartTV");
-        tvon = true;
-    }
+	public void CloseTv()
+	{
+		GetComponent<Renderer>().material = blackScreen;
+		CancelInvoke("StartTV");
+		if (!gameManager.gameOver)
+			Invoke("StartTV", tvRefreshTime);
+		tvOn = false;
+	}
+
+	public void StartTv()
+	{
+		GetComponent<Renderer>().material = staticScreen;
+		CancelInvoke("StartTV");
+		tvOn = true;
+	}
 }

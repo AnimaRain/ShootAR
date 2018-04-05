@@ -2,7 +2,7 @@
 
 public class EnemyBullet : Boopboop
 {
-	private void Start()
+	protected override void Start()
 	{
 		MoveTo(Vector3.zero);
 	}

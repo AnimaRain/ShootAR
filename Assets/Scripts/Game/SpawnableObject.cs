@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+/// <inheritdoc />
 /// <summary>
 /// Parent class of spawnable objects.
 /// </summary>
@@ -8,15 +9,19 @@ public class SpawnableObject : MonoBehaviour
 	/// <summary>
 	/// The speed at which this object is moving.
 	/// </summary>
-	public float Speed;
+	public float speed;
 
-	protected GameController gameController;
+	public struct Orbit
+	{
 
-	protected virtual void Awake()
-    {
-        if (gameController == null)
-            gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-    }
+		public Vector3 direction, perpendicularAxis;
+
+		public Orbit(Vector3 direction, Vector3 perpendicularAxis)
+		{
+			this.direction = direction;
+			this.perpendicularAxis = perpendicularAxis;
+		}
+	}
 
 	/// <summary>
 	/// Enemy moves towards a point using the physics engine.
@@ -25,7 +30,7 @@ public class SpawnableObject : MonoBehaviour
 	{
 		transform.LookAt(point);
 		transform.forward = -transform.position;
-		GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+		GetComponent<Rigidbody>().velocity = transform.forward * speed;
 	}
 
 	/// <summary>
@@ -49,7 +54,7 @@ public class SpawnableObject : MonoBehaviour
 	protected void OrbitAround(Orbit orbit)
 	{
 		transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-		transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);
+		transform.RotateAround(orbit.direction, orbit.perpendicularAxis, speed * Time.deltaTime);
 #if DEBUG
 		Debug.DrawRay(orbit.direction, orbit.perpendicularAxis, Color.blue);
 		Debug.DrawLine(transform.position, orbit.direction);

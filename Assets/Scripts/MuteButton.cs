@@ -4,23 +4,23 @@ using UnityEngine.UI;
 public class MuteButton : MonoBehaviour
 {
 
-    public Material SoundOffPic;
-    public Material SoundOnPic;
-    public static bool SoundEnabled = true;
+    public Material soundOffPic;
+    public Material soundOnPic;
+    public static bool soundEnabled = true;
 
     public void SoundButton()
     {
-        if (SoundEnabled)
+        if (soundEnabled)
         {
-            GetComponent<Image>().material = SoundOffPic;
+            GetComponent<Image>().material = soundOffPic;
             AudioListener.volume = 0.0f;
-            SoundEnabled = false;
+            soundEnabled = false;
         }
         else
         {
-            GetComponent<Image>().material = SoundOnPic;
+            GetComponent<Image>().material = soundOnPic;
             AudioListener.volume = 1.0f;
-            SoundEnabled = true;
+            soundEnabled = true;
         }
     }
 }

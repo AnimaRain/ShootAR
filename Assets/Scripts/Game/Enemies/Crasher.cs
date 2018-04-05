@@ -2,7 +2,7 @@
 
 public class Crasher : Boopboop
 {
-	protected void Start()
+	protected override void Start()
 	{
 		MoveTo(Vector3.zero);
 	}

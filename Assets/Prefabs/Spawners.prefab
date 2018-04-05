@@ -140,16 +140,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectToSpawn: {fileID: 114964183672774884, guid: b61d74442990e8349b2ba008d9253c9c,
-    type: 2}
-  RateOfSpawn: 5
-  MaxDistanceToSpawn: 50
-  MinDistanceToSpawn: 25
-  SpawnLimit: 0
-  SpawnCount: 0
+  objectToSpawn: {fileID: 0}
+  rateOfSpawn: 10
+  maxDistanceToSpawn: 25
+  minDistanceToSpawn: 50
+  spawnLimit: 0
+  spawnCount: 0
   isSpawning: 0
-  SpawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
-  Portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
+  spawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
+  portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
 --- !u!114 &114209767139158460
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -161,16 +160,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectToSpawn: {fileID: 114786631525062386, guid: 16fc9f9a7572d884da8cbe81c7d11097,
-    type: 2}
-  RateOfSpawn: 15
-  MaxDistanceToSpawn: 50
-  MinDistanceToSpawn: 25
-  SpawnLimit: 0
-  SpawnCount: 0
+  objectToSpawn: {fileID: 0}
+  rateOfSpawn: 15
+  maxDistanceToSpawn: 25
+  minDistanceToSpawn: 50
+  spawnLimit: 0
+  spawnCount: 0
   isSpawning: 0
-  SpawnSfx: {fileID: 0}
-  Portal: {fileID: 0}
+  spawnSfx: {fileID: 0}
+  portal: {fileID: 0}
 --- !u!114 &114352869910997322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -182,13 +180,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectToSpawn: {fileID: 114196088740870168, guid: 571ea75721d2aa04fae67e4d0b6bdf91,
+  objectToSpawn: {fileID: 114196088740870168, guid: 571ea75721d2aa04fae67e4d0b6bdf91,
     type: 2}
-  RateOfSpawn: 3
-  MaxDistanceToSpawn: 50
-  MinDistanceToSpawn: 25
-  SpawnLimit: 0
-  SpawnCount: 0
+  rateOfSpawn: 3
+  maxDistanceToSpawn: 25
+  minDistanceToSpawn: 50
+  spawnLimit: 0
+  spawnCount: 0
   isSpawning: 0
-  SpawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
-  Portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
+  spawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
+  portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}

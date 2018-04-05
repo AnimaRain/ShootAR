@@ -1,36 +1,26 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class CameraScript : MonoBehaviour
 {
 
-	[SerializeField]
-	private RawImage Background;
-
-    private float h;
+	private float h;
     private float v;
-    private GameObject cameraContainer;     //The main camera rotates relative to this container.
-    private GameController gameController;
-#if UNITY_ANDROID
+	/// <summary>
+	/// The main camera rotates relative to this container.
+	/// </summary>
+	private GameObject cameraContainer;
+	/// <summary>
+	/// A rotation used to calibrate the phone's camera to the game's camera.
+	/// </summary>
 	private Quaternion calibrationRotation;
-#endif
 
-	void Awake()
+	private void Awake()
     {
-        if (gameController == null)
-            gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-
         cameraContainer = new GameObject("Camera Container");
     }
 
     private void Start()
     {
-        gameController.Cam.Play();
-        Background.texture = gameController.Cam;
-        Background.rectTransform.localEulerAngles = new Vector3(0, 0, gameController.Cam.videoRotationAngle);
-        float scaleY = gameController.Cam.videoVerticallyMirrored ? -1.0f : 1.0f;
-        Background.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
-
         cameraContainer.transform.SetPositionAndRotation(transform.position, transform.rotation);
         transform.SetParent(cameraContainer.transform);
         cameraContainer.transform.Rotate(90f, -90f, 0f);
@@ -39,7 +29,7 @@ public class CameraScript : MonoBehaviour
 #endif
 	}
 
-	void Update()
+	private void Update()
     {
 #if UNITY_ANDROID //Camera Control on Android
 

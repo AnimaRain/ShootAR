@@ -3,42 +3,42 @@ using UnityEngine;
 
 public class ButtonsScript : MonoBehaviour {
 
-    public GameObject MainMenu;
-    public GameObject CreditsMenu;
-    public GameObject StartMenu;
-    public GameObject RoundMenu;
-    public static int RoundToPlay;
+    public GameObject mainMenu;
+    public GameObject creditsMenu;
+    public GameObject startMenu;
+    public GameObject roundMenu;
+    public static int roundToPlay;
 
     public void ToStartMenu()
     {
-        MainMenu.SetActive(false);
-        StartMenu.SetActive(true);
+        mainMenu.SetActive(false);
+        startMenu.SetActive(true);
     }
 
-    public void GameStart(int Round)
+    public void GameStart(int round)
     {
-        RoundToPlay = Round;
+        roundToPlay = round;
         SceneManager.LoadScene("FreakyTVGame");
     }
 
     public void ToRoundSelect()
     {
-        MainMenu.SetActive(false);
-        RoundMenu.SetActive(true);
+        mainMenu.SetActive(false);
+        roundMenu.SetActive(true);
     }
 
     public void ToCredits()
     {
-        MainMenu.SetActive(false);
-        CreditsMenu.SetActive(true);
+        mainMenu.SetActive(false);
+        creditsMenu.SetActive(true);
     }
 
     public void ToMenu()
     {
-        CreditsMenu.SetActive(false);
-        StartMenu.SetActive(false);
-        RoundMenu.SetActive(false);
-        MainMenu.SetActive(true);
+        creditsMenu.SetActive(false);
+        startMenu.SetActive(false);
+        roundMenu.SetActive(false);
+        mainMenu.SetActive(true);
     }
 
     public void QuitApp()

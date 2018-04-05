@@ -1,6 +1,6 @@
 ﻿public class OrbitTester : SpawnableObject
 {
-	Orbit orbit;
+	private Orbit orbit;
 
 	private void Start()
 	{

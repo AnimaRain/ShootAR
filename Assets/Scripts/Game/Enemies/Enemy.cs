@@ -3,56 +3,61 @@
 /// <summary>
 /// Parent class of all types of enemies.
 /// </summary>
-public partial class Enemy : SpawnableObject
+public class Enemy : SpawnableObject
 {
 
 	/// <summary>
 	/// Total count of spawned enemies during the current round.
 	/// </summary>
-	public static int Count;
+	public static int count;
 	/// <summary>
 	/// Count of currently active enemies.
 	/// </summary>
-	public static int ActiveCount;
+	public static int activeCount;
 	/// <summary>
 	/// The amount of points added to the player's score when destroyed.
 	/// </summary>
-	public int PointsValue;
+	public int pointsValue;
 	/// <summary>
 	/// The amount of damage the player recieves from this object's attack.
 	/// </summary>
-	[Range(-Player.HEALTH_MAX, Player.HEALTH_MAX)]
-	public int Damage;
-	[SerializeField] protected AudioClip AttackSfx;
-	[SerializeField] protected GameObject Explosion;
+	[Range(-Player.HealthMax, Player.HealthMax)]
+	public int damage;
+	[SerializeField] protected AudioClip attackSfx;
+	[SerializeField] protected GameObject explosion;
 
 	protected AudioSource sfx;
+	protected static GameManager gameManager;
 
 
-	protected override void Awake()
+	protected void Awake()
 	{
-		base.Awake();
+		activeCount++;
+		count++;
+	}
 
+	protected virtual void Start()
+	{
 		//Create an audio source to play the audio clips
 		sfx = gameObject.AddComponent<AudioSource>();
-		sfx.clip = AttackSfx;
+		sfx.clip = attackSfx;
 		sfx.volume = 0.3f;
 		sfx.playOnAwake = false;
 		sfx.maxDistance = 10f;
-		ActiveCount++;
-		Count++;
+
+		if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
 	}
 
 	protected virtual void OnDestroy()
 	{
-		if (!gameController.gameOver)
+		if (!gameManager.gameOver)
 		{
-			gameController.AddScore(PointsValue);
+			gameManager.AddScore(pointsValue);
 
 			//Explosion special effects
-			Instantiate(Explosion, transform.position, transform.rotation);
+			Instantiate(explosion, transform.position, transform.rotation);
 		}
-		ActiveCount--;
+		activeCount--;
 	}
 
 }

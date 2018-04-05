@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class Drone : Pyoopyoo
+﻿public class Drone : Pyoopyoo
 {
 	private const float ShootDelay = 5f;
 
@@ -8,7 +6,7 @@ public class Drone : Pyoopyoo
 	{
 		if (lastBullet == null)
 		{
-			Invoke(nameof(Shoot), 5f);
+			Invoke(nameof(Shoot), ShootDelay);
 		}
 	}
 

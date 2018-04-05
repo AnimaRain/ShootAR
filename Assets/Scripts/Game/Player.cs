@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Player : MonoBehaviour
 {
-	public const System.Byte HEALTH_MAX = 6;
+	public const byte HealthMax = 6;
 
-	[Range(0, HEALTH_MAX)]
-	public int Health;
-
-	private GameController gameController;
+	[Range(0, HealthMax)]
+	public int health;
 	[SerializeField]
-	private GameObject[] healthIndicator = new GameObject[HEALTH_MAX];
+	private readonly GameObject[] healthIndicator = new GameObject[HealthMax];
 
-	private void Awake()
+	private GameManager gameManager;
+
+	private void Start()
 	{
-		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+		gameManager = FindObjectOfType<GameManager>();
+
 		UpdateHealth();
 	}
 
@@ -24,12 +24,12 @@ public class Player : MonoBehaviour
 	/// </summary>
 	public void LoseHealth(int damage)
 	{
-		Health -= damage;
+		health -= damage;
 		UpdateHealth();
 
-		if (Health <= 0)
+		if (health <= 0)
 		{
-			gameController.gameOver = true;
+			gameManager.gameOver = true;
 		}
 	}
 
@@ -37,14 +37,11 @@ public class Player : MonoBehaviour
 	{
 		for (int i = 0; i < healthIndicator.Length; i++)
 		{
-			if (i < Health)
-			{
-				healthIndicator[i].SetActive(true);
-			}
-			else
-			{
-				healthIndicator[i].SetActive(false);
-			}
+			/*TODO: Take note -> the if-statement was changed to the boolean parameter.
+			 * got rid of the if-else and replaced it with a single line.
+			 */
+
+			healthIndicator[i].SetActive(i < health);
 		}
 	}
 }

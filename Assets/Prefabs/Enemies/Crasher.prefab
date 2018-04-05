@@ -1727,11 +1727,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c683ecfd2dc1bc4a8fdaa3a57d81700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 20
-  PointsValue: 100
-  Damage: 1
-  AttackSfx: {fileID: 8300000, guid: f605ad8805174674cb46f8a4f140baca, type: 3}
-  Explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
+  speed: 10
+  pointsValue: 100
+  damage: 1
+  attackSfx: {fileID: 0}
+  explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
 --- !u!136 &136608325998891070
 CapsuleCollider:
   m_ObjectHideFlags: 1
