@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+#pragma warning disable 649	//the unassigned fields are actually assigned in Unity Editor
+
 public class Background : MonoBehaviour
 {
 	[HideInInspector] public WebCamTexture cam;   //Rear Camera
