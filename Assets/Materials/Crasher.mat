@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: char_enemy_robot
+  m_Name: Crasher
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: TCP2_COLORS_AS_NORMALS TCP2_RAMPTEXT TCP2_SPEC_TOON _EMISSION
   m_LightmapFlags: 1
