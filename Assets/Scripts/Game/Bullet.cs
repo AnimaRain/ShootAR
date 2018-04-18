@@ -12,7 +12,7 @@ public class Bullet : SpawnableObject
 	/// Count of currently active enemies.
 	/// </summary>
 	public static int ActiveCount { get; private set; }
-	private static TvScript tvScreen;
+	private static TVScript tvScreen;
     private static AudioSource shotSfx;
 	private UnityEngine.UI.Text countText;
 
@@ -24,7 +24,7 @@ public class Bullet : SpawnableObject
 	protected void Start()
     {
 		if (tvScreen == null)
-			tvScreen = GameObject.FindGameObjectWithTag("TVScreen").GetComponent<TvScript>();
+			tvScreen = GameObject.FindGameObjectWithTag("TVScreen").GetComponent<TVScript>();
 		if (shotSfx == null)
 			shotSfx = GetComponent<AudioSource>();
 		transform.rotation = Camera.main.transform.rotation;
@@ -48,11 +48,11 @@ public class Bullet : SpawnableObject
         {
             if (tvScreen.tvOn)
             {
-                tvScreen.CloseTv();
+                tvScreen.CloseTV();
             }
             else
             {
-                tvScreen.StartTv();
+                tvScreen.StartTV();
             }
         }
     }

@@ -2,7 +2,7 @@
 
 #pragma warning disable 649	//the unassigned fields are actually assigned in Unity Editor
 
-public class TvScript : MonoBehaviour
+public class TVScript : MonoBehaviour
 {
 
 	[SerializeField]
@@ -24,7 +24,7 @@ public class TvScript : MonoBehaviour
 		//TODO: while not game over, if turned off, turn on.
 	}
 
-	public void CloseTv()
+	public void CloseTV()
 	{
 		GetComponent<Renderer>().material = blackScreen;
 		CancelInvoke("StartTV");
@@ -33,7 +33,7 @@ public class TvScript : MonoBehaviour
 		tvOn = false;
 	}
 
-	public void StartTv()
+	public void StartTV()
 	{
 		GetComponent<Renderer>().material = staticScreen;
 		CancelInvoke("StartTV");

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class UiManager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
 	public delegate void GuiUpdateHandler();
 	public event GuiUpdateHandler UpdateGui;

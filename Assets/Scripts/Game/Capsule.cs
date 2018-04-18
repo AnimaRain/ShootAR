@@ -13,7 +13,7 @@ public class Capsule : SpawnableObject
     {
         rotation = new Vector3(15, 30, 45);
 		pickUpSfx = GetComponent<AudioSource>();
-		bulletCountText = FindObjectOfType<UiManager>().bulletCountText;
+		bulletCountText = FindObjectOfType<UIManager>().bulletCountText;
     }
 
     private void Update()

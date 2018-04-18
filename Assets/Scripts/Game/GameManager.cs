@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-	#region Definitions
-
 	private const float ShotCooldown = 0.35f;
 
 	public delegate void GameOver();
@@ -22,7 +20,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private AudioClip winSfx;
 	private Dictionary<string, Spawner> spawner;
 	private int score;
-	private TvScript tvScreen;
+	private TVScript tvScreen;
 
 	[HideInInspector] public bool gameOver, roundWon;
 	private bool exitTap;
@@ -30,15 +28,13 @@ public class GameManager : MonoBehaviour
 	private AudioSource sfx;
 	private float nextFire;
 
-	private UiManager ui;
+	private UIManager ui;
 	private WebCamTexture cam;
-
-	#endregion
 
 
 	private void Awake()
 	{
-		ui = GameObject.Find("UIManager").GetComponent<UiManager>();
+		ui = GameObject.Find("UIManager").GetComponent<UIManager>();
 
 #if UNITY_ANDROID
 
@@ -90,7 +86,7 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		if (tvScreen == null) tvScreen = GameObject.Find("TVScreen").GetComponent<TvScript>();
+		if (tvScreen == null) tvScreen = GameObject.Find("TVScreen").GetComponent<TVScript>();
 		ui.buttonText.text = "";
 		ui.centerText.text = "";
 		ui.bulletCountText.text = "";
@@ -118,7 +114,7 @@ public class GameManager : MonoBehaviour
 				roundWon = true;
 				ui.centerText.text = "Round Clear!";
 				sfx.PlayOneShot(winSfx, 0.7f);
-				tvScreen.CloseTv();
+				tvScreen.CloseTV();
 				ClearScene();
 				ui.buttonText.text = "Tap to continue";
 			}
