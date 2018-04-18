@@ -10,7 +10,7 @@ public class Boopboop : Enemy
 		if (other.CompareTag("Player"))
 		{
 			sfx.Play();
-			other.SendMessage("LoseHealth", damage);
+			other.GetComponent<Player>().Health -= damage;
 		}
 	}
 }

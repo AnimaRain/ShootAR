@@ -2,12 +2,12 @@
 
 public class Player : MonoBehaviour
 {
-	public const byte HealthMax = 6;
-
-	[Range(0, HealthMax)]
-	public int health;
+	public const sbyte HealthMax = 6;
 	[SerializeField]
 	private readonly GameObject[] healthIndicator = new GameObject[HealthMax];
+
+	[Range(0, HealthMax),SerializeField]
+	private int health;
 
 	private GameManager gameManager;
 
@@ -15,25 +15,37 @@ public class Player : MonoBehaviour
 	{
 		gameManager = FindObjectOfType<GameManager>();
 
-		UpdateHealth();
+		UpdateHealthUI();
 	}
 
 	/// <summary>
-	/// Player's health decreases by the designated amount.
-	/// If heatlh reaches zero, the game is over. Negative value restores.
+	/// Player's health. It 
+	/// If heatlh reaches zero, the game is over.
 	/// </summary>
-	public void LoseHealth(int damage)
+	public int Health
 	{
-		health -= damage;
-		UpdateHealth();
 
-		if (health <= 0)
+		get
 		{
-			gameManager.gameOver = true;
+			return health;
+		}
+
+		set
+		{
+			health = value;
+			if (health <= 0)
+			{
+				health = 0;
+				gameManager.gameOver = true;
+			}
+			else if (health > 6)
+				health = 6;
+
+			UpdateHealthUI();
 		}
 	}
 
-	public void UpdateHealth()
+	public void UpdateHealthUI()
 	{
 		for (int i = 0; i < healthIndicator.Length; i++)
 		{

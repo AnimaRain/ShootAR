@@ -91,11 +91,14 @@ public class GameManager : MonoBehaviour
 		ui.centerText.text = "";
 		ui.bulletCountText.text = "";
 		fireButton.onClick.AddListener(OnButtonDown);
-		if (ButtonsScript.roundToPlay != 0)
+
+		//if player chose to start from a higher level, assign that level
+		int roundToPlay = FindObjectOfType<MenuManager>().RoundToPlay;
+		if (roundToPlay > 0)
 		{
-			level = ButtonsScript.roundToPlay - 1;
-			ButtonsScript.roundToPlay = 0;
+			level = roundToPlay - 1;
 		}
+
 		if (!exitTap)
 		{
 			AdvanceLevel();
@@ -120,7 +123,7 @@ public class GameManager : MonoBehaviour
 			}
 
 			//Defeat
-			else if (player.health == 0 || (Bullet.ActiveCount == 0 && Bullet.count == 0 && Enemy.activeCount > 0))
+			else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.count == 0 && Enemy.activeCount > 0))
 			{
 				ui.centerText.text = "Rounds Survived : " + (level - 1);
 				ClearScene();
@@ -158,7 +161,7 @@ public class GameManager : MonoBehaviour
 			if (gameOver)
 			{
 				//Defeat, tap to restart
-				if (Bullet.count == 0 || player.health <= 0)
+				if (Bullet.count == 0 || player.Health <= 0)
 				{
 					cam.Stop();
 					SceneManager.LoadScene(1);
