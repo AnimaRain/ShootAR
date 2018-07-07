@@ -5,8 +5,8 @@ using System.Collections;
 
 public class Spawner : MonoBehaviour
 {
-    public SpawnableObject objectToSpawn;
-    public float rateOfSpawn;
+    public readonly SpawnableObject ObjectToSpawn;
+    public float RateOfSpawn;
     /// <summary>
     /// Distance away from player.
     /// </summary>
@@ -14,14 +14,14 @@ public class Spawner : MonoBehaviour
     /// <summary>
     /// Number Of ObjectToSpawn objects to spawn.
     /// </summary>
-    [HideInInspector] public int spawnLimit;
+    [HideInInspector] public int SpawnLimit;
     /// <summary>
     /// Counts how many times ObjectToSpawn spawned. Resets every time StartSpawning is called.
     /// </summary>
-    [HideInInspector] public int spawnCount;
-	[HideInInspector] public bool isSpawning;
-	[SerializeField] private AudioClip spawnSfx;
-	[SerializeField] private GameObject portal;
+    [HideInInspector] public int SpawnCount;
+	[HideInInspector] public bool IsSpawning;
+	[SerializeField] private readonly AudioClip spawnSfx;
+	[SerializeField] private readonly GameObject portal;
 
 	private float x, z;
 	private AudioSource sfx;
@@ -29,7 +29,7 @@ public class Spawner : MonoBehaviour
 
 	private void Awake()
     {
-        spawnLimit = -1;    //Initial value should not be 0 to refrain from enabling "Game Over" state when the game has just started.
+        SpawnLimit = -1;    //Initial value should not be 0 to refrain from enabling "Game Over" state when the game has just started.
 
 		if (spawnSfx != null)
 		{
@@ -46,10 +46,14 @@ public class Spawner : MonoBehaviour
     /// <returns></returns>
     public IEnumerator Spawn()
     {
-		isSpawning = true;
-		while (isSpawning && spawnCount < spawnLimit)
+		IsSpawning = true;
+		/* IsSpawning is checked in the while-condition function, in case
+		 * StopSpawning() is called while being in the in the middle of 
+		 * the iteration;
+		 */
+		while (IsSpawning && SpawnCount < SpawnLimit)
 		{
-            yield return new WaitForSeconds(rateOfSpawn);
+            yield return new WaitForSeconds(RateOfSpawn);
             //The following do-while assigns random coordinates for the
             //next spawn according to the defined range. Then, the object's
             //rotation is set towards the player and spawns the object.
@@ -61,7 +65,7 @@ public class Spawner : MonoBehaviour
             transform.localPosition = new Vector3(x, 0, z);
             transform.localRotation = Quaternion.LookRotation(-transform.localPosition);
 
-			if (isSpawning)
+			if (IsSpawning)
 			{
 				//Spawn special effects
 				if (portal != null)
@@ -69,19 +73,19 @@ public class Spawner : MonoBehaviour
 				if (spawnSfx != null)
 					sfx.Play();
 
-				var temp = Instantiate(objectToSpawn, transform.localPosition, transform.localRotation);
-				spawnCount++;
+				var temp = Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
+				SpawnCount++;
 #if DEBUG
-				temp.name = objectToSpawn.name + spawnCount;
+				temp.name = ObjectToSpawn.name + SpawnCount;
 #endif
 			}
         }
-		isSpawning = false;
+		IsSpawning = false;
     }
 
 	public void StartSpawning()
 	{
-		spawnCount = 0;
+		SpawnCount = 0;
 		StartCoroutine(Spawn());
 	}
 	
@@ -91,7 +95,7 @@ public class Spawner : MonoBehaviour
 	/// <param name="spawnLimit">Number of objects to spawn</param>
 	public void StartSpawning(int spawnLimit)
 	{
-		this.spawnLimit = spawnLimit;
+		this.SpawnLimit = spawnLimit;
 		StartSpawning();
 	}
 
@@ -102,13 +106,13 @@ public class Spawner : MonoBehaviour
 	/// <param name="rateOfSpawn">The time in seconds to wait before each spawn</param>
 	public void StartSpawning(int spawnLimit, float rateOfSpawn)
 	{
-		this.rateOfSpawn = rateOfSpawn;
+		this.RateOfSpawn = rateOfSpawn;
 		StartSpawning(spawnLimit);
 	}
 
 	public void StopSpawning()
 	{
-		isSpawning = false;
+		IsSpawning = false;
 		StopCoroutine(Spawn());
 	}
 }

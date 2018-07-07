@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿/* TODO: Check healthIndicator if any changes are needed; I'm not quite happy with 
+ * the way it is right now. Maybe it should be declared readonly. */
+
+using UnityEngine;
 
 public class Player : MonoBehaviour
 {
 	public const sbyte HealthMax = 6;
 	[SerializeField]
-	private readonly GameObject[] healthIndicator = new GameObject[HealthMax];
+	private GameObject[] healthIndicator = new GameObject[HealthMax];
 
 	[Range(0, HealthMax),SerializeField]
 	private int health;
@@ -19,8 +22,8 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Player's health. It 
-	/// If heatlh reaches zero, the game is over.
+	/// Player's health. (range: 0-6)
+	/// If heatlh drops to zero, the game is over.
 	/// </summary>
 	public int Health
 	{
@@ -32,15 +35,8 @@ public class Player : MonoBehaviour
 
 		set
 		{
-			health = value;
-			if (health <= 0)
-			{
-				health = 0;
-				gameManager.gameOver = true;
-			}
-			else if (health > 6)
-				health = 6;
-
+			health = Mathf.Clamp(health + value, 0, 6);
+			if (health == 0) gameManager.gameOver = true;
 			UpdateHealthUI();
 		}
 	}
@@ -49,8 +45,8 @@ public class Player : MonoBehaviour
 	{
 		for (int i = 0; i < healthIndicator.Length; i++)
 		{
-			/*TODO: Take note -> the if-statement was changed to the boolean parameter.
-			 * got rid of the if-else and replaced it with a single line.
+			/* TODO: Take note -> the if-statement was changed to the boolean
+			 * parameter. Got rid of the if-else and replaced it with a single line.
 			 */
 
 			healthIndicator[i].SetActive(i < health);

@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
 		{
 			foreach (Spawner spawner in spawners)
 			{
-				string type = spawner.objectToSpawn.name;
+				string type = spawner.ObjectToSpawn.name;
 				this.spawner.Add(type, spawner);
 			}
 		}
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
 		if (!gameOver)
 		{
 			//Round Won
-			if (spawner.ContainsKey(nameof(Crasher)) ? !spawner["Crasher"].isSpawning : true && Enemy.activeCount == 0)
+			if (spawner.ContainsKey(nameof(Crasher)) ? !spawner["Crasher"].IsSpawning : true && Enemy.activeCount == 0)
 			{
 				roundWon = true;
 				ui.centerText.text = "Round Clear!";
