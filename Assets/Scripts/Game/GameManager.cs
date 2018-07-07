@@ -13,23 +13,24 @@ public class GameManager : MonoBehaviour
 	public delegate void GameOver();
 	public event GameOver OnGameOver;
 
-	[SerializeField] private Button fireButton;
 	[SerializeField] private Bullet bullet;
-	[SerializeField] private Button pauseButton, resumeButton;
 	[HideInInspector] public int level;
 	[SerializeField] private AudioClip winSfx;
 	private Dictionary<string, Spawner> spawner;
 	private int score;
-	private TVScript tvScreen;
-
 	[HideInInspector] public bool gameOver, roundWon;
 	private bool exitTap;
-	private Player player;
 	private AudioSource sfx;
 	private float nextFire;
 
-	private UIManager ui;
-	private WebCamTexture cam;
+	#region Dependencies
+	[SerializeField] private Button fireButton;
+	[SerializeField] private Button pauseButton, resumeButton;
+	[SerializeField] private UIManager ui;
+	[SerializeField] private WebCamTexture cam;
+	[SerializeField] private Player player;
+	private TVScript tvScreen;
+	#endregion
 
 
 	private void Awake()
@@ -53,22 +54,18 @@ public class GameManager : MonoBehaviour
 		}
 #endif
 
-		//TODO: Add if cam == null code here
-
-		cam = FindObjectOfType<Background>().cam;
-
 		/* Create a dictionary of all spawners by setting the name of
          * their assigned ObjectToSpawn as a key and the spawner itself
          * as the value.*/
 		spawner = new Dictionary<string, Spawner>();
-		Spawner[] spawnerParent = GameObject.Find("Spawners").GetComponentsInChildren<Spawner>();
-		if (spawnerParent == null)
+		Spawner[] spawners = FindObjectsOfType<Spawner>();
+		if (spawners == null)
 		{
-			Debug.LogError("Could not find Object \"Spawners\" or no Spawner scripts where attached to it.");
+			Debug.LogError("Could not find objects of type \"Spawner\".");
 		}
 		else
 		{
-			foreach (Spawner spawner in spawnerParent)
+			foreach (Spawner spawner in spawners)
 			{
 				string type = spawner.objectToSpawn.name;
 				this.spawner.Add(type, spawner);
@@ -93,7 +90,7 @@ public class GameManager : MonoBehaviour
 		fireButton.onClick.AddListener(OnButtonDown);
 
 		//if player chose to start from a higher level, assign that level
-		int roundToPlay = FindObjectOfType<MenuManager>().RoundToPlay;
+		int roundToPlay = FindObjectOfType<RoundSelectMenu>().RoundToPlay;
 		if (roundToPlay > 0)
 		{
 			level = roundToPlay - 1;

@@ -9,5 +9,5 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 57233f249101c584a8b51020af69feef
   - enabled: 1
-    path: Assets/Scenes/FreakyTVGame.unity
+    path: Assets/Scenes/Game.unity
     guid: 6c2cabc13831c07459a9b6839d939595

@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 318353440}
   - component: {fileID: 318353439}
   m_Layer: 0
-  m_Name: CapsuleSpawner
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,12 +142,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectToSpawn: {fileID: 114786631525062386, guid: 16fc9f9a7572d884da8cbe81c7d11097,
-    type: 2}
-  RateOfSpawn: 15
-  MaxDistanceToSpawn: 50
-  MinDistanceToSpawn: 25
-  SpawnLimit: 0
+  objectToSpawn: {fileID: 0}
+  rateOfSpawn: 0
+  maxDistanceToSpawn: 0
+  minDistanceToSpawn: 0
+  spawnLimit: 0
   spawnCount: 0
   isSpawning: 0
   spawnSfx: {fileID: 0}
@@ -398,6 +397,15 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 4300034, guid: 23b2bd5ac12bffc4fb73d4fc9e07648f, type: 3}
+    - target: {fileID: 1754492830151452, guid: b058dd71ac564dd4e9ed8f3c5b93cef0, type: 2}
+      propertyPath: m_Name
+      value: TestObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 23341989244412532, guid: b058dd71ac564dd4e9ed8f3c5b93cef0,
+        type: 2}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114362330958593368, guid: b058dd71ac564dd4e9ed8f3c5b93cef0, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: b058dd71ac564dd4e9ed8f3c5b93cef0, type: 2}
@@ -418,4 +426,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2cca20c5d30bbd43821cae9511a333c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
+  speed: 10
