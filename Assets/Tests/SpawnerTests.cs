@@ -2,6 +2,7 @@
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
+using ShootAR;
 
 public class SpawnerTests {
 
@@ -9,10 +10,11 @@ public class SpawnerTests {
 	public IEnumerator SpawnerStopsWhenLimitReached() {
 
 		Spawner spawner = new GameObject("Spawner").AddComponent<Spawner>();
-		var objectToSpawn = new GameObject("SpawnableObject").AddComponent<Spawnable>();
-		var spawnLimit = 5;
-		var spawnRate = 1;
-		spawner.Initialize(objectToSpawn, spawnLimit, spawnRate);
+		spawner.Initialize(
+			objectToSpawn: new GameObject("SpawnableObject").AddComponent<SpawnableObject>(),
+			spawnLimit: 5,
+			spawnRate: 1
+		);
 
 		spawner.StartSpawning();
 		yield return new WaitUntil(() => spawner.SpawnCount == spawner.SpawnLimit);
@@ -25,15 +27,16 @@ public class SpawnerTests {
 	public IEnumerator SpawnerSpawnsTheCorrectNumberOfObjects()
 	{
 		Spawner spawner = new GameObject("Spawner").AddComponent<Spawner>();
-		var objectToSpawn = new GameObject("SpawnableObject").AddComponent<Spawnable>();
-		var spawnLimit = 5;
-		var spawnRate = 1;
-		spawner.Initialize(objectToSpawn, spawnLimit, spawnRate);
+		spawner.Initialize(
+			objectToSpawn: new GameObject("SpawnableObject").AddComponent<SpawnableObject>(),
+			spawnLimit: 5,
+			spawnRate: 1
+		);
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
 
-		int numberOfSpawned = Object.FindObjectsOfType<Spawnable>().Length - 1;
+		int numberOfSpawned = Object.FindObjectsOfType<SpawnableObject>().Length - 1;
 		Assert.AreEqual(5, numberOfSpawned, "Spawned 5 objects as expected.");
 	}
 }

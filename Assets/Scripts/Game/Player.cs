@@ -3,53 +3,56 @@
 
 using UnityEngine;
 
-public class Player : MonoBehaviour
+namespace ShootAR
 {
-	public const sbyte HealthMax = 6;
-	[SerializeField]
-	private GameObject[] healthIndicator = new GameObject[HealthMax];
-
-	[Range(0, HealthMax),SerializeField]
-	private int health;
-
-	private GameManager gameManager;
-
-	private void Start()
+	public class Player : MonoBehaviour
 	{
-		gameManager = FindObjectOfType<GameManager>();
+		public const sbyte HealthMax = 6;
+		[SerializeField]
+		private GameObject[] healthIndicator = new GameObject[HealthMax];
 
-		UpdateHealthUI();
-	}
+		[Range(0, HealthMax), SerializeField]
+		private int health;
 
-	/// <summary>
-	/// Player's health. (range: 0-6)
-	/// If heatlh drops to zero, the game is over.
-	/// </summary>
-	public int Health
-	{
+		private GameManager gameManager;
 
-		get
+		private void Start()
 		{
-			return health;
-		}
+			gameManager = FindObjectOfType<GameManager>();
 
-		set
-		{
-			health = Mathf.Clamp(health + value, 0, 6);
-			if (health == 0) gameManager.gameOver = true;
 			UpdateHealthUI();
 		}
-	}
 
-	public void UpdateHealthUI()
-	{
-		for (int i = 0; i < healthIndicator.Length; i++)
+		/// <summary>
+		/// Player's health. (range: 0-6)
+		/// If heatlh drops to zero, the game is over.
+		/// </summary>
+		public int Health
 		{
-			/* TODO: Take note -> the if-statement was changed to the boolean
-			 * parameter. Got rid of the if-else and replaced it with a single line.
-			 */
 
-			healthIndicator[i].SetActive(i < health);
+			get
+			{
+				return health;
+			}
+
+			set
+			{
+				health = Mathf.Clamp(health + value, 0, 6);
+				if (health == 0) gameManager.gameOver = true;
+				UpdateHealthUI();
+			}
+		}
+
+		public void UpdateHealthUI()
+		{
+			for (int i = 0; i < healthIndicator.Length; i++)
+			{
+				/* TODO: Take note -> the if-statement was changed to the boolean
+				 * parameter. Got rid of the if-else and replaced it with a single line.
+				 */
+
+				healthIndicator[i].SetActive(i < health);
+			}
 		}
 	}
 }

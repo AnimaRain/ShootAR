@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Short-Ranged class of Enemy
-/// </summary>
-public class Boopboop : Enemy
+namespace ShootAR.Enemies
 {
-	protected virtual void OnTriggerEnter(Collider other)
+	/// <summary>
+	/// Short-Ranged class of Enemy
+	/// </summary>
+	public class Boopboop : Enemy
 	{
-		if (other.CompareTag("Player"))
+		protected virtual void OnTriggerEnter(Collider other)
 		{
-			sfx.Play();
-			other.GetComponent<Player>().Health -= damage;
+			if (other.CompareTag("Player"))
+			{
+				sfx.Play();
+				other.GetComponent<Player>().Health -= damage;
+			}
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿public class OrbitTester : SpawnableObject
+﻿using ShootAR;
+
+public class OrbitTester : SpawnableObject
 {
 	private Orbit orbit;
 

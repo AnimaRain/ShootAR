@@ -1,31 +1,34 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-class RoundSelectMenu : MonoBehaviour
+namespace ShootAR.Menu
 {
-	private int roundToPlay;
-	public int RoundToPlay
+	class RoundSelectMenu : MonoBehaviour
 	{
-		get
+		private int roundToPlay;
+		public int RoundToPlay
 		{
-			return roundToPlay;
+			get
+			{
+				return roundToPlay;
+			}
+
+			set
+			{
+				roundToPlay = Mathf.Clamp(value, 1, 999);
+				labelOnUI.text = roundToPlay.ToString();
+			}
 		}
 
-		set
+		/// <summary>
+		/// the text label shown in the menu UI
+		/// </summary>
+		[SerializeField]
+		private Text labelOnUI;
+
+		private void OnEnable()
 		{
-			roundToPlay = Mathf.Clamp(value, 1, 999);
-			labelOnUI.text = roundToPlay.ToString();
+			RoundToPlay = 1;
 		}
-	}
-
-	/// <summary>
-	/// the text label shown in the menu UI
-	/// </summary>
-	[SerializeField]
-	private Text labelOnUI;
-
-	private void OnEnable()
-	{
-		RoundToPlay = 1;
-	}
+	} 
 }

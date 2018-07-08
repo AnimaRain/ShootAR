@@ -1,17 +1,20 @@
-﻿public class Drone : Pyoopyoo
+﻿namespace ShootAR.Enemies
 {
-	private const float ShootDelay = 5f;
-
-	protected void Update()
+	public class Drone : Pyoopyoo
 	{
-		if (lastBullet == null)
+		private const float ShootDelay = 5f;
+
+		protected void Update()
 		{
-			Invoke(nameof(Shoot), ShootDelay);
+			if (lastBullet == null)
+			{
+				Invoke(nameof(Shoot), ShootDelay);
+			}
 		}
-	}
 
-	protected void FixedUpdate()
-	{
-		//OrbitAround();
+		protected void FixedUpdate()
+		{
+			//OrbitAround();
+		}
 	}
 }

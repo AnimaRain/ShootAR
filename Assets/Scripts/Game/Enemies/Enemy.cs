@@ -1,63 +1,67 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Parent class of all types of enemies.
-/// </summary>
-public class Enemy : SpawnableObject
+namespace ShootAR.Enemies
 {
 
 	/// <summary>
-	/// Total count of spawned enemies during the current round.
+	/// Parent class of all types of enemies.
 	/// </summary>
-	public static int count;
-	/// <summary>
-	/// Count of currently active enemies.
-	/// </summary>
-	public static int activeCount;
-	/// <summary>
-	/// The amount of points added to the player's score when destroyed.
-	/// </summary>
-	public int pointsValue;
-	/// <summary>
-	/// The amount of damage the player recieves from this object's attack.
-	/// </summary>
-	[Range(-Player.HealthMax, Player.HealthMax)]
-	public int damage;
-	[SerializeField] protected AudioClip attackSfx;
-	[SerializeField] protected GameObject explosion;
-
-	protected AudioSource sfx;
-	protected static GameManager gameManager;
-
-
-	protected void Awake()
+	public class Enemy : SpawnableObject
 	{
-		activeCount++;
-		count++;
-	}
 
-	protected virtual void Start()
-	{
-		//Create an audio source to play the audio clips
-		sfx = gameObject.AddComponent<AudioSource>();
-		sfx.clip = attackSfx;
-		sfx.volume = 0.3f;
-		sfx.playOnAwake = false;
-		sfx.maxDistance = 10f;
+		/// <summary>
+		/// Total count of spawned enemies during the current round.
+		/// </summary>
+		public static int count;
+		/// <summary>
+		/// Count of currently active enemies.
+		/// </summary>
+		public static int activeCount;
+		/// <summary>
+		/// The amount of points added to the player's score when destroyed.
+		/// </summary>
+		public int pointsValue;
+		/// <summary>
+		/// The amount of damage the player recieves from this object's attack.
+		/// </summary>
+		[Range(-Player.HealthMax, Player.HealthMax)]
+		public int damage;
+		[SerializeField] protected AudioClip attackSfx;
+		[SerializeField] protected GameObject explosion;
 
-		if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
-	}
+		protected AudioSource sfx;
+		protected static GameManager gameManager;
 
-	protected virtual void OnDestroy()
-	{
-		if (!gameManager.gameOver)
+
+		protected void Awake()
 		{
-			gameManager.AddScore(pointsValue);
-
-			//Explosion special effects
-			Instantiate(explosion, transform.position, transform.rotation);
+			activeCount++;
+			count++;
 		}
-		activeCount--;
-	}
 
+		protected virtual void Start()
+		{
+			//Create an audio source to play the audio clips
+			sfx = gameObject.AddComponent<AudioSource>();
+			sfx.clip = attackSfx;
+			sfx.volume = 0.3f;
+			sfx.playOnAwake = false;
+			sfx.maxDistance = 10f;
+
+			if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
+		}
+
+		protected virtual void OnDestroy()
+		{
+			if (!gameManager.gameOver)
+			{
+				gameManager.AddScore(pointsValue);
+
+				//Explosion special effects
+				Instantiate(explosion, transform.position, transform.rotation);
+			}
+			activeCount--;
+		}
+
+	}
 }

@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
 
-public class EnemyBullet : Boopboop
+namespace ShootAR.Enemies
 {
-	protected override void Start()
+	public class EnemyBullet : Boopboop
 	{
-		MoveTo(Vector3.zero);
-	}
-
-	protected override void OnTriggerEnter(Collider other)
-	{
-		if (other.CompareTag("Player"))
+		protected override void Start()
 		{
-			base.OnTriggerEnter(other);
-			Destroy(gameObject);
+			MoveTo(Vector3.zero);
+		}
+
+		protected override void OnTriggerEnter(Collider other)
+		{
+			if (other.CompareTag("Player"))
+			{
+				base.OnTriggerEnter(other);
+				Destroy(gameObject);
+			}
 		}
 	}
 }

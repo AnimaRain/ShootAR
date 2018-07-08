@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using ShootAR;
 
 #pragma warning disable 649	//the unassigned fields are actually assigned in Unity Editor
 

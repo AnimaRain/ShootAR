@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-public class Crasher : Boopboop
+namespace ShootAR.Enemies
 {
-	protected override void Start()
+	public class Crasher : Boopboop
 	{
-		MoveTo(Vector3.zero);
+		protected override void Start()
+		{
+			MoveTo(Vector3.zero);
+		}
 	}
 }
