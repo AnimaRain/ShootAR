@@ -1,6 +1,4 @@
-﻿//TO DO: Remove local variable temp
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 namespace ShootAR
@@ -8,31 +6,56 @@ namespace ShootAR
 
 	public class Spawner : MonoBehaviour
 	{
-		public SpawnableObject ObjectToSpawn;
-		public float SpawnRate;
+		public SpawnableObject ObjectToSpawn { get; private set; }
+		public float SpawnRate { get; set; }
 		/// <summary>
 		/// Distance away from player.
 		/// </summary>
-		public float maxDistanceToSpawn, minDistanceToSpawn;
+		[SerializeField] private float maxDistanceToSpawn, minDistanceToSpawn;
+		public float MaxDistanceToSpawn
+		{
+			get { return maxDistanceToSpawn; }
+			private set { maxDistanceToSpawn = value; }
+		}
+		public float MinDistanceToSpawn
+		{
+			get { return minDistanceToSpawn; }
+			private set { minDistanceToSpawn = value; }
+		}
 		/// <summary>
 		/// Number Of ObjectToSpawn objects to spawn.
 		/// </summary>
-		[HideInInspector] public int SpawnLimit;
+		public int SpawnLimit { get; private set; }
 		/// <summary>
-		/// Counts how many times ObjectToSpawn spawned. Resets every time StartSpawning is called.
+		/// Counts how many times ObjectToSpawn spawned. Resets every time
+		/// StartSpawning is called.
 		/// </summary>
-		[HideInInspector] public int SpawnCount;
-		[HideInInspector] public bool IsSpawning;
+		public int SpawnCount { get; private set; }
+		public bool IsSpawning { get; private set; }
 		[SerializeField] private readonly AudioClip spawnSfx;
 		[SerializeField] private readonly GameObject portal;
 
 		private float x, z;
 		private AudioSource sfx;
 
+		public static Spawner Create(
+			SpawnableObject objectToSpawn, int spawnLimit, int spawnRate, 
+			float maxDistanceToSpawn, float minDistanceToSpawn)
+		{
+			var o = new GameObject("Spawner").AddComponent<Spawner>();
+			o.ObjectToSpawn = objectToSpawn;
+			o.SpawnLimit = spawnLimit;
+			o.SpawnRate = spawnRate;
+			o.MaxDistanceToSpawn = maxDistanceToSpawn;
+			o.MinDistanceToSpawn = minDistanceToSpawn;
+			return o;
+		}
 
 		private void Awake()
 		{
-			SpawnLimit = -1;    //Initial value should not be 0 to refrain from enabling "Game Over" state when the game has just started.
+			SpawnLimit = -1;    //Initial value should not be 0 to refrain from
+								//enabling "Game Over" state when the game has
+								//just started.
 
 			if (spawnSfx != null)
 			{
@@ -40,13 +63,6 @@ namespace ShootAR
 				sfx.clip = spawnSfx;
 				sfx.volume = 0.2f;
 			}
-		}
-
-		public void Initialize(SpawnableObject objectToSpawn, int spawnLimit, int spawnRate)
-		{
-			ObjectToSpawn = objectToSpawn;
-			SpawnLimit = spawnLimit;
-			SpawnRate = spawnRate;
 		}
 
 
@@ -64,14 +80,11 @@ namespace ShootAR
 			while (IsSpawning && SpawnCount < SpawnLimit)
 			{
 				yield return new WaitForSeconds(SpawnRate);
-				//The following do-while assigns random coordinates for the
-				//next spawn according to the defined range. Then, the object's
-				//rotation is set towards the player and spawns the object.
 				do
 				{
-					x = Random.Range(-maxDistanceToSpawn, maxDistanceToSpawn);
-					z = Random.Range(-maxDistanceToSpawn, maxDistanceToSpawn);
-				} while (Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2)) <= minDistanceToSpawn);
+					x = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
+					z = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
+				} while (Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2)) <= MinDistanceToSpawn);
 				transform.localPosition = new Vector3(x, 0, z);
 				transform.localRotation = Quaternion.LookRotation(-transform.localPosition);
 
@@ -83,11 +96,8 @@ namespace ShootAR
 					if (spawnSfx != null)
 						sfx.Play();
 
-					var temp = Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
+					Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
 					SpawnCount++;
-#if DEBUG
-					temp.name = ObjectToSpawn.name + SpawnCount;
-#endif
 				}
 			}
 			IsSpawning = false;
@@ -105,19 +115,21 @@ namespace ShootAR
 		/// <param name="spawnLimit">Number of objects to spawn</param>
 		public void StartSpawning(int spawnLimit)
 		{
-			this.SpawnLimit = spawnLimit;
+			SpawnLimit = spawnLimit;
 			StartSpawning();
 		}
 
 		/// <summary>
-		/// Automatically start a Spawn coroutine after setting the spawn limit
+		/// Automatically start a Spawn coroutine after setting the spawn limit and
+		/// the rate of spawn.
 		/// </summary>
 		/// <param name="spawnLimit">Number of objects to spawn</param>
 		/// <param name="rateOfSpawn">The time in seconds to wait before each spawn</param>
 		public void StartSpawning(int spawnLimit, float rateOfSpawn)
 		{
-			this.SpawnRate = rateOfSpawn;
-			StartSpawning(spawnLimit);
+			SpawnRate = rateOfSpawn;
+			SpawnLimit = spawnLimit;
+			StartSpawning();
 		}
 
 		public void StopSpawning()
