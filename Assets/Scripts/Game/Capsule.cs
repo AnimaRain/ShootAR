@@ -12,6 +12,22 @@ namespace ShootAR
 		private GameManager gameManager;
 		private Text bulletCountText;
 
+		public enum CapsuleType
+		{
+			Bullet,
+			Health,
+			Armor,
+			PowerUp
+		}
+		public CapsuleType Type { get; private set; }
+
+		public static Capsule Create(CapsuleType type)
+		{
+			var o = new GameObject("Capsule").AddComponent<Capsule>();
+			o.Type = type;
+			return o;
+		}
+
 		protected void Start()
 		{
 			rotation = new Vector3(15, 30, 45);
@@ -36,9 +52,14 @@ namespace ShootAR
 				 * destroys it and the player gains 50 points.*/
 				if (!gameManager.gameOver)
 				{
-					Bullet.count += 4;
-					bulletCountText.text = Bullet.count.ToString();
-					pickUpSfx.Play();
+					switch (Type)
+					{
+						case 0:
+							Bullet.count += 4;
+							bulletCountText.text = Bullet.count.ToString();
+							break;
+					}
+					pickUpSfx?.Play();
 				}
 				else if (gameManager.roundWon)
 				{
