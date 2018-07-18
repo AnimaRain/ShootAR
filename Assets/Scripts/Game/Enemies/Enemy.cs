@@ -6,7 +6,7 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Parent class of all types of enemies.
 	/// </summary>
-	public class Enemy : SpawnableObject
+	public class Enemy : Spawnable
 	{
 
 		/// <summary>

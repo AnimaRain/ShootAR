@@ -234,8 +234,8 @@ namespace ShootAR
 				spawner.StopSpawning();
 			}
 
-			SpawnableObject[] objects = FindObjectsOfType<SpawnableObject>();
-			foreach (SpawnableObject o in objects)
+			Spawnable[] objects = FindObjectsOfType<Spawnable>();
+			foreach (Spawnable o in objects)
 			{
 				Destroy(o.gameObject);
 			}

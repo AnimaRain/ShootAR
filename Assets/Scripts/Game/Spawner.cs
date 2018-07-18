@@ -6,7 +6,7 @@ namespace ShootAR
 
 	public class Spawner : MonoBehaviour
 	{
-		public SpawnableObject ObjectToSpawn { get; private set; }
+		public Spawnable ObjectToSpawn { get; private set; }
 		public float SpawnRate { get; set; }
 		/// <summary>
 		/// Distance away from player.
@@ -39,7 +39,7 @@ namespace ShootAR
 		private AudioSource sfx;
 
 		public static Spawner Create(
-			SpawnableObject objectToSpawn, int spawnLimit, int spawnRate, 
+			Spawnable objectToSpawn, int spawnLimit, int spawnRate, 
 			float maxDistanceToSpawn, float minDistanceToSpawn)
 		{
 			var o = new GameObject("Spawner").AddComponent<Spawner>();

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace ShootAR
 {
 
-	public class Capsule : SpawnableObject
+	public class Capsule : Spawnable
 	{
 		private Vector3 rotation;
 		private AudioSource pickUpSfx;
@@ -40,7 +40,7 @@ namespace ShootAR
 			//rotation
 			transform.Rotate(rotation * Time.deltaTime);
 			//orbit
-			transform.RotateAround(Vector3.zero, Vector3.up, speed * Time.deltaTime);
+			transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
 		}
 
 		protected void OnDestroy()

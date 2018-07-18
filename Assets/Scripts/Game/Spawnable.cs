@@ -6,21 +6,36 @@ namespace ShootAR
 	/// <summary>
 	/// Parent class of spawnable objects.
 	/// </summary>
-	public class SpawnableObject : MonoBehaviour
+	public abstract class Spawnable : MonoBehaviour
 	{
 		/// <summary>
 		/// The speed at which this object is moving.
 		/// </summary>
-		public float speed;
+		[SerializeField]
+		private float speed;
+
+		public float Speed
+		{
+			get
+			{
+				return speed;
+			}
+
+			set
+			{
+				speed = value;
+			}
+		}
 
 		public struct Orbit
 		{
 
-			public Vector3 direction, perpendicularAxis;
+			public Vector3 direction, centerPoint, perpendicularAxis;
 
-			public Orbit(Vector3 direction, Vector3 perpendicularAxis)
+			public Orbit(Vector3 direction, Vector3 centerPoint, Vector3 perpendicularAxis)
 			{
 				this.direction = direction;
+				this.centerPoint = centerPoint;
 				this.perpendicularAxis = perpendicularAxis;
 			}
 		}
@@ -32,7 +47,7 @@ namespace ShootAR
 		{
 			transform.LookAt(point);
 			transform.forward = -transform.position;
-			GetComponent<Rigidbody>().velocity = transform.forward * speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 		}
 
 		/// <summary>
@@ -43,10 +58,9 @@ namespace ShootAR
 		/// <returns>Orbit</returns>
 		protected Orbit CalculateOrbit(Vector3 centerPoint, bool clockwise = true)
 		{
-
 			Vector3 direction = centerPoint - transform.position;
-			Vector3 perpendicularAxis = Vector3.Cross(direction, clockwise ? Vector3.left : Vector3.right);
-			return new Orbit(direction, perpendicularAxis);
+			Vector3 perpendicularAxis = Vector3.Cross(direction/2, clockwise ? Vector3.left : Vector3.right);
+			return new Orbit(direction, centerPoint, perpendicularAxis);
 		}
 
 		/// <summary>
@@ -56,12 +70,7 @@ namespace ShootAR
 		protected void OrbitAround(Orbit orbit)
 		{
 			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, speed * Time.deltaTime);
-#if DEBUG
-			Debug.DrawRay(orbit.direction, orbit.perpendicularAxis, Color.blue);
-			Debug.DrawLine(transform.position, orbit.direction);
-			Debug.DrawLine(transform.position, orbit.perpendicularAxis, Color.red);
-#endif
+			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);
 		}
 	}
 }

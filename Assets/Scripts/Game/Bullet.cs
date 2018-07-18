@@ -4,7 +4,7 @@
 
 namespace ShootAR
 {
-	public class Bullet : SpawnableObject
+	public class Bullet : Spawnable
 	{
 		/// <summary>
 		/// Total count of spawned enemies during the current round.
@@ -32,7 +32,7 @@ namespace ShootAR
 			transform.rotation = Camera.main.transform.rotation;
 			transform.position = Vector3.zero;
 			shotSfx.Play();
-			GetComponent<Rigidbody>().velocity = transform.forward * speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
 			count--;
 			ActiveCount++;

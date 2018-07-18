@@ -10,7 +10,7 @@ public class SpawnerTests {
 	public IEnumerator SpawnerStopsWhenLimitReached() {
 
 		Spawner spawner = Spawner.Create(
-			objectToSpawn: new GameObject("SpawnableObject").AddComponent<SpawnableObject>(),
+			objectToSpawn: new GameObject("SpawnableObject").AddComponent<Spawnable>(),
 			spawnLimit: 5,
 			spawnRate: 1,
 			maxDistanceToSpawn: 10f,
@@ -28,7 +28,7 @@ public class SpawnerTests {
 	public IEnumerator SpawnerSpawnsTheCorrectNumberOfObjects()
 	{
 		Spawner spawner = Spawner.Create(
-			objectToSpawn: new GameObject("SpawnableObject").AddComponent<SpawnableObject>(),
+			objectToSpawn: new GameObject("SpawnableObject").AddComponent<Spawnable>(),
 			spawnLimit: 5,
 			spawnRate: 1,
 			maxDistanceToSpawn: 10f,
@@ -38,7 +38,7 @@ public class SpawnerTests {
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
 
-		int numberOfSpawned = Object.FindObjectsOfType<SpawnableObject>().Length - 1;
+		int numberOfSpawned = Object.FindObjectsOfType<Spawnable>().Length - 1;
 		Assert.AreEqual(5, numberOfSpawned, "Spawn 5 objects.");
 	}
 
@@ -46,14 +46,14 @@ public class SpawnerTests {
 	public IEnumerator SpawnerCanStopSpawning()
 	{
 		Spawner spawner = Spawner.Create(
-			new GameObject("Spawnable").AddComponent<SpawnableObject>(), 5, 1, 10f, 3f);
+			new GameObject("Spawnable").AddComponent<Spawnable>(), 5, 1, 10f, 3f);
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.SpawnCount < 3);
 		spawner.StopSpawning();
 		
 
-		int numberOfSpawned = Object.FindObjectsOfType<SpawnableObject>().Length - 1;
+		int numberOfSpawned = Object.FindObjectsOfType<Spawnable>().Length - 1;
 		Assert.AreEqual(3, numberOfSpawned, "Interrupt spawning after spawning 5 objects.");
 	}
 
@@ -78,7 +78,7 @@ public class SpawnerTests {
 	[TearDown]
 	public void ClearTestEnvironment()
 	{
-		SpawnableObject[] objects = Object.FindObjectsOfType<SpawnableObject>();
+		Spawnable[] objects = Object.FindObjectsOfType<Spawnable>();
 		foreach (var o in objects)
 		{
 			Object.Destroy(o.gameObject);
