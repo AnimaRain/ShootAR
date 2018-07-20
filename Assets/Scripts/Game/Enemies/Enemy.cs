@@ -24,7 +24,7 @@ namespace ShootAR.Enemies
 		/// <summary>
 		/// The amount of damage the player recieves from this object's attack.
 		/// </summary>
-		[Range(-Player.HealthMax, Player.HealthMax)]
+		[Range(-Player.HEALTH_MAX, Player.HEALTH_MAX)]
 		public int damage;
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;

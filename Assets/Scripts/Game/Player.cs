@@ -7,21 +7,14 @@ namespace ShootAR
 {
 	public class Player : MonoBehaviour
 	{
-		public const sbyte HealthMax = 6;
+		public const sbyte HEALTH_MAX = 3;
 		[SerializeField]
-		private GameObject[] healthIndicator = new GameObject[HealthMax];
+		private GameObject[] healthIndicator = new GameObject[HEALTH_MAX];
 
-		[Range(0, HealthMax), SerializeField]
+		[Range(0, HEALTH_MAX), SerializeField]
 		private int health;
 
 		private GameManager gameManager;
-
-		private void Start()
-		{
-			gameManager = FindObjectOfType<GameManager>();
-
-			UpdateHealthUI();
-		}
 
 		/// <summary>
 		/// Player's health. (range: 0-6)
@@ -37,22 +30,34 @@ namespace ShootAR
 
 			set
 			{
-				health = Mathf.Clamp(health + value, 0, 6);
+				health = Mathf.Clamp(value, 0, 6);
 				if (health == 0) gameManager.gameOver = true;
 				UpdateHealthUI();
 			}
 		}
 
-		public void UpdateHealthUI()
+		private void UpdateHealthUI()
 		{
-			for (int i = 0; i < healthIndicator.Length; i++)
+			for (int i = 0; i < HEALTH_MAX; i++)
 			{
-				/* TODO: Take note -> the if-statement was changed to the boolean
-				 * parameter. Got rid of the if-else and replaced it with a single line.
-				 */
-
 				healthIndicator[i].SetActive(i < health);
 			}
+		}
+
+		public static Player Create(int health)
+		{
+			var o = new GameObject().AddComponent<Player>();
+			for (int i = 0; i < HEALTH_MAX; i++)
+				o.healthIndicator[i] = new GameObject("HealthIndicator");
+			o.Health = health;
+			return o;
+		}
+
+		private void Start()
+		{
+			gameManager = FindObjectOfType<GameManager>();
+
+			UpdateHealthUI();
 		}
 	}
 }
