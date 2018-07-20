@@ -6,7 +6,7 @@ namespace ShootAR
 	/// <summary>
 	/// Parent class of spawnable objects.
 	/// </summary>
-	public abstract class Spawnable : MonoBehaviour
+	public class Spawnable : MonoBehaviour
 	{
 		/// <summary>
 		/// The speed at which this object is moving.
