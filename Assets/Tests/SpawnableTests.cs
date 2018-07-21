@@ -40,7 +40,7 @@ class SpawnableTests
 		OrbitTester orbiter = Object.Instantiate(
 			new GameObject("TestObject").AddComponent<OrbitTester>());
 		orbiter.transform.Translate(startingPoint);
-		orbiter.Speed = 100f;
+		orbiter.Self.Speed = 100f;
 		var oCollider = orbiter.gameObject.AddComponent<SphereCollider>();
 		oCollider.radius = 1f;
 
@@ -58,11 +58,11 @@ class SpawnableTests
 			"Points (5, 5, 5) and (-5,-5,-5) are both part of the orbit path.");
 	}
 
-	[UnityTest]
+	/*[UnityTest]
 	public IEnumerator FollowOrbitWhileMoving()
 	{
 		yield return null;
-	}
+	}*/
 
 	[TearDown]
 	public void CleanUp()

@@ -6,71 +6,51 @@ namespace ShootAR
 	/// <summary>
 	/// Parent class of spawnable objects.
 	/// </summary>
-	public class Spawnable : MonoBehaviour
+	public class Spawnable : MonoBehaviour, IOrbiter
 	{
-		/// <summary>
-		/// The speed at which this object is moving.
-		/// </summary>
-		[SerializeField]
-		private float speed;
+		private _Spawnable @base;
+		//[SerializeField] private float speed;
 
-		public float Speed
+		public _Spawnable Self { get { return @base; } }
+
+		public static Spawnable Create(float speed,
+			float x = 0f, float y = 0f, float z = 0f)
 		{
-			get
-			{
-				return speed;
-			}
-
-			set
-			{
-				speed = value;
-			}
+			var o = new GameObject("Spawnable").AddComponent<Spawnable>();
+			o.@base = new _Spawnable(speed);
+			o.transform.position = new Vector3(x, y, z);
+			return o;
 		}
 
-		public struct Orbit
+		protected void OnEnable()
 		{
-
-			public Vector3 direction, centerPoint, perpendicularAxis;
-
-			public Orbit(Vector3 direction, Vector3 centerPoint, Vector3 perpendicularAxis)
-			{
-				this.direction = direction;
-				this.centerPoint = centerPoint;
-				this.perpendicularAxis = perpendicularAxis;
-			}
+			@base.Orbiter = this;
 		}
 
 		/// <summary>
 		/// Enemy moves towards a point using the physics engine.
 		/// </summary>
-		protected void MoveTo(Vector3 point)
+		public void MoveTo(Vector3 point)
 		{
 			transform.LookAt(point);
 			transform.forward = -transform.position;
-			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * @base.Speed;
 		}
 
-		/// <summary>
-		/// Returns a circular orbit around centerPoint with the range of the object's position vector.
-		/// </summary>
-		/// <param name="centerPoint">the center of the orbit</param>
-		/// <param name="clockwise">the direction of the orbit</param>
-		/// <returns>Orbit</returns>
-		protected Orbit CalculateOrbit(Vector3 centerPoint, bool clockwise = true)
+		public void MoveTo(float x, float y, float z)
 		{
-			Vector3 direction = centerPoint - transform.position;
-			Vector3 perpendicularAxis = Vector3.Cross(direction/2, clockwise ? Vector3.left : Vector3.right);
-			return new Orbit(direction, centerPoint, perpendicularAxis);
+			Vector3 point = new Vector3(x, y, z);
+			MoveTo(point);
 		}
 
 		/// <summary>
 		/// Object orbits around a defined point by an angle based on its speed.
 		/// </summary>
 		/// <param name="orbit">The orbit to move in</param>
-		protected void OrbitAround(Orbit orbit)
+		public void OrbitAround(Orbit orbit)
 		{
 			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);
+			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, @base.Speed * Time.deltaTime);
 		}
 	}
 }
