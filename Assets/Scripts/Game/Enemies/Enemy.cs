@@ -2,36 +2,30 @@
 
 namespace ShootAR.Enemies
 {
-
 	/// <summary>
 	/// Parent class of all types of enemies.
 	/// </summary>
-	public class Enemy : Spawnable
+	public class Enemy : MonoBehaviour, ISpawnable, IOrbiter
 	{
+		private EnemyController controller;
+		//[SerializeField] private float speed;
 
-		/// <summary>
-		/// Total count of spawned enemies during the current round.
-		/// </summary>
-		public static int count;
-		/// <summary>
-		/// Count of currently active enemies.
-		/// </summary>
-		public static int activeCount;
-		/// <summary>
-		/// The amount of points added to the player's score when destroyed.
-		/// </summary>
-		public int pointsValue;
-		/// <summary>
-		/// The amount of damage the player recieves from this object's attack.
-		/// </summary>
-		[Range(-Player.HEALTH_MAX, Player.HEALTH_MAX)]
-		public int damage;
+		public EnemyController Controller { get { return controller; } }
+
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;
 
 		protected AudioSource sfx;
 		protected static GameManager gameManager;
 
+		public static Enemy Create(float speed,
+			float x = 0f, float y = 0f, float z = 0f)
+		{
+			var o = new GameObject("Enemy").AddComponent<Enemy>();
+			o.controller = new EnemyController(speed);
+			o.transform.position = new Vector3(x, y, z);
+			return o;
+		}
 
 		protected void Awake()
 		{
@@ -48,6 +42,8 @@ namespace ShootAR.Enemies
 			sfx.playOnAwake = false;
 			sfx.maxDistance = 10f;
 
+			controller.Orbiter = this;
+
 			if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
 		}
 
@@ -55,7 +51,7 @@ namespace ShootAR.Enemies
 		{
 			if (!gameManager.gameOver)
 			{
-				gameManager.AddScore(pointsValue);
+				gameManager.AddScore(controller.pointsValue);
 
 				//Explosion special effects
 				Instantiate(explosion, transform.position, transform.rotation);
@@ -63,5 +59,30 @@ namespace ShootAR.Enemies
 			activeCount--;
 		}
 
+		/// <summary>
+		/// Enemy moves towards a point using the physics engine.
+		/// </summary>
+		public void MoveTo(Vector3 point)
+		{
+			transform.LookAt(point);
+			transform.forward = -transform.position;
+			GetComponent<Rigidbody>().velocity = transform.forward * controller.Speed;
+		}
+
+		public void MoveTo(float x, float y, float z)
+		{
+			Vector3 point = new Vector3(x, y, z);
+			MoveTo(point);
+		}
+
+		/// <summary>
+		/// Object orbits around a defined point by an angle based on its speed.
+		/// </summary>
+		/// <param name="orbit">The orbit to move in</param>
+		public void OrbitAround(Orbit orbit)
+		{
+			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
+			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, controller.Speed * Time.deltaTime);
+		}
 	}
 }
