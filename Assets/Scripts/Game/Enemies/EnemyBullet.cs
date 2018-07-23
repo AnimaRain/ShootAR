@@ -9,13 +9,10 @@ namespace ShootAR.Enemies
 			MoveTo(Vector3.zero);
 		}
 
-		protected override void OnTriggerEnter(Collider other)
+		public override void Attack(Player target)
 		{
-			if (other.CompareTag("Player"))
-			{
-				base.OnTriggerEnter(other);
-				Destroy(gameObject);
-			}
+			base.Attack(target);
+			Destroy(gameObject);
 		}
 	}
 }

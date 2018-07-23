@@ -17,16 +17,14 @@ namespace ShootAR.Enemies
 
 		protected virtual void OnTriggerEnter(Collider other)
 		{
-			if (other.CompareTag("Player"))
-			{
-				Attack(other);
-			}
+			var target = other.GetComponent<Player>();
+			if (target != null) Attack(target);
 		}
 
-		public void Attack(Collider other)
+		public virtual void Attack(Player target)
 		{
 			sfx.Play();
-			other.GetComponent<Player>().Health -= Controller.damage;
+			target.Health -= Controller.damage;
 		}
 	}
 }

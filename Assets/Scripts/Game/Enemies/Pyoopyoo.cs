@@ -5,7 +5,7 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Long-Ranged class of Enemy
 	/// </summary>
-	public class Pyoopyoo : Enemy
+	public abstract class Pyoopyoo : Enemy
 	{
 		[SerializeField] protected EnemyBullet bullet;
 		/// <summary>
@@ -22,7 +22,7 @@ namespace ShootAR.Enemies
 		{
 			sfx.Play();
 			lastBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-			lastBullet.damage = damage;
+			lastBullet.Controller.damage = Controller.damage;
 		}
 	}
 }
