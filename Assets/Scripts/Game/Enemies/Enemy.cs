@@ -5,10 +5,9 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Parent class of all types of enemies.
 	/// </summary>
-	public class Enemy : MonoBehaviour, ISpawnable, IOrbiter
+	public abstract class Enemy : MonoBehaviour, ISpawnable, IOrbiter
 	{
-		private EnemyController controller;
-		//[SerializeField] private float speed;
+		[SerializeField] private EnemyController controller;
 
 		public EnemyController Controller { get { return controller; } }
 
@@ -18,11 +17,11 @@ namespace ShootAR.Enemies
 		protected AudioSource sfx;
 		protected static GameManager gameManager;
 
-		public static Enemy Create(float speed,
+		public static Enemy Create(float speed, int damage, int pointsValue,
 			float x = 0f, float y = 0f, float z = 0f)
 		{
 			var o = new GameObject("Enemy").AddComponent<Enemy>();
-			o.controller = new EnemyController(speed);
+			o.controller = new EnemyController(speed, damage, pointsValue);
 			o.transform.position = new Vector3(x, y, z);
 			return o;
 		}
@@ -42,7 +41,7 @@ namespace ShootAR.Enemies
 			sfx.playOnAwake = false;
 			sfx.maxDistance = 10f;
 
-			controller.Orbiter = this;
+			Controller.Orbiter = this;
 
 			if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
 		}
@@ -51,7 +50,7 @@ namespace ShootAR.Enemies
 		{
 			if (!gameManager.gameOver)
 			{
-				gameManager.AddScore(controller.pointsValue);
+				gameManager.AddScore(Controller.PointsValue);
 
 				//Explosion special effects
 				Instantiate(explosion, transform.position, transform.rotation);
@@ -66,7 +65,7 @@ namespace ShootAR.Enemies
 		{
 			transform.LookAt(point);
 			transform.forward = -transform.position;
-			GetComponent<Rigidbody>().velocity = transform.forward * controller.Speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * Controller.Speed;
 		}
 
 		public void MoveTo(float x, float y, float z)
@@ -82,7 +81,7 @@ namespace ShootAR.Enemies
 		public void OrbitAround(Orbit orbit)
 		{
 			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, controller.Speed * Time.deltaTime);
+			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Controller.Speed * Time.deltaTime);
 		}
 	}
 }
