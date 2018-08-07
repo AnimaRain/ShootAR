@@ -32,7 +32,7 @@ namespace ShootAR
 			transform.rotation = Camera.main.transform.rotation;
 			transform.position = Vector3.zero;
 			shotSfx.Play();
-			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * Self.Speed;
 
 			count--;
 			ActiveCount++;

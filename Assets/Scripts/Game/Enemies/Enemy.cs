@@ -1,87 +1,31 @@
-﻿using UnityEngine;
-
-namespace ShootAR.Enemies
+﻿namespace ShootAR.Enemies
 {
-	/// <summary>
-	/// Parent class of all types of enemies.
-	/// </summary>
-	public abstract class Enemy : MonoBehaviour, ISpawnable, IOrbiter
+	[System.Serializable]
+	public class Enemy
 	{
-		[SerializeField] private EnemyController controller;
-
-		public EnemyController Controller { get { return controller; } }
-
-		[SerializeField] protected AudioClip attackSfx;
-		[SerializeField] protected GameObject explosion;
-
-		protected AudioSource sfx;
-		protected static GameManager gameManager;
-
-		public static Enemy Create(float speed, int damage, int pointsValue,
-			float x = 0f, float y = 0f, float z = 0f)
-		{
-			var o = new GameObject("Enemy").AddComponent<Enemy>();
-			o.controller = new EnemyController(speed, damage, pointsValue);
-			o.transform.position = new Vector3(x, y, z);
-			return o;
-		}
-
-		protected void Awake()
-		{
-			activeCount++;
-			count++;
-		}
-
-		protected virtual void Start()
-		{
-			//Create an audio source to play the audio clips
-			sfx = gameObject.AddComponent<AudioSource>();
-			sfx.clip = attackSfx;
-			sfx.volume = 0.3f;
-			sfx.playOnAwake = false;
-			sfx.maxDistance = 10f;
-
-			Controller.Orbiter = this;
-
-			if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
-		}
-
-		protected virtual void OnDestroy()
-		{
-			if (!gameManager.gameOver)
-			{
-				gameManager.AddScore(Controller.PointsValue);
-
-				//Explosion special effects
-				Instantiate(explosion, transform.position, transform.rotation);
-			}
-			activeCount--;
-		}
-
 		/// <summary>
-		/// Enemy moves towards a point using the physics engine.
+		/// The speed at which this object is moving.
 		/// </summary>
-		public void MoveTo(Vector3 point)
-		{
-			transform.LookAt(point);
-			transform.forward = -transform.position;
-			GetComponent<Rigidbody>().velocity = transform.forward * Controller.Speed;
-		}
-
-		public void MoveTo(float x, float y, float z)
-		{
-			Vector3 point = new Vector3(x, y, z);
-			MoveTo(point);
-		}
-
+		public float Speed { get; set; }
 		/// <summary>
-		/// Object orbits around a defined point by an angle based on its speed.
+		/// The amount of points added to the player's score when destroyed.
 		/// </summary>
-		/// <param name="orbit">The orbit to move in</param>
-		public void OrbitAround(Orbit orbit)
+		public int PointsValue { get; }
+		/// <summary>
+		/// The amount of damage the player recieves from this object's attack.
+		/// </summary>
+		[UnityEngine.Range(-Player.HEALTH_MAX, Player.HEALTH_MAX), UnityEngine.SerializeField]
+		public int damage;
+		public int Damage { get { return damage; } set { damage = value; } }
+
+		public IOrbiter Orbiter { get; set; }
+
+		protected void MoveTo(float x, float y, float z) => Orbiter.MoveTo(x, y, z);
+		protected void OrbitAround(Orbit orbit) => Orbiter.OrbitAround(orbit);
+
+		public Enemy(float speed, int damage, int pointsValue)
 		{
-			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Controller.Speed * Time.deltaTime);
+			Speed = speed;
 		}
 	}
 }

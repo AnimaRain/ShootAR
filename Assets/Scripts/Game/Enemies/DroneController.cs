@@ -1,6 +1,6 @@
 ﻿namespace ShootAR.Enemies
 {
-	public class Drone : Pyoopyoo
+	public class DroneController : PyoopyooController
 	{
 		private const float ShootDelay = 5f;
 

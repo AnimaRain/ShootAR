@@ -2,7 +2,7 @@
 
 namespace ShootAR.Enemies
 {
-	public class Crasher : Boopboop
+	public class CrasherController : BoopboopController
 	{
 		protected override void Start()
 		{

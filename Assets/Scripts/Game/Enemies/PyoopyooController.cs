@@ -5,9 +5,9 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Long-Ranged class of Enemy
 	/// </summary>
-	public abstract class Pyoopyoo : Enemy
+	public abstract class PyoopyooController : EnemyController
 	{
-		[SerializeField] protected EnemyBullet bullet;
+		[SerializeField] protected EnemyBulletController bullet;
 		/// <summary>
 		/// the position where the bullets will get fired from
 		/// </summary>
@@ -16,13 +16,13 @@ namespace ShootAR.Enemies
 		/// <summary>
 		/// The last bullet that was fired by this enemy
 		/// </summary>
-		protected EnemyBullet lastBullet;
+		protected EnemyBulletController lastBullet;
 
 		protected virtual void Shoot()
 		{
 			sfx.Play();
 			lastBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-			lastBullet.Controller.damage = Controller.damage;
+			lastBullet._.damage = Controller.damage;
 		}
 	}
 }

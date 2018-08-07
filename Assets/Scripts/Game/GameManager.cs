@@ -27,6 +27,7 @@ namespace ShootAR
 		private bool exitTap;
 		private AudioSource sfx;
 		private float nextFire;
+		[SerializeField] private int ammo;
 
 		#region Dependencies
 		[SerializeField] private readonly Button fireButton;
@@ -37,6 +38,20 @@ namespace ShootAR
 		private TVScript tvScreen;
 		#endregion
 
+		/// <summary>
+		/// The ammount of bullets the player has.
+		/// </summary>
+		public int Ammo {
+			get { return ammo; }
+			private set { ammo = value; }
+		}
+
+		public static GameManager Create(int ammo)
+		{
+			var o = new GameObject("Game Manager").AddComponent<GameManager>();
+			o.Ammo = ammo;
+			return o;
+		}
 
 		private void Awake()
 		{
@@ -113,7 +128,7 @@ namespace ShootAR
 			{
 				#region Round Won
 				//TO DO: Check following condition. Looks weird... Is the literal true really needed?
-				if (spawner.ContainsKey(nameof(Crasher)) ? !spawner["Crasher"].IsSpawning : true && Enemy.activeCount == 0)
+				if (spawner.ContainsKey(nameof(CrasherController)) ? !spawner["Crasher"].IsSpawning : true && EnemyController.activeCount == 0)
 				{
 					roundWon = true;
 					ui.centerText.text = "Round Clear!";
@@ -125,7 +140,7 @@ namespace ShootAR
 				#endregion
 
 				#region Defeat
-				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.count == 0 && Enemy.activeCount > 0))
+				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.count == 0 && EnemyController.activeCount > 0))
 				{
 					ui.centerText.text = "Rounds Survived : " + (level - 1);
 					ClearScene();
