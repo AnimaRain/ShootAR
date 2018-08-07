@@ -4,17 +4,20 @@ using UnityEngine.UI;
 namespace ShootAR
 {
 
-	public class CapsuleController : Spawnable
+	public class CapsuleController : MonoBehaviour, ISpawnable
 	{
+		public Capsule Base { get; private set; }
+
 		private Vector3 rotation;
 		private AudioSource pickUpSfx;	//TODO: move the sound effect of picking up bonuses to the player
 
 		private Text bulletCountText;
+		[SerializeField] private GameManager gameManager;
 
-		public static CapsuleController Create(CapsuleType type)
+		public static CapsuleController Create(Capsule.CapsuleType type, float speed)
 		{
 			var o = new GameObject("Capsule").AddComponent<CapsuleController>();
-			o.Type = type;
+			o.Base = new Capsule(type, speed);
 			return o;
 		}
 
@@ -30,7 +33,7 @@ namespace ShootAR
 			//rotation
 			transform.Rotate(rotation * Time.deltaTime);
 			//orbit
-			transform.RotateAround(Vector3.zero, Vector3.up, Self.Speed * Time.deltaTime);
+			transform.RotateAround(Vector3.zero, Vector3.up, Base.Speed * Time.deltaTime);
 		}
 
 		protected void OnDestroy()
@@ -42,7 +45,7 @@ namespace ShootAR
 				 * destroys it and the player gains 50 points.*/
 				if (!gameManager.gameOver)
 				{
-					switch (Type)
+					switch (Base.Type)
 					{
 						case 0:
 							Bullet.count += 4;

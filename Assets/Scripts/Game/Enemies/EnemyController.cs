@@ -7,9 +7,9 @@ namespace ShootAR.Enemies
 	/// </summary>
 	public abstract class EnemyController : MonoBehaviour, ISpawnable, IOrbiter
 	{
-		[SerializeField] private Enemy controller;
+		[SerializeField] private Enemy @base;
 
-		public Enemy Controller { get { return controller; } }
+		public Enemy Base { get { return @base; } }
 
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;
@@ -21,7 +21,7 @@ namespace ShootAR.Enemies
 			float x = 0f, float y = 0f, float z = 0f)
 		{
 			var o = new GameObject("Enemy").AddComponent<EnemyController>();
-			o.controller = new Enemy(speed, damage, pointsValue);
+			o.@base = new Enemy(speed, damage, pointsValue);
 			o.transform.position = new Vector3(x, y, z);
 			return o;
 		}
@@ -41,7 +41,7 @@ namespace ShootAR.Enemies
 			sfx.playOnAwake = false;
 			sfx.maxDistance = 10f;
 
-			Controller.Orbiter = this;
+			Base.Orbiter = this;
 
 			if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
 		}
@@ -50,7 +50,7 @@ namespace ShootAR.Enemies
 		{
 			if (!gameManager.gameOver)
 			{
-				gameManager.AddScore(Controller.PointsValue);
+				gameManager.AddScore(Base.PointsValue);
 
 				//Explosion special effects
 				Instantiate(explosion, transform.position, transform.rotation);
@@ -65,7 +65,7 @@ namespace ShootAR.Enemies
 		{
 			transform.LookAt(point);
 			transform.forward = -transform.position;
-			GetComponent<Rigidbody>().velocity = transform.forward * Controller.Speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * Base.Speed;
 		}
 
 		public void MoveTo(float x, float y, float z)
@@ -81,7 +81,7 @@ namespace ShootAR.Enemies
 		public void OrbitAround(Orbit orbit)
 		{
 			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Controller.Speed * Time.deltaTime);
+			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Base.Speed * Time.deltaTime);
 		}
 	}
 }

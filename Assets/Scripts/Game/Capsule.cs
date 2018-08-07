@@ -5,7 +5,7 @@ namespace ShootAR
 	[Serializable]
 	public class Capsule
 	{
-		private GameManager gameManager;
+		public float Speed { get; set; }
 
 		public enum CapsuleType
 		{
@@ -16,5 +16,10 @@ namespace ShootAR
 		}
 		public CapsuleType Type { get; private set; }
 
+		public Capsule(CapsuleType type, float speed)
+		{
+			Type = type;
+			Speed = speed;
+		}
 	}
 }
