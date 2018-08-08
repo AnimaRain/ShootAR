@@ -1,15 +1,30 @@
-﻿using System;
+﻿using UnityEngine;
 
 namespace ShootAR.Enemies
 {
-	[Serializable]
-	public class Boopboop : Enemy
+	/// <summary>
+	/// Class of Short-Ranged Enemy
+	/// </summary>
+	public abstract class Boopboop : Enemy, IDamager
 	{
-		public IDamager Damager { get; set; }
+		public new BoopboopBase Base { get; set; }
 
-		public Boopboop(float speed, int damage, int pointsValue)
-			: base(speed, damage, pointsValue) { }
+		protected override void Start()
+		{
+			base.Start();
+			Base.Damager = this;
+		}
 
-		public void Attack(UnityEngine.Collider other) => Damager.Attack(other);
+		protected virtual void OnTriggerEnter(Collider other)
+		{
+			var target = other.GetComponent<Player>();
+			if (target != null) Attack(target);
+		}
+
+		public virtual void Attack(Player target)
+		{
+			sfx.Play();
+			target.Health -= Base.damage;
+		}
 	}
 }
