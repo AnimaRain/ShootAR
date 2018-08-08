@@ -48,8 +48,8 @@ namespace ShootAR
 					switch (Base.Type)
 					{
 						case 0:
-							Bullet.count += 4;
-							bulletCountText.text = Bullet.count.ToString();
+							Bullet.Count += 4;
+							bulletCountText.text = Bullet.Count.ToString();
 							break;
 					}
 					pickUpSfx?.Play();

@@ -95,7 +95,7 @@ namespace ShootAR
 				Debug.LogError("Player object not found");
 
 			sfx = gameObject.AddComponent<AudioSource>();
-			Bullet.count = 10;
+			Bullet.Count = 10;
 			gameOver = false;
 		}
 
@@ -140,7 +140,7 @@ namespace ShootAR
 				#endregion
 
 				#region Defeat
-				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.count == 0 && EnemyController.activeCount > 0))
+				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.Count == 0 && EnemyController.activeCount > 0))
 				{
 					ui.centerText.text = "Rounds Survived : " + (level - 1);
 					ClearScene();
@@ -168,7 +168,7 @@ namespace ShootAR
 				//Fire Bullet
 				if (!gameOver)
 				{
-					if (Bullet.count > 0 && Time.time > nextFire)
+					if (Bullet.Count > 0 && Time.time > nextFire)
 					{
 						nextFire = Time.time + ShotCooldown;
 						Instantiate(bullet, Vector3.zero, Camera.main.transform.rotation);
@@ -179,7 +179,7 @@ namespace ShootAR
 				if (gameOver)
 				{
 					//Defeat, tap to restart
-					if (Bullet.count == 0 || player.Health <= 0)
+					if (Bullet.Count == 0 || player.Health <= 0)
 					{
 						cam.Stop();
 						SceneManager.LoadScene(1);
@@ -190,7 +190,7 @@ namespace ShootAR
 						gameOver = false;
 						ui.centerText.text = "";
 						ui.buttonText.text = "";
-						Bullet.count += 6;
+						Bullet.Count += 6;
 						AdvanceLevel();
 					}
 				}

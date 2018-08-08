@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 
-#pragma warning disable 649   //the unassigned fields are actually assigned in Unity Editor
+//#pragma warning disable 649   //the unassigned fields are actually assigned in Unity Editor
 
 namespace ShootAR
 {
-	public class Bullet : Spawnable
+	public class Bullet : MonoBehaviour, ISpawnable
 	{
+		[SerializeField] private float Speed { get; }
 		/// <summary>
-		/// Total count of spawned enemies during the current round.
+		/// Total count of spawned bullets during the current round.
 		/// </summary>
-		public static int count;
+		public static int Count { private set; get; }
 		/// <summary>
-		/// Count of currently active enemies.
+		/// Count of currently active bullets.
 		/// </summary>
 		public static int ActiveCount { get; private set; }
 		private static TVScript tvScreen;
@@ -20,7 +21,7 @@ namespace ShootAR
 
 		protected void Awake()
 		{
-			if (count < 0) Destroy(gameObject);
+			if (Count < 0) Destroy(gameObject);
 		}
 
 		protected void Start()
@@ -32,11 +33,11 @@ namespace ShootAR
 			transform.rotation = Camera.main.transform.rotation;
 			transform.position = Vector3.zero;
 			shotSfx.Play();
-			GetComponent<Rigidbody>().velocity = transform.forward * Self.Speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
-			count--;
+			Count++;
 			ActiveCount++;
-			countText.text = count.ToString();
+			countText.text = Count.ToString();
 		}
 
 		protected void OnTriggerEnter(Collider col)
