@@ -4,9 +4,9 @@ using System.Collections;
 namespace ShootAR
 {
 
-	public class Spawner : MonoBehaviour
+	public class Spawner<T> : MonoBehaviour where T : Object, ISpawnable
 	{
-		public Spawnable ObjectToSpawn { get; private set; }
+		public T ObjectToSpawn { get; private set; }
 		public float SpawnRate { get; set; }
 		/// <summary>
 		/// Distance away from player.
@@ -35,14 +35,13 @@ namespace ShootAR
 		[SerializeField] private readonly AudioClip spawnSfx;
 		[SerializeField] private readonly GameObject portal;
 
-		private float x, z;
 		private AudioSource sfx;
 
-		public static Spawner Create(
-			Spawnable objectToSpawn, int spawnLimit, int spawnRate, 
+		public static Spawner<T> Create(
+			T objectToSpawn, int spawnLimit, int spawnRate, 
 			float maxDistanceToSpawn, float minDistanceToSpawn)
 		{
-			var o = new GameObject("Spawner").AddComponent<Spawner>();
+			var o = new GameObject("Spawner").AddComponent<Spawner<T>>();
 			o.ObjectToSpawn = objectToSpawn;
 			o.SpawnLimit = spawnLimit;
 			o.SpawnRate = spawnRate;
@@ -73,13 +72,15 @@ namespace ShootAR
 		public IEnumerator Spawn()
 		{
 			IsSpawning = true;
-			/* IsSpawning is checked in the while-condition function, in case
-			 * StopSpawning() is called while being in the in the middle of 
-			 * the iteration;
-			 */
-			while (IsSpawning && SpawnCount < SpawnLimit)
+			float x, z;
+			while (IsSpawning)
 			{
 				yield return new WaitForSeconds(SpawnRate);
+
+				/* IsSpawning is checked again, in case StopSpawning() is called
+				 * while being in the middle of this function call. */
+				if (!IsSpawning) break;
+
 				do
 				{
 					x = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
@@ -88,19 +89,16 @@ namespace ShootAR
 				transform.localPosition = new Vector3(x, 0, z);
 				transform.localRotation = Quaternion.LookRotation(-transform.localPosition);
 
-				if (IsSpawning)
-				{
-					//Spawn special effects
-					if (portal != null)
-						Instantiate(portal, transform.localPosition, transform.localRotation);
-					if (spawnSfx != null)
-						sfx.Play();
+				//Spawn special effects
+				if (portal != null)
+					Instantiate(portal, transform.localPosition, transform.localRotation);
+				if (spawnSfx != null)
+					sfx.Play();
 
-					Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
-					SpawnCount++;
-				}
+				Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
+				SpawnCount++;
+				if (SpawnCount == SpawnLimit) IsSpawning = false;
 			}
-			IsSpawning = false;
 		}
 
 		public void StartSpawning()
