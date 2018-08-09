@@ -4,6 +4,6 @@ namespace ShootAR.Enemies
 {
 	public interface IDamager
 	{
-		void Attack(Collider other);
+		void Attack(Player target);
 	}
 }

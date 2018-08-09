@@ -11,9 +11,13 @@ namespace ShootAR.Enemies
 
 		public EnemyBase Base { get { return @base; } }
 
+		/// <summary>
+		/// Count of currently active enemies.
+		/// </summary>
+		public static int ActiveCount { get; set; }
+
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;
-
 		protected AudioSource sfx;
 		protected static GameManager gameManager;
 
@@ -28,8 +32,7 @@ namespace ShootAR.Enemies
 
 		protected void Awake()
 		{
-			activeCount++;
-			count++;
+			ActiveCount++;
 		}
 
 		protected virtual void Start()
@@ -51,11 +54,9 @@ namespace ShootAR.Enemies
 			if (!gameManager.gameOver)
 			{
 				gameManager.AddScore(Base.PointsValue);
-
-				//Explosion special effects
 				Instantiate(explosion, transform.position, transform.rotation);
 			}
-			activeCount--;
+			ActiveCount--;
 		}
 
 		/// <summary>

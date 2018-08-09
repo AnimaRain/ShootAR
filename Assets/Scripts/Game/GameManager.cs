@@ -123,7 +123,7 @@ namespace ShootAR
 			{
 				#region Round Won
 				//TO DO: Check following condition. Looks weird... Is the literal true really needed?
-				if (spawner.ContainsKey(nameof(Crasher)) ? !spawner["Crasher"].IsSpawning : true && Enemy.activeCount == 0)
+				if (spawner.ContainsKey(nameof(Crasher)) ? !spawner["Crasher"].IsSpawning : true && Enemy.ActiveCount == 0)
 				{
 					roundWon = true;
 					ui.centerText.text = "Round Clear!";
@@ -135,7 +135,7 @@ namespace ShootAR
 				#endregion
 
 				#region Defeat
-				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && player.Ammo == 0 && Enemy.activeCount > 0))
+				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && player.Ammo == 0 && Enemy.ActiveCount > 0))
 				{
 					ui.centerText.text = "Rounds Survived : " + (level - 1);
 					ClearScene();
