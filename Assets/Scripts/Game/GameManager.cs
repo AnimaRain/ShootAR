@@ -13,12 +13,9 @@ namespace ShootAR
 
 	public class GameManager : MonoBehaviour
 	{
-		private const float ShotCooldown = 0.35f;
-
 		public delegate void GameOver();
 		public event GameOver OnGameOver;
 
-		[SerializeField] private Bullet bullet;
 		[HideInInspector] public int level;
 		[SerializeField] private AudioClip winSfx;
 		private Dictionary<string, Spawner> spawner;
@@ -26,7 +23,6 @@ namespace ShootAR
 		[HideInInspector] public bool gameOver, roundWon;
 		private bool exitTap;
 		private AudioSource sfx;
-		private float nextFire;
 		[SerializeField] private int ammo;
 
 		#region Dependencies
@@ -95,7 +91,6 @@ namespace ShootAR
 				Debug.LogError("Player object not found");
 
 			sfx = gameObject.AddComponent<AudioSource>();
-			Bullet.Count = 10;
 			gameOver = false;
 		}
 
@@ -140,7 +135,7 @@ namespace ShootAR
 				#endregion
 
 				#region Defeat
-				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && Bullet.Count == 0 && Enemy.activeCount > 0))
+				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && player.Ammo == 0 && Enemy.activeCount > 0))
 				{
 					ui.centerText.text = "Rounds Survived : " + (level - 1);
 					ClearScene();
@@ -168,18 +163,14 @@ namespace ShootAR
 				//Fire Bullet
 				if (!gameOver)
 				{
-					if (Bullet.Count > 0 && Time.time > nextFire)
-					{
-						nextFire = Time.time + ShotCooldown;
-						Instantiate(bullet, Vector3.zero, Camera.main.transform.rotation);
-					}
+					player.Shoot();
 				}
 
 				//Tap To Continue
 				if (gameOver)
 				{
 					//Defeat, tap to restart
-					if (Bullet.Count == 0 || player.Health <= 0)
+					if (player.Ammo == 0 || player.Health <= 0)
 					{
 						cam.Stop();
 						SceneManager.LoadScene(1);
@@ -190,7 +181,7 @@ namespace ShootAR
 						gameOver = false;
 						ui.centerText.text = "";
 						ui.buttonText.text = "";
-						Bullet.Count += 6;
+						player.Ammo += 6;
 						AdvanceLevel();
 					}
 				}

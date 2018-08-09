@@ -19,11 +19,6 @@ namespace ShootAR
 		private static AudioSource shotSfx;
 		private UnityEngine.UI.Text countText;
 
-		protected void Awake()
-		{
-			if (Count < 0) Destroy(gameObject);
-		}
-
 		protected void Start()
 		{
 			if (tvScreen == null)
