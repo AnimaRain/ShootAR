@@ -9,8 +9,8 @@ public class SpawnerTests {
 	[UnityTest]
 	public IEnumerator SpawnerStopsWhenLimitReached() {
 
-		Spawner spawner = Spawner.Create(
-			objectToSpawn: new GameObject("SpawnableObject").AddComponent<Spawnable>(),
+		Spawner<OrbitTester> spawner = Spawner<OrbitTester>.Create(
+			objectToSpawn: new GameObject("OrbitTester").AddComponent<OrbitTester>(),
 			spawnLimit: 5,
 			spawnRate: 1,
 			maxDistanceToSpawn: 10f,
@@ -27,8 +27,8 @@ public class SpawnerTests {
 	[UnityTest]
 	public IEnumerator SpawnerSpawnsTheCorrectNumberOfObjects()
 	{
-		Spawner spawner = Spawner.Create(
-			objectToSpawn: new GameObject("SpawnableObject").AddComponent<Spawnable>(),
+		Spawner<OrbitTester> spawner = Spawner<OrbitTester>.Create(
+			objectToSpawn: new GameObject("SpawnableObject").AddComponent<OrbitTester>(),
 			spawnLimit: 5,
 			spawnRate: 1,
 			maxDistanceToSpawn: 10f,
@@ -38,22 +38,22 @@ public class SpawnerTests {
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
 
-		int numberOfSpawned = Object.FindObjectsOfType<Spawnable>().Length - 1;
+		int numberOfSpawned = Object.FindObjectsOfType<OrbitTester>().Length - 1;
 		Assert.AreEqual(5, numberOfSpawned, "Spawn 5 objects.");
 	}
 
 	[UnityTest]
 	public IEnumerator SpawnerCanStopSpawning()
 	{
-		Spawner spawner = Spawner.Create(
-			new GameObject("Spawnable").AddComponent<Spawnable>(), 5, 1, 10f, 3f);
+		Spawner<OrbitTester> spawner = Spawner<OrbitTester>.Create(
+			new GameObject("Spawnable").AddComponent<OrbitTester>(), 5, 1, 10f, 3f);
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.SpawnCount < 3);
 		spawner.StopSpawning();
 		
 
-		int numberOfSpawned = Object.FindObjectsOfType<Spawnable>().Length - 1;
+		int numberOfSpawned = Object.FindObjectsOfType<OrbitTester>().Length - 1;
 		Assert.AreEqual(3, numberOfSpawned, "Interrupt spawning after spawning 5 objects.");
 	}
 
@@ -78,13 +78,13 @@ public class SpawnerTests {
 	[TearDown]
 	public void ClearTestEnvironment()
 	{
-		Spawnable[] objects = Object.FindObjectsOfType<Spawnable>();
+		OrbitTester[] objects = Object.FindObjectsOfType<OrbitTester>();
 		foreach (var o in objects)
 		{
 			Object.Destroy(o.gameObject);
 		}
 
-		Spawner[] spawners = Object.FindObjectsOfType<Spawner>();
+		Spawner<OrbitTester>[] spawners = Object.FindObjectsOfType<Spawner<OrbitTester>>();
 		foreach (var s in spawners)
 		{
 			Object.Destroy(s.gameObject);

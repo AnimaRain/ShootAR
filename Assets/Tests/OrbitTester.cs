@@ -1,13 +1,15 @@
 ﻿using ShootAR;
+using ShootAR.Enemies;
 using UnityEngine;
 
-public class OrbitTester : Spawnable
+public class OrbitTester : Enemy
 {
 	private Orbit orbit;
 
-	private void Start()
+	protected override void Start()
 	{
-		orbit = CalculateOrbit(Vector3.zero);
+		base.Start();
+		orbit =new Orbit(transform.position, Vector3.zero);
 	}
 
 	private void Update()
