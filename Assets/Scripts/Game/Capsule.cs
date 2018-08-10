@@ -12,7 +12,8 @@ namespace ShootAR
 		private AudioSource pickUpSfx;	//TODO: move the sound effect of picking up bonuses to the player
 
 		private Text bulletCountText;
-		[SerializeField] private GameManager gameManager;
+		[SerializeField] private readonly GameManager gameManager;
+		[SerializeField] private readonly Player player;
 
 		public static Capsule Create(CapsuleBase.CapsuleType type, float speed)
 		{
@@ -40,17 +41,16 @@ namespace ShootAR
 		{
 			if (gameManager != null)
 			{
-				/* If a capsule is destroyed, the player gains bullets.
-				 * If it is is not destroyed at the end of the round, the GameController
-				 * destroys it and the player gains 50 points.*/
 				if (!gameManager.gameOver)
 				{
 					switch (Base.Type)
 					{
 						case 0:
-							Bullet.Count += 4;
+							player.Ammo += 4;
 							bulletCountText.text = Bullet.Count.ToString();
 							break;
+
+						//TODO: Write cases for the rest of the types of capsule
 					}
 					pickUpSfx?.Play();
 				}

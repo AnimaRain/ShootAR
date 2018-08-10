@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-//#pragma warning disable 649   //the unassigned fields are actually assigned in Unity Editor
+#pragma warning disable 649   //the unassigned fields are actually assigned in Unity Editor
 
 namespace ShootAR
 {
