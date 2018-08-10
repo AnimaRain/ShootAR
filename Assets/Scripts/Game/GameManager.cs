@@ -1,6 +1,8 @@
 ﻿/* TODO: Check if roundWon and gameOver conditions are used in the correct
  * places. */
+/* TODO: Write "Create" function. */
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,13 +19,13 @@ namespace ShootAR
 		public event GameOver OnGameOver;
 
 		[HideInInspector] public int level;
-		[SerializeField] private AudioClip winSfx;
-		private Dictionary<string, Spawner> spawner;
+		[SerializeField] private readonly AudioClip winSfx;
+		private Dictionary<Type, Spawner<Enemy>> enemySpawner;
+		private Spawner<Capsule> capsuleSpawner;
 		private int score;
 		[HideInInspector] public bool gameOver, roundWon;
 		private bool exitTap;
 		private AudioSource sfx;
-		[SerializeField] private int ammo;
 
 		#region Dependencies
 		[SerializeField] private readonly Button fireButton;
@@ -34,20 +36,6 @@ namespace ShootAR
 		private TVScript tvScreen;
 		#endregion
 
-		/// <summary>
-		/// The ammount of bullets the player has.
-		/// </summary>
-		public int Ammo {
-			get { return ammo; }
-			private set { ammo = value; }
-		}
-
-		public static GameManager Create(int ammo)
-		{
-			var o = new GameObject("Game Manager").AddComponent<GameManager>();
-			o.Ammo = ammo;
-			return o;
-		}
 
 		private void Awake()
 		{
@@ -69,22 +57,27 @@ namespace ShootAR
 			}
 #endif
 
-			/* Create a dictionary of all spawners by setting the name of
-			 * their assigned ObjectToSpawn as a key and the spawner itself
-			 * as the value.*/
-			spawner = new Dictionary<string, Spawner>();
-			Spawner[] spawners = FindObjectsOfType<Spawner>();
-			if (spawners == null)
+			enemySpawner = new Dictionary<Type, Spawner<Enemy>>();
+			Spawner<Enemy>[] enemySpawners = FindObjectsOfType<Spawner<Enemy>>();
+			if (enemySpawners == null)
 			{
-				Debug.LogError("Could not find objects of type \"Spawner\".");
+				Debug.LogError("Could not find \"Enemy\" spawners.");
 			}
 			else
 			{
-				foreach (Spawner spawner in spawners)
+				foreach (Spawner<Enemy> spawner in enemySpawners)
 				{
-					string type = spawner.ObjectToSpawn.name;
-					this.spawner.Add(type, spawner);
+					Type type = spawner.ObjectToSpawn.GetType();
+					enemySpawner.Add(type, spawner);
+#if DEBUG
+					Debug.Log($"Found spawner of type \"{type}\"");
+#endif
 				}
+			}
+			capsuleSpawner = FindObjectOfType<Spawner<Capsule>>();
+			if (capsuleSpawner == null)
+			{
+				Debug.LogError("Could not find \"Capsule\" spawners.");
 			}
 
 			if (player == null)
@@ -114,7 +107,7 @@ namespace ShootAR
 				AdvanceLevel();
 			}
 
-			System.GC.Collect();
+			GC.Collect();
 		}
 
 		private void Update()
@@ -123,7 +116,7 @@ namespace ShootAR
 			{
 				#region Round Won
 				//TO DO: Check following condition. Looks weird... Is the literal true really needed?
-				if (spawner.ContainsKey(nameof(Crasher)) ? !spawner["Crasher"].IsSpawning : true && Enemy.ActiveCount == 0)
+				if (enemySpawner.ContainsKey(typeof(Crasher)) ? !enemySpawner[typeof(Crasher)].IsSpawning : true && Enemy.ActiveCount == 0)
 				{
 					roundWon = true;
 					ui.centerText.text = "Round Clear!";
@@ -196,22 +189,22 @@ namespace ShootAR
 		{
 			level++;
 			tvScreen.Invoke("StartTV", 10);
-			foreach (var spawner in spawner)
+
+			// Spawn Patterns
+			foreach (var spawner in enemySpawner)
 			{
-				// Spawn Patterns
-				switch (spawner.Key)
+				switch (spawner.Key.ToString())
 				{
-					case "Crasher":
+					case nameof(Crasher):
 						spawner.Value.StartSpawning(4 * level + 8);
 						break;
-					case "Drone":
+					case nameof(Drone):
 						spawner.Value.StartSpawning(3 * level + 6);
-						break;
-					case "Capsule":
-						spawner.Value.StartSpawning(level + 2);
 						break;
 				}
 			}
+			capsuleSpawner.StartSpawning(level + 2);
+
 			roundWon = false;
 		}
 
@@ -235,16 +228,14 @@ namespace ShootAR
 		{
 			gameOver = true;
 
-			foreach (Spawner spawner in spawner.Values)
-			{
+			capsuleSpawner.StopSpawning();
+			foreach (Spawner<Enemy> spawner in enemySpawner.Values)
 				spawner.StopSpawning();
-			}
 
-			Spawnable[] objects = FindObjectsOfType<Spawnable>();
-			foreach (Spawnable o in objects)
-			{
-				Destroy(o.gameObject);
-			}
+			Enemy[] enemies = FindObjectsOfType<Enemy>();
+			foreach (var e in enemies) Destroy(e.gameObject);
+			Capsule[] capsules = FindObjectsOfType<Capsule>();
+			foreach (var c in capsules) Destroy(c.gameObject);
 		}
 
 		public void GoToMenu()

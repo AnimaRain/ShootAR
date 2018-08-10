@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace ShootAR.Menu
 {
-	class RoundSelectMenu : MonoBehaviour
+	public class RoundSelectMenu : MonoBehaviour
 	{
 		private int roundToPlay;
 		public int RoundToPlay

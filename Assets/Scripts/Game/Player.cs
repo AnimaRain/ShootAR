@@ -59,6 +59,9 @@ namespace ShootAR
 			}
 		}
 
+		/// <summary>
+		/// The ammount of bullets the player has.
+		/// </summary>
 		public int Ammo
 		{
 			get { return ammo; }
