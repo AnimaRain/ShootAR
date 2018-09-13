@@ -20,8 +20,8 @@ namespace ShootAR
 
 		[HideInInspector] public int level;
 		[SerializeField] private readonly AudioClip winSfx;
-		private Dictionary<Type, Spawner<Enemy>> enemySpawner;
-		private Spawner<Capsule> capsuleSpawner;
+		private Dictionary<Type, Spawner> enemySpawner;
+		private Spawner capsuleSpawner;
 		private int score;
 		[HideInInspector] public bool gameOver, roundWon;
 		private bool exitTap;
@@ -57,15 +57,15 @@ namespace ShootAR
 			}
 #endif
 
-			enemySpawner = new Dictionary<Type, Spawner<Enemy>>();
-			Spawner<Enemy>[] enemySpawners = FindObjectsOfType<Spawner<Enemy>>();
+			enemySpawner = new Dictionary<Type, Spawner>();
+			Spawner[] enemySpawners = FindObjectsOfType<Spawner>();
 			if (enemySpawners == null)
 			{
 				Debug.LogError("Could not find \"Enemy\" spawners.");
 			}
 			else
 			{
-				foreach (Spawner<Enemy> spawner in enemySpawners)
+				foreach (Spawner spawner in enemySpawners)
 				{
 					Type type = spawner.ObjectToSpawn.GetType();
 					enemySpawner.Add(type, spawner);
@@ -74,7 +74,7 @@ namespace ShootAR
 #endif
 				}
 			}
-			capsuleSpawner = FindObjectOfType<Spawner<Capsule>>();
+			capsuleSpawner = FindObjectOfType<Spawner>();
 			if (capsuleSpawner == null)
 			{
 				Debug.LogError("Could not find \"Capsule\" spawners.");
@@ -229,7 +229,7 @@ namespace ShootAR
 			gameOver = true;
 
 			capsuleSpawner.StopSpawning();
-			foreach (Spawner<Enemy> spawner in enemySpawner.Values)
+			foreach (Spawner spawner in enemySpawner.Values)
 				spawner.StopSpawning();
 
 			Enemy[] enemies = FindObjectsOfType<Enemy>();

@@ -6,7 +6,16 @@ namespace ShootAR
 
 	public class Capsule : MonoBehaviour, ISpawnable
 	{
-		public CapsuleBase Base { get; private set; }
+		public float Speed { get; set; }
+
+		public enum CapsuleType
+		{
+			Bullet,
+			Health,
+			Armor,
+			PowerUp
+		}
+		public CapsuleType Type { get; private set; }
 
 		private Vector3 rotation;
 		private AudioSource pickUpSfx;	//TODO: move the sound effect of picking up bonuses to the player
@@ -15,10 +24,11 @@ namespace ShootAR
 		[SerializeField] private readonly GameManager gameManager;
 		[SerializeField] private readonly Player player;
 
-		public static Capsule Create(CapsuleBase.CapsuleType type, float speed)
+		public static Capsule Create(CapsuleType type, float speed)
 		{
 			var o = new GameObject("Capsule").AddComponent<Capsule>();
-			o.Base = new CapsuleBase(type, speed);
+			o.Type = type;
+			o.Speed = speed;
 			return o;
 		}
 
@@ -34,7 +44,7 @@ namespace ShootAR
 			//rotation
 			transform.Rotate(rotation * Time.deltaTime);
 			//orbit
-			transform.RotateAround(Vector3.zero, Vector3.up, Base.Speed * Time.deltaTime);
+			transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
 		}
 
 		protected void OnDestroy()
@@ -43,7 +53,7 @@ namespace ShootAR
 			{
 				if (!gameManager.gameOver)
 				{
-					switch (Base.Type)
+					switch (this.Type)
 					{
 						case 0:
 							player.Ammo += 4;

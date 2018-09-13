@@ -7,10 +7,20 @@ namespace ShootAR.Enemies
 	/// </summary>
 	public abstract class Enemy : MonoBehaviour, ISpawnable, IOrbiter
 	{
-		[SerializeField] private EnemyBase @base;
-
-		public EnemyBase Base { get { return @base; } }
-
+		/// <summary>
+		/// The speed at which this object is moving.
+		/// </summary>
+		public float Speed { get; set; }
+		/// <summary>
+		/// The amount of points added to the player's score when destroyed.
+		/// </summary>
+		public int PointsValue { get; private set; }
+		/// <summary>
+		/// The amount of damage the player recieves from this object's attack.
+		/// </summary>
+		[UnityEngine.Range(-Player.HEALTH_MAX, Player.HEALTH_MAX), UnityEngine.SerializeField]
+		public int damage;
+		public int Damage { get { return damage; } set { damage = value; } }
 		/// <summary>
 		/// Count of currently active enemies.
 		/// </summary>
@@ -25,7 +35,9 @@ namespace ShootAR.Enemies
 			float x = 0f, float y = 0f, float z = 0f)
 		{
 			var o = new GameObject("Enemy").AddComponent<Enemy>();
-			o.@base = new EnemyBase(speed, damage, pointsValue);
+			o.Speed = speed;
+			o.Damage = damage;
+			o.PointsValue = pointsValue;
 			o.transform.position = new Vector3(x, y, z);
 			return o;
 		}
@@ -44,8 +56,6 @@ namespace ShootAR.Enemies
 			sfx.playOnAwake = false;
 			sfx.maxDistance = 10f;
 
-			Base.Orbiter = this;
-
 			if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
 		}
 
@@ -53,7 +63,7 @@ namespace ShootAR.Enemies
 		{
 			if (!gameManager.gameOver)
 			{
-				gameManager.AddScore(Base.PointsValue);
+				gameManager.AddScore(PointsValue);
 				Instantiate(explosion, transform.position, transform.rotation);
 			}
 			ActiveCount--;
@@ -66,7 +76,7 @@ namespace ShootAR.Enemies
 		{
 			transform.LookAt(point);
 			transform.forward = -transform.position;
-			GetComponent<Rigidbody>().velocity = transform.forward * Base.Speed;
+			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 		}
 
 		public void MoveTo(float x, float y, float z)
@@ -82,7 +92,7 @@ namespace ShootAR.Enemies
 		public void OrbitAround(Orbit orbit)
 		{
 			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Base.Speed * Time.deltaTime);
+			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);
 		}
 	}
 }

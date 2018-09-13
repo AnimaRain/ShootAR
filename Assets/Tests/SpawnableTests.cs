@@ -40,7 +40,7 @@ class SpawnableTests
 		OrbitTester orbiter = Object.Instantiate(
 			new GameObject("TestObject").AddComponent<OrbitTester>());
 		orbiter.transform.Translate(startingPoint);
-		orbiter.Base.Speed = 100f;
+		orbiter.Speed = 100f;
 		var oCollider = orbiter.gameObject.AddComponent<SphereCollider>();
 		oCollider.radius = 1f;
 

@@ -9,7 +9,7 @@ public class SpawnerTests {
 	[UnityTest]
 	public IEnumerator SpawnerStopsWhenLimitReached() {
 
-		Spawner<OrbitTester> spawner = Spawner<OrbitTester>.Create(
+		Spawner spawner = Spawner.Create(
 			objectToSpawn: new GameObject("OrbitTester").AddComponent<OrbitTester>(),
 			spawnLimit: 5,
 			spawnRate: 1,
@@ -27,7 +27,7 @@ public class SpawnerTests {
 	[UnityTest]
 	public IEnumerator SpawnerSpawnsTheCorrectNumberOfObjects()
 	{
-		Spawner<OrbitTester> spawner = Spawner<OrbitTester>.Create(
+		Spawner spawner = Spawner.Create(
 			objectToSpawn: new GameObject("SpawnableObject").AddComponent<OrbitTester>(),
 			spawnLimit: 5,
 			spawnRate: 1,
@@ -45,7 +45,7 @@ public class SpawnerTests {
 	[UnityTest]
 	public IEnumerator SpawnerCanStopSpawning()
 	{
-		Spawner<OrbitTester> spawner = Spawner<OrbitTester>.Create(
+		Spawner spawner = Spawner.Create(
 			new GameObject("Spawnable").AddComponent<OrbitTester>(), 5, 1, 10f, 3f);
 
 		spawner.StartSpawning();
@@ -84,7 +84,7 @@ public class SpawnerTests {
 			Object.Destroy(o.gameObject);
 		}
 
-		Spawner<OrbitTester>[] spawners = Object.FindObjectsOfType<Spawner<OrbitTester>>();
+		Spawner[] spawners = Object.FindObjectsOfType<Spawner>();
 		foreach (var s in spawners)
 		{
 			Object.Destroy(s.gameObject);

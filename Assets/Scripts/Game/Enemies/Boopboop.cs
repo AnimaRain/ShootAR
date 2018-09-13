@@ -5,16 +5,8 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Class of Short-Ranged Enemy
 	/// </summary>
-	public abstract class Boopboop : Enemy, IDamager
+	public abstract class Boopboop : Enemy
 	{
-		public new BoopboopBase Base { get; set; }
-
-		protected override void Start()
-		{
-			base.Start();
-			Base.Damager = this;
-		}
-
 		protected virtual void OnTriggerEnter(Collider other)
 		{
 			var target = other.GetComponent<Player>();
@@ -24,7 +16,7 @@ namespace ShootAR.Enemies
 		public virtual void Attack(Player target)
 		{
 			sfx.Play();
-			target.Health -= Base.damage;
+			target.Health -= damage;
 		}
 	}
 }

@@ -4,9 +4,9 @@ using System.Collections;
 namespace ShootAR
 {
 
-	public class Spawner<T> : MonoBehaviour where T : Object, ISpawnable
+	public class Spawner : MonoBehaviour
 	{
-		public T ObjectToSpawn { get; private set; }
+		public ISpawnable ObjectToSpawn { get; private set; }
 		public float SpawnRate { get; set; }
 		/// <summary>
 		/// Distance away from player.
@@ -37,11 +37,11 @@ namespace ShootAR
 
 		private AudioSource sfx;
 
-		public static Spawner<T> Create(
-			T objectToSpawn, int spawnLimit, int spawnRate, 
+		public static Spawner Create(
+			ISpawnable objectToSpawn, int spawnLimit, int spawnRate, 
 			float maxDistanceToSpawn, float minDistanceToSpawn)
 		{
-			var o = new GameObject("Spawner").AddComponent<Spawner<T>>();
+			var o = new GameObject("Spawner").AddComponent<Spawner>();
 			o.ObjectToSpawn = objectToSpawn;
 			o.SpawnLimit = spawnLimit;
 			o.SpawnRate = spawnRate;
@@ -95,7 +95,7 @@ namespace ShootAR
 				if (spawnSfx != null)
 					sfx.Play();
 
-				Instantiate(ObjectToSpawn, transform.localPosition, transform.localRotation);
+				Instantiate((Object)ObjectToSpawn, transform.localPosition, transform.localRotation);
 				SpawnCount++;
 				if (SpawnCount == SpawnLimit) IsSpawning = false;
 			}
