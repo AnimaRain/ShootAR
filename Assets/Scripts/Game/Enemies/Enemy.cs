@@ -14,7 +14,7 @@ namespace ShootAR.Enemies
 		/// <summary>
 		/// The amount of points added to the player's score when destroyed.
 		/// </summary>
-		public int PointsValue { get; private set; }
+		public int PointsValue { get; protected set; }
 		/// <summary>
 		/// The amount of damage the player recieves from this object's attack.
 		/// </summary>
@@ -30,17 +30,6 @@ namespace ShootAR.Enemies
 		[SerializeField] protected GameObject explosion;
 		protected AudioSource sfx;
 		protected static GameManager gameManager;
-
-		public static Enemy Create(float speed, int damage, int pointsValue,
-			float x = 0f, float y = 0f, float z = 0f)
-		{
-			var o = new GameObject("Enemy").AddComponent<Enemy>();
-			o.Speed = speed;
-			o.Damage = damage;
-			o.PointsValue = pointsValue;
-			o.transform.position = new Vector3(x, y, z);
-			return o;
-		}
 
 		protected void Awake()
 		{
@@ -61,7 +50,7 @@ namespace ShootAR.Enemies
 
 		protected virtual void OnDestroy()
 		{
-			if (!gameManager.gameOver)
+			if (gameManager != null && !gameManager.GameOver)
 			{
 				gameManager.AddScore(PointsValue);
 				Instantiate(explosion, transform.position, transform.rotation);

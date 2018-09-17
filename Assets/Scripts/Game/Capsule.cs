@@ -18,7 +18,7 @@ namespace ShootAR
 		public CapsuleType Type { get; private set; }
 
 		private Vector3 rotation;
-		private AudioSource pickUpSfx;	//TODO: move the sound effect of picking up bonuses to the player
+		private AudioSource pickUpSfx;  //TODO: move the sound effect of picking up bonuses to the player
 
 		private Text bulletCountText;
 		[SerializeField] private readonly GameManager gameManager;
@@ -36,7 +36,7 @@ namespace ShootAR
 		{
 			rotation = new Vector3(15, 30, 45);
 			pickUpSfx = GetComponent<AudioSource>();
-			bulletCountText = FindObjectOfType<UIManager>().bulletCountText;
+			bulletCountText = FindObjectOfType<UIManager>()?.bulletCountText;
 		}
 
 		private void Update()
@@ -51,20 +51,21 @@ namespace ShootAR
 		{
 			if (gameManager != null)
 			{
-				if (!gameManager.gameOver)
+				if (!gameManager.GameOver)
 				{
 					switch (this.Type)
 					{
 						case 0:
 							player.Ammo += 4;
-							bulletCountText.text = Bullet.Count.ToString();
+							if (bulletCountText != null)
+								bulletCountText.text = Bullet.Count.ToString();
 							break;
 
-						//TODO: Write cases for the rest of the types of capsule
+							//TODO: Write cases for the rest of the types of capsule
 					}
 					pickUpSfx?.Play();
 				}
-				else if (gameManager.roundWon)
+				else if (gameManager.RoundWon)
 				{
 					gameManager.AddScore(50);
 				}

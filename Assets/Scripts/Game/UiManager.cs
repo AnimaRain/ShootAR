@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿/* TODO: UI should not be depended on the game manager */
+
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ShootAR
@@ -21,6 +23,27 @@ namespace ShootAR
 		private AudioClip pauseSfx;
 
 		private GameManager gameManager;
+
+		public static UIManager Create(
+				GameObject uiCanvas, GameObject pauseCanvas,
+				Text bulletCountText, Text centerText, Text buttonText,
+				Text scoreText, Text roundText,
+				AudioSource sfx, AudioClip pauseSfx)
+		{
+			var o = new GameObject(nameof(UIManager)).AddComponent<UIManager>();
+
+			o.uiCanvas = uiCanvas;
+			o.pauseCanvas = pauseCanvas;
+			o.bulletCountText = bulletCountText;
+			o.centerText = centerText;
+			o.buttonText = buttonText;
+			o.scoreText = scoreText;
+			o.roundText = roundText;
+			o.sfx = sfx;
+			o.pauseSfx = pauseSfx;
+
+			return o;
+		}
 
 		public void Start()
 		{

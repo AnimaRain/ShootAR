@@ -32,9 +32,9 @@ namespace ShootAR
 		/// </summary>
 		public int SpawnCount { get; private set; }
 		public bool IsSpawning { get; private set; }
+
 		[SerializeField] private readonly AudioClip spawnSfx;
 		[SerializeField] private readonly GameObject portal;
-
 		private AudioSource sfx;
 
 		public static Spawner Create(
@@ -55,7 +55,10 @@ namespace ShootAR
 			SpawnLimit = -1;    //Initial value should not be 0 to refrain from
 								//enabling "Game Over" state when the game has
 								//just started.
+		}
 
+		private void Start()
+		{
 			if (spawnSfx != null)
 			{
 				sfx = gameObject.AddComponent<AudioSource>();
@@ -64,6 +67,27 @@ namespace ShootAR
 			}
 		}
 
+		private void OnEnable()
+		{
+			var gm = FindObjectOfType<GameManager>();
+
+			if (gm != null)
+			{
+				gm.OnGameOver += StopSpawning;
+				gm.OnRoundWon += StopSpawning;
+			}
+		}
+
+		private void OnDisable()
+		{
+			var gm = FindObjectOfType<GameManager>();
+
+			if (gm != null)
+			{
+				gm.OnGameOver -= StopSpawning;
+				gm.OnRoundWon -= StopSpawning;
+			}
+		}
 
 		/// <summary>
 		/// Spawn objects until the spawn-limit is reached.

@@ -29,7 +29,7 @@ public class TVScript : MonoBehaviour
 	{
 		GetComponent<Renderer>().material = blackScreen;
 		CancelInvoke("StartTV");
-		if (!gameManager.gameOver)
+		if (!gameManager.GameOver)
 			Invoke("StartTV", tvRefreshTime);
 		tvOn = false;
 	}

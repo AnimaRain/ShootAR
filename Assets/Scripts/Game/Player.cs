@@ -46,7 +46,7 @@ namespace ShootAR
 					HasArmor = false;
 				}
 				health = Mathf.Clamp(value, 0, HEALTH_MAX);
-				if (health == 0) gameManager.gameOver = true;
+				if (health == 0) gameManager.GameOver = true;
 				UpdateHealthUI();
 			}
 		}
