@@ -1,31 +1,30 @@
-﻿/* TODO: Check healthIndicator if any changes are needed; I'm not quite happy with 
- * the way it is right now. Maybe it should be declared readonly. */
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ShootAR
 {
+	[RequireComponent(typeof(AudioSource))]
 	public class Player : MonoBehaviour
 	{
 		//Set here how much health the player is allowed to have.
-		public const sbyte HEALTH_MAX = 3;
-
-		private const float ShotCooldown = 0.35f;
+		public const sbyte MAXIMUM_HEALTH = 3;
+		private const float SHOT_COOLDOWN = 0.35f;
 
 		[SerializeField]
-		private GameObject[] healthIndicator = new GameObject[HEALTH_MAX];
+		private GameObject[] healthIndicator = new GameObject[MAXIMUM_HEALTH];
 
-		[Range(0, HEALTH_MAX), SerializeField]
+		[Range(0, MAXIMUM_HEALTH), SerializeField]
 		private int health;
 		[Range(0, Mathf.Infinity), SerializeField]
 		private int ammo;
 		private float nextFire;
 
-		private GameManager gameManager;
+		private GameState gameState;
 		/// <summary>
-		/// The bullet prefab that gets cloned when the player shoots.
+		/// The bullet prefab that gets instantiated when the player shoots.
 		/// </summary>
-		[SerializeField] private readonly Bullet bullet;
+		[SerializeField] private Bullet bullet;
+		private AudioSource audioSource;
+		private AudioClip shotSfx;
 
 		/// <summary>
 		/// Player's health.
@@ -40,22 +39,18 @@ namespace ShootAR
 
 			set
 			{
-				if (HasArmor && value < 0)
-				{
-					value = 0;
-					HasArmor = false;
-				}
-				health = Mathf.Clamp(value, 0, HEALTH_MAX);
-				if (health == 0) gameManager.GameOver = true;
+				health = Mathf.Clamp(value, 0, MAXIMUM_HEALTH);
+				if (health == 0 && gameState != null)
+					gameState.GameOver = true;
 				UpdateHealthUI();
 			}
 		}
 
 		private void UpdateHealthUI()
 		{
-			for (int i = 0; i < HEALTH_MAX; i++)
+			for (int i = 0; i < MAXIMUM_HEALTH; i++)
 			{
-				healthIndicator[i].SetActive(i < health);
+				healthIndicator[i]?.SetActive(i < health);
 			}
 		}
 
@@ -68,27 +63,48 @@ namespace ShootAR
 			set
 			{
 				ammo = value;
-				CanShoot = ammo <= 0;
+				CanShoot = ammo >= 0;
 			}
 		}
 
 		public bool HasArmor { get; set; }
 		public bool CanShoot { get; set; }
 
-		public static Player Create(int health)
+		public static Player Create(
+			int health = MAXIMUM_HEALTH, Camera camera = null,
+			Bullet bullet = null, int ammo = 0, GameState gameState = null)
 		{
-			var o = new GameObject().AddComponent<Player>();
-			for (int i = 0; i < HEALTH_MAX; i++)
+			var o = new GameObject(nameof(Player)).AddComponent<Player>();
+
+			for (int i = 0; i < MAXIMUM_HEALTH; i++)
 				o.healthIndicator[i] = new GameObject("HealthIndicator");
 			o.Health = health;
+			o.Ammo = ammo;
+			o.bullet = bullet;
+			o.gameState = gameState;
+			if (camera != null) camera.tag = "MainCamera";
+			else if (bullet != null)
+			{
+				Debug.LogWarning("No reference to main camera. Shooting" +
+					" functions will raise error if used.");
+			}
+
 			return o;
 		}
 
+		/// <summary>
+		/// Instantiate a bullet if there is enough ammo and the cooldown has expired.
+		/// </summary>
+		/// <returns>
+		/// a reference to the bullet fired or null if conditions are not met
+		/// </returns>
 		public Bullet Shoot()
 		{
-			if (Bullet.Count > 0 && Time.time > nextFire)
+			if (Ammo > 0 && Time.time >= nextFire)
 			{
-				nextFire = Time.time + ShotCooldown;
+				Ammo--;
+				nextFire = Time.time + SHOT_COOLDOWN;
+				if (shotSfx != null) audioSource.PlayOneShot(shotSfx);
 				return Instantiate(bullet, Vector3.zero, Camera.main.transform.rotation);
 			}
 
@@ -97,9 +113,35 @@ namespace ShootAR
 
 		private void Start()
 		{
-			gameManager = FindObjectOfType<GameManager>();
+			audioSource = GetComponent<AudioSource>();
 
 			UpdateHealthUI();
+		}
+
+		/// <summary>
+		/// Player's health is reduced by damage.
+		/// If health vanishes, GameOver state is set.
+		/// </summary>
+		/// <param name="damage">the amount by which health is reduced</param>
+		public void GetDamaged(int damage)
+		{
+			if (damage < 0) return;
+
+			if (HasArmor)
+			{
+				HasArmor = false;
+				return;
+			}
+
+			Health -= damage;
+		}
+
+		private void OnDestroy()
+		{
+			foreach (var h in healthIndicator)
+			{
+				Destroy(h.gameObject);
+			}
 		}
 	}
 }

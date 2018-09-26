@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 
-#pragma warning disable 649   //the unassigned fields are actually assigned in Unity Editor
-
 namespace ShootAR
 {
+	[RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 	public class Bullet : MonoBehaviour, ISpawnable
 	{
-		[SerializeField] private float Speed { get; }
+		[SerializeField] private float speed;
+		public float Speed
+		{
+			get { return speed; }
+			private set { speed = value; }
+		}
 		/// <summary>
 		/// Total count of spawned bullets during the current round.
 		/// </summary>
@@ -15,43 +19,39 @@ namespace ShootAR
 		/// Count of currently active bullets.
 		/// </summary>
 		public static int ActiveCount { get; private set; }
-		private static TVScript tvScreen;
-		private static AudioSource shotSfx;
-		private UnityEngine.UI.Text countText;
+
+		public static Bullet Create(float speed, UnityEngine.UI.Text countText = null)
+		{
+			var o = new GameObject(nameof(Bullet)).AddComponent<Bullet>();
+
+			o.GetComponent<Rigidbody>().useGravity = false;
+			o.GetComponent<SphereCollider>().isTrigger = true;
+			o.Speed = speed;
+
+			// When the bullet gets created, it starts moving. This is
+			// a solution that currently works. After Player.Shoot() gets called
+			// the new bullet must be set active. Mind that Bullet.Create() is
+			// intended for test purposes only.
+			o.gameObject.SetActive(false);
+			return o;
+		}
 
 		protected void Start()
 		{
-			if (tvScreen == null)
-				tvScreen = GameObject.FindGameObjectWithTag("TVScreen").GetComponent<TVScript>();
-			if (shotSfx == null)
-				shotSfx = GetComponent<AudioSource>();
 			transform.rotation = Camera.main.transform.rotation;
 			transform.position = Vector3.zero;
-			shotSfx.Play();
 			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
 			Count++;
 			ActiveCount++;
-			countText.text = Count.ToString();
 		}
 
 		protected void OnTriggerEnter(Collider col)
 		{
-			if (col.CompareTag("Enemy") || col.CompareTag("Capsule"))
+			if (col.GetComponent<Enemies.Enemy>() || col.GetComponent<Capsule>())
 			{
 				Destroy(col.gameObject);
 				Destroy(gameObject);
-			}
-			if (col.gameObject.tag == "Remote")
-			{
-				if (tvScreen.tvOn)
-				{
-					tvScreen.CloseTV();
-				}
-				else
-				{
-					tvScreen.StartTV();
-				}
 			}
 		}
 

@@ -6,7 +6,11 @@ namespace ShootAR
 
 	public class Spawner : MonoBehaviour
 	{
-		public ISpawnable ObjectToSpawn { get; private set; }
+		[SerializeField] private ISpawnable objectToSpawn;
+		public ISpawnable ObjectToSpawn {
+			get {return objectToSpawn; }
+			private set {objectToSpawn = value; }
+		}
 		public float SpawnRate { get; set; }
 		/// <summary>
 		/// Distance away from player.
@@ -27,34 +31,48 @@ namespace ShootAR
 		/// </summary>
 		public int SpawnLimit { get; private set; }
 		/// <summary>
-		/// Counts how many times ObjectToSpawn spawned. Resets every time
-		/// StartSpawning is called.
+		/// Counts how many instances of ObjectToSpawn were spawned. Resets 
+		/// every time StartSpawning is called.
 		/// </summary>
 		public int SpawnCount { get; private set; }
 		public bool IsSpawning { get; private set; }
 
+		private GameState gameState;
 		[SerializeField] private readonly AudioClip spawnSfx;
 		[SerializeField] private readonly GameObject portal;
 		private AudioSource sfx;
 
 		public static Spawner Create(
-			ISpawnable objectToSpawn, int spawnLimit, int spawnRate, 
-			float maxDistanceToSpawn, float minDistanceToSpawn)
+			ISpawnable objectToSpawn, int spawnLimit, float spawnRate, 
+			float maxDistanceToSpawn, float minDistanceToSpawn,
+			GameState gameState = null)
 		{
-			var o = new GameObject("Spawner").AddComponent<Spawner>();
+			var o = new GameObject(nameof(Spawner)).AddComponent<Spawner>();
+
 			o.ObjectToSpawn = objectToSpawn;
 			o.SpawnLimit = spawnLimit;
 			o.SpawnRate = spawnRate;
 			o.MaxDistanceToSpawn = maxDistanceToSpawn;
 			o.MinDistanceToSpawn = minDistanceToSpawn;
+			o.gameState = gameState;
+
+			// Since Create() is not an actual constructor, when object o is
+			// created, o.gameState is null and the code in OnEnable() won't
+			// run, so the following lines were copied here as well.
+			if (gameState != null)
+			{
+				gameState.OnGameOver += o.StopSpawning;
+				gameState.OnRoundWon += o.StopSpawning;
+			}
+
 			return o;
 		}
 
 		private void Awake()
 		{
-			SpawnLimit = -1;    //Initial value should not be 0 to refrain from
-								//enabling "Game Over" state when the game has
-								//just started.
+			//Initial value should not be 0 to refrain from enabling
+			//"Game Over" state when the game has just started.
+			if (SpawnLimit == 0) SpawnLimit = -1;
 		}
 
 		private void Start()
@@ -69,23 +87,19 @@ namespace ShootAR
 
 		private void OnEnable()
 		{
-			var gm = FindObjectOfType<GameManager>();
-
-			if (gm != null)
+			if (gameState != null)
 			{
-				gm.OnGameOver += StopSpawning;
-				gm.OnRoundWon += StopSpawning;
+				gameState.OnGameOver += StopSpawning;
+				gameState.OnRoundWon += StopSpawning;
 			}
 		}
 
 		private void OnDisable()
 		{
-			var gm = FindObjectOfType<GameManager>();
-
-			if (gm != null)
+			if (gameState != null)
 			{
-				gm.OnGameOver -= StopSpawning;
-				gm.OnRoundWon -= StopSpawning;
+				gameState.OnGameOver -= StopSpawning;
+				gameState.OnRoundWon -= StopSpawning;
 			}
 		}
 
@@ -96,7 +110,6 @@ namespace ShootAR
 		public IEnumerator Spawn()
 		{
 			IsSpawning = true;
-			float x, z;
 			while (IsSpawning)
 			{
 				yield return new WaitForSeconds(SpawnRate);
@@ -105,23 +118,28 @@ namespace ShootAR
 				 * while being in the middle of this function call. */
 				if (!IsSpawning) break;
 
-				do
-				{
-					x = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
-					z = Random.Range(-MaxDistanceToSpawn, MaxDistanceToSpawn);
-				} while (Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2)) <= MinDistanceToSpawn);
-				transform.localPosition = new Vector3(x, 0, z);
-				transform.localRotation = Quaternion.LookRotation(-transform.localPosition);
+				float r = Random.Range(minDistanceToSpawn, maxDistanceToSpawn);
+				float theta = Random.Range(0f, Mathf.PI);
+				float fi = Random.Range(0f, 2 * Mathf.PI);
+				float x = r * Mathf.Sin(theta) * Mathf.Cos(fi);
+				float y = r * Mathf.Sin(theta) * Mathf.Sin(fi);
+				float z = r * Mathf.Cos(theta);
+
+				transform.localPosition = new Vector3(x, y, z);
+				transform.localRotation = Quaternion.LookRotation(
+						-transform.localPosition);
 
 				//Spawn special effects
 				if (portal != null)
-					Instantiate(portal, transform.localPosition, transform.localRotation);
+					Instantiate(portal,
+						transform.localPosition, transform.localRotation);
 				if (spawnSfx != null)
 					sfx.Play();
 
-				Instantiate((Object)ObjectToSpawn, transform.localPosition, transform.localRotation);
+				Instantiate((Object)ObjectToSpawn,
+					transform.localPosition, transform.localRotation);
 				SpawnCount++;
-				if (SpawnCount == SpawnLimit) IsSpawning = false;
+				if (SpawnCount == SpawnLimit) StopSpawning();
 			}
 		}
 

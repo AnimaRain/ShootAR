@@ -6,35 +6,22 @@ using ShootAR;
 
 public class CapsuleTests {
 
-    /*[UnityTest]
+    [UnityTest]
     public IEnumerator CapsuleGivesBulletsWhenDestroyed() {
-		//TODO: Set up Test
-		Capsule capsule = Capsule.Create(Capsule.CapsuleType.Bullet);
-		Player stubPlayer = new GameObject("Player").AddComponent<Player>();
-		stubPlayer.Bullets = 10;
+		//Set up Test
+		Player player = Player.Create();
+		Capsule capsule =
+			Capsule.Create(Capsule.CapsuleType.Bullet, 0, player);
 
-		//TODO: Perform Test
+		//Perform Test
 		Object.Destroy(capsule.gameObject);
+		yield return new WaitUntil(() => capsule == null);
 
-		//TODO: Assert
-		Assert.AreEqual(10, stubPlayer.Bullets);
-		yield return null;
-    }*/
+		//Assert
+		Assert.Greater(player.Ammo, 0);
+    }
 
-	[UnityTest]
-	public IEnumerator UndestroyedCapsuleGivesPointsAtRoundEnd()
-	{
-		//TODO: Set up Test
-		//Create capsule
-
-		//TODO: Perform Test
-
-		//TODO: Assert
-
-		yield return null;
-	}
-
-	//TODO:
+	//UNDONE:
 	/* Tests for conditional-capsule
 	 * e.g. Capsules that appears after performing a combo, killing a couple of
 	 * enemies in row without missing.
@@ -43,9 +30,16 @@ public class CapsuleTests {
 	 * ...or in an other game-logic system?
 	 * 
 	[UnityTest]
-	public IEnumerator SpecialCapsuleAppearsAfterKillingXEnemiesInARow()
+	public IEnumerator BonusCapsuleAppearsAfterKillingXEnemiesConsecutively()
 	{
 		yield return null;
 	}
 	*/
+
+	[TearDown]
+	public void ClearEnvironment()
+	{
+		var objects = Object.FindObjectsOfType<GameObject>();
+		foreach (var o in objects) Object.Destroy(o.gameObject);
+	}
 }

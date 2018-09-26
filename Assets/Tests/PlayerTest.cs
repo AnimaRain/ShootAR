@@ -3,52 +3,33 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using ShootAR;
+using ShootAR.TestTools;
 
 class PlayerTest
 {
-	internal class FakeBullet : MonoBehaviour
+	[Test]
+	public void PlayerCanShoot()
 	{
-		int damage;
-		public bool hit;
+		Player player = Player.Create(
+			Player.MAXIMUM_HEALTH, new GameObject().AddComponent<Camera>(),
+			Bullet.Create(50f), 10);
 
-		public static FakeBullet Create(int damage)
-		{
-			var o = new GameObject("Bullet").AddComponent<FakeBullet>();
-			o.damage = damage;
-			return o;
-		}
+		Bullet shotBullet = player.Shoot();
+		shotBullet.gameObject.SetActive(true);
 
-		private void Start()
-		{
-			var collider = gameObject.AddComponent<SphereCollider>();
-			collider.isTrigger = true;
-
-			gameObject.AddComponent<Rigidbody>();
-		}
-
-		private void OnTriggerEnter(Collider other)
-		{
-			Debug.Log("Bullet hit!");
-			other.GetComponent<Player>().Health -= damage;
-			hit = true;
-		}
-	}
-
-	[UnityTest]
-	public IEnumerator PlayerShoots()
-	{
-		yield return null;
+		Assert.That(shotBullet != null,
+			"Player must be able to fire bullets.");
 	}
 
 	[UnityTest]
 	public IEnumerator LoseHealthWhenHit()
 	{
-		Player player = Player.Create(3);
+		Player player = Player.Create();
 		var playerCollider = player.gameObject.AddComponent<CapsuleCollider>();
 		playerCollider.height = 2f;
 		playerCollider.isTrigger = true;
 
-		var bullet = FakeBullet.Create(1);
+		var bullet = TestBullet.Create(1);
 
 		bullet.transform.position = player.transform.position;
 		yield return new WaitUntil(() => bullet.hit);
@@ -59,25 +40,72 @@ class PlayerTest
 	[UnityTest]
 	public IEnumerator GameOverWhenHealthDepleted()
 	{
+		GameState gameState = GameState.Create(0);
+		Player player = Player.Create(1, null, null, 0, gameState);
+
+		player.Health = 0;
 		yield return null;
+
+		Assert.True(gameState.GameOver,
+			"Game should be in the \"Game Over\" state when player's" +
+			"health is depleted.");
 	}
 
-	[UnityTest]
-	public IEnumerator ArmorProtectsFromHits()
+	[Test]
+	public void ArmorProtectsFromDamage()
 	{
-		yield return null;
+		Player player = Player.Create(Player.MAXIMUM_HEALTH);
+		player.HasArmor = true;
+
+		player.GetDamaged(1);
+
+		Assert.That(player.Health == Player.MAXIMUM_HEALTH,
+			"When player gets damaged and has armor, health should not be reduced.");
 	}
 
-	[UnityTest]
-	public IEnumerator UseLastShotToHitCapsuleAndTakeBullets()
+	[Test]
+	public void ArmorLostWhenPlayerGetsDamaged()
 	{
-		yield return null;
+
+		Player player = Player.Create();
+		player.HasArmor = true;
+
+		player.GetDamaged(1);
+
+		Assert.IsFalse(player.HasArmor,
+			"Armored player should lose its armor when damaged.");
 	}
 
-	[UnityTest]
-	public IEnumerator UseLastShotToKillLastEnemy()
+	[Test]
+	public void ShootingUsesUpAmmo()
 	{
-		yield return null;
+		const int initialAmmoAmount = 10;
+		Player player = Player.Create(
+			health: Player.MAXIMUM_HEALTH,
+			camera: new GameObject().AddComponent<Camera>(),
+			bullet: Bullet.Create(1),
+			ammo: initialAmmoAmount);
+
+		var bullet = player.Shoot();
+		bullet.gameObject.SetActive(true);
+
+		Assert.Less(player.Ammo, initialAmmoAmount,
+			"After shooting, player should have one less bullet.");
+	}
+
+	[Test]
+	public void CannotShootWithoutAmmo()
+	{
+		Player player = Player.Create(
+			health: Player.MAXIMUM_HEALTH,
+			camera: new GameObject("Camera").AddComponent<Camera>(),
+			bullet: Bullet.Create(0),
+			ammo: 0);
+
+		var firedBullet = player.Shoot();
+
+		Assert.That(firedBullet == null,
+			"Player shouldn't be able to shoot without ammo.");
 	}
 
 	[TearDown]
@@ -87,7 +115,7 @@ class PlayerTest
 
 		foreach (GameObject o in objects)
 		{
-			Object.Destroy(o);
+			Object.Destroy(o.gameObject);
 		}
 	}
 }

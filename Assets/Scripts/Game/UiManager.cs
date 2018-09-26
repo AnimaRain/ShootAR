@@ -1,6 +1,4 @@
-﻿/* TODO: UI should not be depended on the game manager */
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace ShootAR
@@ -22,13 +20,14 @@ namespace ShootAR
 		[SerializeField]
 		private AudioClip pauseSfx;
 
-		private GameManager gameManager;
+		private GameState gameState;
 
 		public static UIManager Create(
 				GameObject uiCanvas, GameObject pauseCanvas,
 				Text bulletCountText, Text centerText, Text buttonText,
 				Text scoreText, Text roundText,
-				AudioSource sfx, AudioClip pauseSfx)
+				AudioSource sfx, AudioClip pauseSfx,
+				GameState gameState)
 		{
 			var o = new GameObject(nameof(UIManager)).AddComponent<UIManager>();
 
@@ -41,14 +40,13 @@ namespace ShootAR
 			o.roundText = roundText;
 			o.sfx = sfx;
 			o.pauseSfx = pauseSfx;
+			o.gameState = gameState;
 
 			return o;
 		}
 
 		public void Start()
 		{
-
-			gameManager = FindObjectOfType<GameManager>();
 
 			//Create the audio source for pausing
 			if (pauseSfx != null)
@@ -76,7 +74,7 @@ namespace ShootAR
 			// not the optimal way but for the sake of readability
 			if (gameObject.activeSelf)
 			{
-				roundText.text = "Round : " + gameManager.level;
+				roundText.text = "Round : " + gameState.Level;
 				uiCanvas.SetActive(false);
 				pauseCanvas.SetActive(true);
 				Time.timeScale = 0f;

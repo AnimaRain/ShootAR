@@ -1,32 +1,22 @@
-﻿/* TODO: Check if roundWon and gameOver conditions are used in the correct
- * places. */
-/* TODO: Write "Create" function. */
-
+﻿using ShootAR.Enemies;
+using ShootAR.Menu;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using ShootAR.Enemies;
-using ShootAR.Menu;
 
 namespace ShootAR
 {
 
 	public class GameManager : MonoBehaviour
 	{
-		public delegate void GameOverHandler();
-		public event GameOverHandler OnGameOver;
-		public delegate void RoundWonHandler();
-		public event RoundWonHandler OnRoundWon;
-
-		[HideInInspector] public int level;
 		[SerializeField] private AudioClip winSfx;
 		private Dictionary<Type, Spawner> spawner;
-		private int score;
-		[HideInInspector] public bool GameOver, RoundWon;
+		[SerializeField] private ScoreManager scoreManager;
 		[Obsolete] private bool exitTap;
 		private AudioSource sfx;
+		private GameState gameState;
 
 		#region Dependencies
 		[SerializeField] private Button fireButton;
@@ -37,7 +27,7 @@ namespace ShootAR
 		#endregion
 
 		public static GameManager Create(
-				Player player, int level = 0, int score = 0,
+				Player player, GameState gameState, ScoreManager scoreManager = null,
 				AudioClip winSfx = null, AudioSource sfx = null,
 				Button fireButton = null, Button pauseButton = null,
 				Button resumeButton = null, UIManager ui = null,
@@ -47,8 +37,8 @@ namespace ShootAR
 			var o = new GameObject(nameof(GameManager)).AddComponent<GameManager>();
 
 			o.player = player;
-			o.level = level;
-			o.score = score;
+			o.gameState = gameState;
+			o.scoreManager = scoreManager;
 			o.winSfx = winSfx;
 			o.sfx = sfx;
 			o.fireButton = fireButton;
@@ -66,7 +56,7 @@ namespace ShootAR
 					buttonText: new GameObject().AddComponent<Text>(),
 					scoreText: new GameObject().AddComponent<Text>(),
 					roundText: new GameObject().AddComponent<Text>(),
-					sfx: null, pauseSfx: null
+					sfx: null, pauseSfx: null, gameState: o.gameState
 				);
 			}
 			else o.ui = ui;
@@ -76,10 +66,14 @@ namespace ShootAR
 
 		private void Awake()
 		{
+#if UNITY_EDITOR || DEBUG || VERBOSE
+			Debug.unityLogger.logEnabled = true;
+#else
+			Debug.unityLogger.logEnabled = false;
+#endif
 
 #if UNITY_ANDROID
 
-			//Check if Gyroscope is supported
 			if (!SystemInfo.supportsGyroscope)
 			{
 				const string error = "This device does not have Gyroscope";
@@ -93,6 +87,24 @@ namespace ShootAR
 				Input.gyro.enabled = true;
 			}
 #endif
+		}
+
+		private void Start()
+		{
+			ui.buttonText.text = "";
+			ui.centerText.text = "";
+			ui.bulletCountText.text = "";
+			fireButton?.onClick.AddListener(OnTap);
+			sfx = gameObject.AddComponent<AudioSource>();
+
+			if (player == null)
+				Debug.LogError("Player object not found");
+
+			int? roundToPlay = FindObjectOfType<RoundSelectMenu>()?.RoundToPlay;
+			if (roundToPlay != null && roundToPlay > 0)
+			{
+				gameState.Level = (int)roundToPlay - 1;
+			}
 
 			spawner = new Dictionary<Type, Spawner>();
 			Spawner[] spawners = FindObjectsOfType<Spawner>();
@@ -112,63 +124,50 @@ namespace ShootAR
 				}
 			}
 
-			sfx = gameObject.AddComponent<AudioSource>();
-			GameOver = false;
-		}
-
-		private void Start()
-		{
-			ui.buttonText.text = "";
-			ui.centerText.text = "";
-			ui.bulletCountText.text = "";
-			fireButton?.onClick.AddListener(OnButtonDown);
-
-			if (player == null)
-				Debug.LogError("Player object not found");
-
-			int? roundToPlay = FindObjectOfType<RoundSelectMenu>()?.RoundToPlay;
-			if (roundToPlay != null && roundToPlay > 0)
-			{
-				level = (int)roundToPlay - 1;
-			}
-
 			AdvanceLevel();
 
 			GC.Collect();
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
-			if (!GameOver)
+			if (!gameState.GameOver)
 			{
 				#region Round Won
-				//TO DO: Check following condition. Looks weird... Is the literal true really needed?
-				if (spawner.ContainsKey(typeof(Crasher)) ? !spawner[typeof(Crasher)].IsSpawning : true && Enemy.ActiveCount == 0)
+				bool spawnersStoped = true;
+				foreach (var type in spawner.Keys)
+					if (type == typeof(Enemy) && spawner[type].IsSpawning)
+					{
+						spawnersStoped = false;
+						break;
+					}
+				if (spawnersStoped && Enemy.ActiveCount == 0)
 				{
-					RoundWon = true;
+					Debug.Log("Round won");
+					gameState.RoundWon = true;
 					ui.centerText.text = "Round Clear!";
-					sfx.PlayOneShot(winSfx, 0.7f);
+					sfx?.PlayOneShot(winSfx, 0.7f);
 					ClearScene();
 					ui.buttonText.text = "Tap to continue";
 				}
 				#endregion
 
 				#region Defeat
-				else if (player.Health == 0 || (Bullet.ActiveCount == 0 && player.Ammo == 0 && Enemy.ActiveCount > 0))
+				else if (player.Health == 0 || (Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0 && player.Ammo == 0))
 				{
-					ui.centerText.text = "Rounds Survived : " + (level - 1);
+					Debug.Log("Player defeated");
+					ui.centerText.text = "Rounds Survived : " + (gameState.Level - 1);
+					gameState.GameOver = true;
 					ClearScene();
 					ui.buttonText.text = "Tap to continue";
 				}
 				#endregion
 			}
-			else if (OnGameOver != null)
-				OnGameOver();
 		}
 
 		public void OnApplicationQuit()
 		{
-			GameOver = true;
+			gameState.GameOver = true;
 			ClearScene();
 
 #if UNITY_EDITOR_WIN
@@ -177,34 +176,24 @@ namespace ShootAR
 		}
 
 
-		public void OnButtonDown()
+		public void OnTap()
 		{
-			//Fire Bullet
-			if (!GameOver)
+			if (gameState.RoundWon)
 			{
+				gameState.GameOver = false;
+				ui.centerText.text = "";
+				ui.buttonText.text = "";
+				player.Ammo += 6;
+				AdvanceLevel();
+			}
+			else if (gameState.GameOver)
+			{
+				// TODO: Comment why cam.Stop() is required here.
+				cam.Stop();
+				SceneManager.LoadScene(1);
+			}
+			else
 				player.Shoot();
-			}
-
-			//Tap To Continue
-			if (GameOver)
-			{
-				//Defeat, tap to restart
-				if (player.Ammo == 0 || player.Health <= 0)
-				{
-					cam.Stop();
-					SceneManager.LoadScene(1);
-				}
-				//Next Round tap
-				else
-				{
-					GameOver = false;
-					ui.centerText.text = "";
-					ui.buttonText.text = "";
-					player.Ammo += 6;
-					AdvanceLevel();
-				}
-			}
-			else Application.Quit();
 		}
 
 		/// <summary>
@@ -212,39 +201,28 @@ namespace ShootAR
 		/// </summary>
 		private void AdvanceLevel()
 		{
-			level++;
+			gameState.Level++;
+			Debug.Log($"Advancing to level {gameState.Level}");
 
-			// Spawn Patterns
 			foreach (var s in spawner)
 			{
 				switch (s.Key.ToString())
 				{
+					#region Spawn Patterns
 					case nameof(Crasher):
-						s.Value.StartSpawning(4 * level + 8);
+						s.Value.StartSpawning(4 * gameState.Level + 8);
 						break;
 					case nameof(Drone):
-						s.Value.StartSpawning(3 * level + 6);
+						s.Value.StartSpawning(3 * gameState.Level + 6);
 						break;
 					case nameof(Capsule):
-						s.Value.StartSpawning(level + 2);
+						s.Value.StartSpawning(gameState.Level + 2);
 						break;
+						#endregion
 				}
 			}
 
-			RoundWon = false;
-		}
-
-		/// <summary>
-		/// Adds points to the score and updates the GUI.
-		/// </summary>
-		/// <param name="points">The amount of pointts to add.</param>
-		public void AddScore(int points)
-		{
-			if (ui.scoreText != null)
-			{
-				score += points;
-				ui.scoreText.text = "Score: " + score;
-			}
+			gameState.RoundWon = false;
 		}
 
 		/// <summary>
@@ -252,7 +230,7 @@ namespace ShootAR
 		/// </summary>
 		private void ClearScene()
 		{
-			GameOver = true;
+			Debug.Log("Clearing scene...");
 
 			foreach (Spawner spawner in spawner.Values)
 				spawner?.StopSpawning();
@@ -260,6 +238,8 @@ namespace ShootAR
 			Enemy[] enemies = FindObjectsOfType<Enemy>();
 			foreach (var e in enemies) Destroy(e.gameObject);
 			Capsule[] capsules = FindObjectsOfType<Capsule>();
+			if (gameState.RoundWon && scoreManager != null)
+				scoreManager.AddScore(capsules.Length * Capsule.BONUS_POINTS);
 			foreach (var c in capsules) Destroy(c.gameObject);
 		}
 
@@ -273,7 +253,7 @@ namespace ShootAR
 #if DEBUG
 		private void OnGUI()
 		{
-			GUILayout.Label($"Game Over: {GameOver}\nRound Over: {RoundWon}");
+			GUILayout.Label($"Game Over: {gameState.GameOver}\nRound Over: {gameState.RoundWon}");
 		}
 #endif
 	}

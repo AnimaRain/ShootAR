@@ -11,25 +11,25 @@ public class TVScript : MonoBehaviour
 	private int tvRefreshTime;
 	public bool tvOn;
 
-	private GameManager gameManager;
+	private GameState gameState;
 	
 
 	private void Start()
 	{
-		gameManager = FindObjectOfType<GameManager>();
+		gameState = FindObjectOfType<GameState>();
 		Invoke("StartTV", tvRefreshTime);
 	}
 
 	private void Update()
 	{
-		//TODO: while not game over, if turned off, turn on.
+		//UNDONE: while not game over, if turned off, turn on.
 	}
 
 	public void CloseTV()
 	{
 		GetComponent<Renderer>().material = blackScreen;
 		CancelInvoke("StartTV");
-		if (!gameManager.GameOver)
+		if (!gameState.GameOver)
 			Invoke("StartTV", tvRefreshTime);
 		tvOn = false;
 	}

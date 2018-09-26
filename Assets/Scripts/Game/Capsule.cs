@@ -3,9 +3,11 @@ using UnityEngine.UI;
 
 namespace ShootAR
 {
-
+	[RequireComponent(typeof(AudioSource))]
 	public class Capsule : MonoBehaviour, ISpawnable
 	{
+		public const int BONUS_POINTS = 50;
+
 		public float Speed { get; set; }
 
 		public enum CapsuleType
@@ -18,17 +20,20 @@ namespace ShootAR
 		public CapsuleType Type { get; private set; }
 
 		private Vector3 rotation;
-		private AudioSource pickUpSfx;  //TODO: move the sound effect of picking up bonuses to the player
+		private AudioSource pickUpSfx;
 
 		private Text bulletCountText;
-		[SerializeField] private readonly GameManager gameManager;
-		[SerializeField] private readonly Player player;
+		[SerializeField] private GameState gameState;
+		[SerializeField] private Player player;
 
-		public static Capsule Create(CapsuleType type, float speed)
+		public static Capsule Create(CapsuleType type, float speed, 
+				Player player = null, GameState gameState = null)
 		{
-			var o = new GameObject("Capsule").AddComponent<Capsule>();
+			var o = new GameObject(nameof(Capsule)).AddComponent<Capsule>();
 			o.Type = type;
 			o.Speed = speed;
+			o.player = player;
+			o.gameState = gameState;
 			return o;
 		}
 
@@ -49,27 +54,20 @@ namespace ShootAR
 
 		protected void OnDestroy()
 		{
-			if (gameManager != null)
-			{
-				if (!gameManager.GameOver)
-				{
-					switch (this.Type)
-					{
-						case 0:
-							player.Ammo += 4;
-							if (bulletCountText != null)
-								bulletCountText.text = Bullet.Count.ToString();
-							break;
+			if (gameState != null ? gameState.GameOver : false) return;
 
-							//TODO: Write cases for the rest of the types of capsule
-					}
-					pickUpSfx?.Play();
-				}
-				else if (gameManager.RoundWon)
-				{
-					gameManager.AddScore(50);
-				}
+			switch (this.Type)
+			{
+				case 0:
+					if(player != null)
+						player.Ammo += 10;
+					if (bulletCountText != null)
+						bulletCountText.text = Bullet.Count.ToString();
+					break;
+
+					//UNDONE: Write cases for the rest of the types of capsule
 			}
+			pickUpSfx?.Play();
 		}
 	}
 }

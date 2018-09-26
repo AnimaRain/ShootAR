@@ -5,6 +5,7 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Parent class of all types of enemies.
 	/// </summary>
+	[RequireComponent(typeof(SphereCollider))]
 	public abstract class Enemy : MonoBehaviour, ISpawnable, IOrbiter
 	{
 		/// <summary>
@@ -18,18 +19,19 @@ namespace ShootAR.Enemies
 		/// <summary>
 		/// The amount of damage the player recieves from this object's attack.
 		/// </summary>
-		[UnityEngine.Range(-Player.HEALTH_MAX, Player.HEALTH_MAX), UnityEngine.SerializeField]
+		[Range(-Player.MAXIMUM_HEALTH, Player.MAXIMUM_HEALTH), UnityEngine.SerializeField]
 		public int damage;
 		public int Damage { get { return damage; } set { damage = value; } }
 		/// <summary>
 		/// Count of currently active enemies.
 		/// </summary>
-		public static int ActiveCount { get; set; }
+		public static int ActiveCount { get; protected set; }
 
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;
 		protected AudioSource sfx;
-		protected static GameManager gameManager;
+		protected GameState gameState;
+		protected ScoreManager score;
 
 		protected void Awake()
 		{
@@ -44,16 +46,15 @@ namespace ShootAR.Enemies
 			sfx.volume = 0.3f;
 			sfx.playOnAwake = false;
 			sfx.maxDistance = 10f;
-
-			if (gameManager != null) gameManager = FindObjectOfType<GameManager>();
 		}
 
 		protected virtual void OnDestroy()
 		{
-			if (gameManager != null && !gameManager.GameOver)
+			if (gameState != null && !gameState.GameOver)
 			{
-				gameManager.AddScore(PointsValue);
-				Instantiate(explosion, transform.position, transform.rotation);
+				score?.AddScore(PointsValue);
+				if (explosion != null)
+					Instantiate(explosion, transform.position, transform.rotation);
 			}
 			ActiveCount--;
 		}
