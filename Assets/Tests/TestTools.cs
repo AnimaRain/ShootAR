@@ -24,6 +24,12 @@ namespace ShootAR.TestTools
 			return o;
 		}
 
+		protected override void Start()
+		{
+			GetComponent<SphereCollider>().isTrigger = true;
+			GetComponent<Rigidbody>().useGravity = false;
+		}
+
 		protected override void OnDestroy() { ActiveCount--; }
 	}
 
@@ -32,7 +38,7 @@ namespace ShootAR.TestTools
 	/// </summary>
 	internal class TestBullet : MonoBehaviour
 	{
-		int damage;
+		public int damage;
 		public bool hit;
 
 		public static TestBullet Create(int damage)
@@ -47,7 +53,8 @@ namespace ShootAR.TestTools
 			var collider = gameObject.AddComponent<SphereCollider>();
 			collider.isTrigger = true;
 
-			gameObject.AddComponent<Rigidbody>();
+			var body = gameObject.AddComponent<Rigidbody>();
+			body.useGravity = false;
 		}
 
 		private void OnTriggerEnter(Collider other)

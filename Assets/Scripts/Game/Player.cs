@@ -6,7 +6,7 @@ namespace ShootAR
 	public class Player : MonoBehaviour
 	{
 		//Set here how much health the player is allowed to have.
-		public const sbyte MAXIMUM_HEALTH = 3;
+		public const sbyte MAXIMUM_HEALTH = 6;
 		private const float SHOT_COOLDOWN = 0.35f;
 
 		[SerializeField]
@@ -14,7 +14,7 @@ namespace ShootAR
 
 		[Range(0, MAXIMUM_HEALTH), SerializeField]
 		private int health;
-		[Range(0, Mathf.Infinity), SerializeField]
+		[Range(0, 999), SerializeField]
 		private int ammo;
 		private float nextFire;
 

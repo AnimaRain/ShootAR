@@ -34,7 +34,7 @@ class PlayerTest
 		bullet.transform.position = player.transform.position;
 		yield return new WaitUntil(() => bullet.hit);
 
-		Assert.AreEqual(2, player.Health, "Player must lose health when hit.");
+		Assert.AreEqual(Player.MAXIMUM_HEALTH - bullet.damage, player.Health, "Player must lose health when hit.");
 	}
 
 	[UnityTest]

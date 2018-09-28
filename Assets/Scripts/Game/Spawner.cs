@@ -38,8 +38,8 @@ namespace ShootAR
 		public bool IsSpawning { get; private set; }
 
 		private GameState gameState;
-		[SerializeField] private readonly AudioClip spawnSfx;
-		[SerializeField] private readonly GameObject portal;
+		[SerializeField] private AudioClip spawnSfx;
+		[SerializeField] private GameObject portal;
 		private AudioSource sfx;
 
 		public static Spawner Create(

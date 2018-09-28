@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraRotator : MonoBehaviour
 {
 
-	private float h;
-    private float v;
+	private float mouseY;
+    private float mouseX;
 	/// <summary>
 	/// The main camera rotates relative to this container.
 	/// </summary>
@@ -41,9 +42,9 @@ public class CameraRotator : MonoBehaviour
 #if UNITY_EDITOR_WIN //Camera Control on PC
         if (Input.GetButton("Fire2"))
         {
-            h += 5 * Input.GetAxis("Mouse Y");
-            v += 5 * Input.GetAxis("Mouse X");
-            Camera.main.transform.eulerAngles = new Vector3(-h, v, 0);
+            mouseY += 5 * Input.GetAxis("Mouse Y");
+            mouseX += 5 * Input.GetAxis("Mouse X");
+            Camera.main.transform.eulerAngles = new Vector3(-mouseY, mouseX, 0);
         }
 #endif
     }

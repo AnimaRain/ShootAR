@@ -10,17 +10,47 @@ namespace ShootAR
 
 		[SerializeField] private GameObject uiCanvas;
 		[SerializeField] private GameObject pauseCanvas;
-		public Text bulletCountText;
-		public Text centerText;
-		public Text buttonText;
-		public Text scoreText;
-		public Text roundText;
+		[SerializeField] private Text bulletCount;
+		[SerializeField] private Text messageOnScreen;
+		[SerializeField] private Text secondaryMessageOnScreen;
+		[SerializeField] private Text score;
+		[SerializeField] private Text roundIndex;
 
 		private AudioSource sfx;
 		[SerializeField]
 		private AudioClip pauseSfx;
 
 		private GameState gameState;
+
+		public Text BulletCount
+		{
+			get { return bulletCount; }
+			set { bulletCount = value; }
+		}
+
+		public Text MessageOnScreen
+		{
+			get { return messageOnScreen; }
+			set { messageOnScreen = value; }
+		}
+
+		public Text SecondaryMessageOnScreen
+		{
+			get { return secondaryMessageOnScreen; }
+			set { secondaryMessageOnScreen = value; }
+		}
+
+		public Text Score
+		{
+			get { return score; }
+			set { score = value; }
+		}
+
+		public Text RoundIndex
+		{
+			get { return roundIndex; }
+			set { roundIndex = value; }
+		}
 
 		public static UI Create(
 				GameObject uiCanvas, GameObject pauseCanvas,
@@ -33,11 +63,11 @@ namespace ShootAR
 
 			o.uiCanvas = uiCanvas;
 			o.pauseCanvas = pauseCanvas;
-			o.bulletCountText = bulletCountText;
-			o.centerText = centerText;
-			o.buttonText = buttonText;
-			o.scoreText = scoreText;
-			o.roundText = roundText;
+			o.bulletCount = bulletCountText;
+			o.MessageOnScreen = centerText;
+			o.SecondaryMessageOnScreen = buttonText;
+			o.Score = scoreText;
+			o.RoundIndex = roundText;
 			o.sfx = sfx;
 			o.pauseSfx = pauseSfx;
 			o.gameState = gameState;
@@ -74,7 +104,7 @@ namespace ShootAR
 			// not the optimal way but for the sake of readability
 			if (gameObject.activeSelf)
 			{
-				roundText.text = "Round : " + gameState.Level;
+				RoundIndex.text = "Round : " + gameState.Level;
 				uiCanvas.SetActive(false);
 				pauseCanvas.SetActive(true);
 				Time.timeScale = 0f;

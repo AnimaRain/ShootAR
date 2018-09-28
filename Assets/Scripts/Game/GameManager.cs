@@ -90,9 +90,9 @@ namespace ShootAR
 
 		private void Start()
 		{
-			ui.buttonText.text = "";
-			ui.centerText.text = "";
-			ui.bulletCountText.text = "";
+			ui.SecondaryMessageOnScreen.text = "";
+			ui.MessageOnScreen.text = "";
+			ui.BulletCount.text = "";
 			fireButton?.onClick.AddListener(OnTap);
 			sfx = gameObject.AddComponent<AudioSource>();
 
@@ -144,10 +144,10 @@ namespace ShootAR
 				{
 					Debug.Log("Round won");
 					gameState.RoundWon = true;
-					ui.centerText.text = "Round Clear!";
+					ui.MessageOnScreen.text = "Round Clear!";
 					sfx?.PlayOneShot(winSfx, 0.7f);
 					ClearScene();
-					ui.buttonText.text = "Tap to continue";
+					ui.SecondaryMessageOnScreen.text = "Tap to continue";
 				}
 				#endregion
 
@@ -155,10 +155,10 @@ namespace ShootAR
 				else if (player.Health == 0 || (Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0 && player.Ammo == 0))
 				{
 					Debug.Log("Player defeated");
-					ui.centerText.text = "Rounds Survived : " + (gameState.Level - 1);
+					ui.MessageOnScreen.text = "Rounds Survived : " + (gameState.Level - 1);
 					gameState.GameOver = true;
 					ClearScene();
-					ui.buttonText.text = "Tap to continue";
+					ui.SecondaryMessageOnScreen.text = "Tap to continue";
 				}
 				#endregion
 			}
@@ -180,8 +180,8 @@ namespace ShootAR
 			if (gameState.RoundWon)
 			{
 				gameState.GameOver = false;
-				ui.centerText.text = "";
-				ui.buttonText.text = "";
+				ui.MessageOnScreen.text = "";
+				ui.SecondaryMessageOnScreen.text = "";
 				player.Ammo += 6;
 				AdvanceLevel();
 			}

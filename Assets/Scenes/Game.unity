@@ -113,6 +113,47 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &23858080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 23858082}
+  - component: {fileID: 23858081}
+  m_Layer: 0
+  m_Name: ScoreManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &23858081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 23858080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c08ffc99813d4f4e89b5f8734c43a49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreLabel: {fileID: 1185042125}
+--- !u!4 &23858082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 23858080}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.027342, y: 16.027342, z: 16.027342}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &107427077
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,7 +510,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 237831468}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70a8b56573473c545861d66a2a8f85df, type: 3}
+  m_Script: {fileID: 11500000, guid: 75673b6cad27c724f8ac140dfb4b8636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &291425442
@@ -872,12 +913,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winSfx: {fileID: 8300000, guid: 25ec12bee3d72a8479e6c560cc1624ea, type: 3}
-  scoreManager: {fileID: 0}
+  scoreManager: {fileID: 23858081}
   fireButton: {fileID: 869210693}
   pauseButton: {fileID: 2125751302}
   resumeButton: {fileID: 657967873}
   ui: {fileID: 1310314011}
-  cam: {fileID: 0}
   player: {fileID: 1143016213}
 --- !u!4 &540221806
 Transform:
@@ -1824,22 +1864,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 114071794171306142, guid: d4da007e017dade458300c7112329fba,
-        type: 2}
-      propertyPath: objectToSpawn
-      value: 
-      objectReference: {fileID: 114964183672774884, guid: b61d74442990e8349b2ba008d9253c9c,
-        type: 2}
-    - target: {fileID: 114209767139158460, guid: d4da007e017dade458300c7112329fba,
-        type: 2}
-      propertyPath: objectToSpawn
-      value: 
-      objectReference: {fileID: 114786631525062386, guid: 16fc9f9a7572d884da8cbe81c7d11097,
-        type: 2}
-    - target: {fileID: 1711733272364658, guid: d4da007e017dade458300c7112329fba, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4da007e017dade458300c7112329fba, type: 2}
   m_IsPrefabAsset: 0
@@ -2189,7 +2213,7 @@ GameObject:
   - component: {fileID: 1310314012}
   - component: {fileID: 1310314011}
   m_Layer: 0
-  m_Name: UIManager
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2203,16 +2227,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1310314010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87e17ef9861369a4280a9ec562d0b066, type: 3}
+  m_Script: {fileID: 11500000, guid: 1985473178dc5214f8ee7a5a1ed639c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   uiCanvas: {fileID: 1917753327}
   pauseCanvas: {fileID: 472218348}
-  bulletCountText: {fileID: 605862816}
-  centerText: {fileID: 2044034911}
-  buttonText: {fileID: 691084847}
-  scoreText: {fileID: 1185042125}
-  roundText: {fileID: 107753530}
+  bulletCount: {fileID: 605862816}
+  messageOnScreen: {fileID: 2044034911}
+  secondaryMessageOnScreen: {fileID: 691084847}
+  score: {fileID: 1185042125}
+  roundIndex: {fileID: 107753530}
   pauseSfx: {fileID: 8300000, guid: 5feec34d02e08e24f83e43fafffb70d8, type: 3}
 --- !u!4 &1310314012
 Transform:

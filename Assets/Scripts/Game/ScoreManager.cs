@@ -20,7 +20,7 @@ namespace ShootAR
 		private void Start()
 		{
 			if (scoreLabel == null)
-				scoreLabel = FindObjectOfType<UI>()?.scoreText;
+				scoreLabel = FindObjectOfType<UI>()?.Score;
 		}
 
 		/// <summary>
