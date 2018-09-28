@@ -39,7 +39,7 @@ public class GameStateTests
 		GameState gameState = GameState.Create(0);
 		Camera camera = new GameObject("Camera").AddComponent<Camera>();
 		Player player = Player.Create(
-			health: 1,
+			health: Player.MAXIMUM_HEALTH,
 			camera: camera,
 			bullet: Bullet.Create(100f),
 			ammo: 1,
@@ -51,7 +51,7 @@ public class GameStateTests
 		var firedBullet = player.Shoot();
 		firedBullet.gameObject.SetActive(true);
 
-		yield return new WaitUntil(() => enemy == null);
+		yield return new WaitUntil(() => gameState.RoundWon);
 
 		Assert.False(gameState.GameOver,
 			"The game must not end if the last enemy dies by the last bullet.");

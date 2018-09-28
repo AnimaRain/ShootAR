@@ -6,12 +6,8 @@ namespace ShootAR.Enemies
 	/// Parent class of all types of enemies.
 	/// </summary>
 	[RequireComponent(typeof(SphereCollider))]
-	public abstract class Enemy : MonoBehaviour, ISpawnable, IOrbiter
+	public abstract class Enemy : Spawnable
 	{
-		/// <summary>
-		/// The speed at which this object is moving.
-		/// </summary>
-		public float Speed { get; set; }
 		/// <summary>
 		/// The amount of points added to the player's score when destroyed.
 		/// </summary>

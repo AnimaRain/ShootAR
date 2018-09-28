@@ -6,16 +6,15 @@ using ShootAR;
 
 public class CapsuleTests {
 
-    [UnityTest]
-    public IEnumerator CapsuleGivesBulletsWhenDestroyed() {
+    [Test]
+    public void CapsuleGivesBullets() {
 		//Set up Test
 		Player player = Player.Create();
 		Capsule capsule =
 			Capsule.Create(Capsule.CapsuleType.Bullet, 0, player);
 
 		//Perform Test
-		Object.Destroy(capsule.gameObject);
-		yield return new WaitUntil(() => capsule == null);
+		capsule.GivePowerUp();
 
 		//Assert
 		Assert.Greater(player.Ammo, 0);

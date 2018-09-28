@@ -1,14 +1,11 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 namespace ShootAR
 {
 	[RequireComponent(typeof(AudioSource))]
-	public class Capsule : MonoBehaviour, ISpawnable
+	public class Capsule : Spawnable
 	{
 		public const int BONUS_POINTS = 50;
-
-		public float Speed { get; set; }
 
 		public enum CapsuleType
 		{
@@ -54,16 +51,21 @@ namespace ShootAR
 		{
 			if (gameState != null ? gameState.GameOver : false) return;
 
-			switch (this.Type)
+			GivePowerUp();
+			pickUpSfx?.Play();
+		}
+
+		public void GivePowerUp()
+		{
+			switch (Type)
 			{
 				case 0:
-					if(player != null)
+					if (player != null)
 						player.Ammo += 10;
 					break;
 
 					//UNDONE: Write cases for the rest of the types of capsule
 			}
-			pickUpSfx?.Play();
 		}
 	}
 }

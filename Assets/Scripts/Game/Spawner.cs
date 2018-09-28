@@ -6,8 +6,8 @@ namespace ShootAR
 
 	public class Spawner : MonoBehaviour
 	{
-		[SerializeField] private ISpawnable objectToSpawn;
-		public ISpawnable ObjectToSpawn {
+		[SerializeField] private Spawnable objectToSpawn;
+		public Spawnable ObjectToSpawn {
 			get {return objectToSpawn; }
 			private set {objectToSpawn = value; }
 		}
@@ -43,7 +43,7 @@ namespace ShootAR
 		private AudioSource sfx;
 
 		public static Spawner Create(
-			ISpawnable objectToSpawn, int spawnLimit, float spawnRate, 
+			Spawnable objectToSpawn, int spawnLimit, float spawnRate, 
 			float maxDistanceToSpawn, float minDistanceToSpawn,
 			GameState gameState = null)
 		{

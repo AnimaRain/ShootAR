@@ -3,14 +3,8 @@
 namespace ShootAR
 {
 	[RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
-	public class Bullet : MonoBehaviour, ISpawnable
+	public class Bullet : Spawnable
 	{
-		[SerializeField] private float speed;
-		public float Speed
-		{
-			get { return speed; }
-			private set { speed = value; }
-		}
 		/// <summary>
 		/// Total count of spawned bullets during the current round.
 		/// </summary>

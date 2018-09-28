@@ -225,7 +225,7 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Deactivates spawners, destroys all spawned objects and set game over state to true. 
+		/// Deactivates spawners and destroys all spawned objects. 
 		/// </summary>
 		private void ClearScene()
 		{
