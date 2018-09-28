@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace ShootAR
 {
-	public class UIManager : MonoBehaviour
+	public class UI : MonoBehaviour
 	{
 		public delegate void GuiUpdateHandler();
 		public event GuiUpdateHandler UpdateGui;
@@ -22,14 +22,14 @@ namespace ShootAR
 
 		private GameState gameState;
 
-		public static UIManager Create(
+		public static UI Create(
 				GameObject uiCanvas, GameObject pauseCanvas,
 				Text bulletCountText, Text centerText, Text buttonText,
 				Text scoreText, Text roundText,
 				AudioSource sfx, AudioClip pauseSfx,
 				GameState gameState)
 		{
-			var o = new GameObject(nameof(UIManager)).AddComponent<UIManager>();
+			var o = new GameObject(nameof(UI)).AddComponent<UI>();
 
 			o.uiCanvas = uiCanvas;
 			o.pauseCanvas = pauseCanvas;

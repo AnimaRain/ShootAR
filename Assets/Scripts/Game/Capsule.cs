@@ -22,7 +22,6 @@ namespace ShootAR
 		private Vector3 rotation;
 		private AudioSource pickUpSfx;
 
-		private Text bulletCountText;
 		[SerializeField] private GameState gameState;
 		[SerializeField] private Player player;
 
@@ -41,7 +40,6 @@ namespace ShootAR
 		{
 			rotation = new Vector3(15, 30, 45);
 			pickUpSfx = GetComponent<AudioSource>();
-			bulletCountText = FindObjectOfType<UIManager>()?.bulletCountText;
 		}
 
 		private void Update()
@@ -61,8 +59,6 @@ namespace ShootAR
 				case 0:
 					if(player != null)
 						player.Ammo += 10;
-					if (bulletCountText != null)
-						bulletCountText.text = Bullet.Count.ToString();
 					break;
 
 					//UNDONE: Write cases for the rest of the types of capsule

@@ -5,28 +5,22 @@ namespace ShootAR
 {
 	public class ScoreManager : MonoBehaviour
 	{
-		[SerializeField] private int score;
-		[SerializeField] private Text scoreUI;
+		[SerializeField] private Text scoreLabel;
 
-		public int Score
-		{
-			get { return score; }
+		public int Score { get; private set; }
 
-			private set { score = value; }
-		}
-
-		public static ScoreManager Create(Text scoreUI = null, int score = 0)
+		public static ScoreManager Create(Text scoreLabel = null, int score = 0)
 		{
 			var o = new GameObject(nameof(ScoreManager)).AddComponent<ScoreManager>();
 			o.Score = score;
-			o.scoreUI = scoreUI;
+			o.scoreLabel = scoreLabel;
 			return o;
 		}
 
 		private void Start()
 		{
-			if (scoreUI == null)
-				scoreUI = FindObjectOfType<UIManager>()?.scoreText;
+			if (scoreLabel == null)
+				scoreLabel = FindObjectOfType<UI>()?.scoreText;
 		}
 
 		/// <summary>
@@ -37,9 +31,9 @@ namespace ShootAR
 		{
 			Score += points;
 
-			if (scoreUI != null)
+			if (scoreLabel != null)
 			{
-				scoreUI.text = "Score: " + Score;
+				scoreLabel.text = "Score: " + Score;
 			}
 		}
 	}

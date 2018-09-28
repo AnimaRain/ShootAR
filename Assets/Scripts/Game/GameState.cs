@@ -12,8 +12,9 @@ namespace ShootAR
 		public delegate void RoundWonHandler();
 		public event RoundWonHandler OnRoundWon;
 
-		public int Level;
-		public bool GameOver, RoundWon;
+		public int Level { get; set; }
+		public bool GameOver { get; set; }
+		public bool RoundWon { get; set; }
 
 		public static GameState Create(int level)
 		{

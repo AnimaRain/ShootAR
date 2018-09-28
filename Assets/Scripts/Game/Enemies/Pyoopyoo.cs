@@ -22,7 +22,7 @@ namespace ShootAR.Enemies
 		{
 			sfx.Play();
 			lastBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-			lastBullet.damage = damage;
+			lastBullet.Damage = Damage;
 		}
 	}
 }

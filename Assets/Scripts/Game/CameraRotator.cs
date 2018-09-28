@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class CameraScript : MonoBehaviour
+public class CameraRotator : MonoBehaviour
 {
 
 	private float h;
@@ -33,8 +33,8 @@ public class CameraScript : MonoBehaviour
     {
 #if UNITY_ANDROID //Camera Control on Android
 
-        // Rotates the camera using feedback from the gyroscope. It flips the
-        // input because the Gyroscope is right-handed and Unity is left-handed.
+        // Rotate the camera using feedback from the gyroscope. The input is
+		// flipped because the Gyroscope is right-handed and Unity is left-handed.
         transform.localRotation = Input.gyro.attitude * calibrationRotation;
 #endif
 
@@ -48,11 +48,17 @@ public class CameraScript : MonoBehaviour
 #endif
     }
 
-//Debug: Camera rotation
-//    private void OnGUI()
-//    {
-//#if DEBUG
-//        GUILayout.Label(string.Format("Gyro attitude: {0}\nCamera attitude: {1}\nCamera local attitude: {2}", Input.gyro.attitude, transform.rotation, transform.localRotation));
-//#endif
-//    }
+/*Debug: Camera rotation
+#if DEBUG
+	private void OnGUI()
+	{
+		GUILayout.Label(
+			string.Format(
+				"Gyro attitude: {0}\nCamera attitude: {1}\n" +
+				"Camera local attitude: {2}",
+				Input.gyro.attitude, transform.rotation, transform.localRotation
+			)
+		);
+	}
+#endif*/
 }

@@ -24,7 +24,7 @@ namespace ShootAR
 		/// </summary>
 		[SerializeField] private Bullet bullet;
 		private AudioSource audioSource;
-		private AudioClip shotSfx;
+		[SerializeField] private AudioClip shotSfx;
 
 		/// <summary>
 		/// Player's health.
@@ -32,10 +32,7 @@ namespace ShootAR
 		/// </summary>
 		public int Health
 		{
-			get
-			{
-				return health;
-			}
+			get { return health; }
 
 			set
 			{

@@ -20,9 +20,10 @@ namespace ShootAR
 
 		#region Dependencies
 		[SerializeField] private Button fireButton;
+		//TODO: UI and buttons should be combined (?)
 		[SerializeField] private Button pauseButton, resumeButton;
-		[SerializeField] private UIManager ui;
-		[SerializeField] private WebCamTexture cam;
+		[SerializeField] private UI ui;
+		private WebCamTexture cam;
 		[SerializeField] private Player player;
 		#endregion
 
@@ -30,8 +31,7 @@ namespace ShootAR
 				Player player, GameState gameState, ScoreManager scoreManager = null,
 				AudioClip winSfx = null, AudioSource sfx = null,
 				Button fireButton = null, Button pauseButton = null,
-				Button resumeButton = null, UIManager ui = null,
-				WebCamTexture cam = null
+				Button resumeButton = null, UI ui = null
 			)
 		{
 			var o = new GameObject(nameof(GameManager)).AddComponent<GameManager>();
@@ -44,11 +44,10 @@ namespace ShootAR
 			o.fireButton = fireButton;
 			o.pauseButton = pauseButton;
 			o.resumeButton = resumeButton;
-			o.cam = cam;
 
 			if (ui == null)
 			{
-				o.ui = UIManager.Create(
+				o.ui = UI.Create(
 					uiCanvas: new GameObject(),
 					pauseCanvas: new GameObject(),
 					bulletCountText: new GameObject().AddComponent<Text>(),

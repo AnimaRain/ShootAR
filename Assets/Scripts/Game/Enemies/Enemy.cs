@@ -19,8 +19,8 @@ namespace ShootAR.Enemies
 		/// <summary>
 		/// The amount of damage the player recieves from this object's attack.
 		/// </summary>
-		[Range(-Player.MAXIMUM_HEALTH, Player.MAXIMUM_HEALTH), UnityEngine.SerializeField]
-		public int damage;
+		[Range(-Player.MAXIMUM_HEALTH, Player.MAXIMUM_HEALTH), SerializeField]
+		private int damage;
 		public int Damage { get { return damage; } set { damage = value; } }
 		/// <summary>
 		/// Count of currently active enemies.
@@ -35,6 +35,7 @@ namespace ShootAR.Enemies
 
 		protected void Awake()
 		{
+			GetComponent<SphereCollider>().isTrigger = true;
 			ActiveCount++;
 		}
 
@@ -67,12 +68,6 @@ namespace ShootAR.Enemies
 			transform.LookAt(point);
 			transform.forward = -transform.position;
 			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
-		}
-
-		public void MoveTo(float x, float y, float z)
-		{
-			Vector3 point = new Vector3(x, y, z);
-			MoveTo(point);
 		}
 
 		/// <summary>

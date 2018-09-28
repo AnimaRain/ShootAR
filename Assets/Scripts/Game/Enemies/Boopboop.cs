@@ -16,7 +16,7 @@ namespace ShootAR.Enemies
 		public virtual void Attack(Player target)
 		{
 			sfx.Play();
-			target.GetDamaged(damage);
+			target.GetDamaged(Damage);
 		}
 	}
 }
