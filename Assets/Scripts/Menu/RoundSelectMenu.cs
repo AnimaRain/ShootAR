@@ -8,10 +8,7 @@ namespace ShootAR.Menu
 		private int roundToPlay;
 		public int RoundToPlay
 		{
-			get
-			{
-				return roundToPlay;
-			}
+			get { return roundToPlay; }
 
 			set
 			{

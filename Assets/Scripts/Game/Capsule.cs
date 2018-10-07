@@ -19,7 +19,6 @@ namespace ShootAR
 		private Vector3 rotation;
 		private AudioSource pickUpSfx;
 
-		[SerializeField] private GameState gameState;
 		[SerializeField] private Player player;
 
 		public static Capsule Create(CapsuleType type, float speed, 
@@ -29,7 +28,7 @@ namespace ShootAR
 			o.Type = type;
 			o.Speed = speed;
 			o.player = player;
-			o.gameState = gameState;
+			o.GameState = gameState;
 			return o;
 		}
 

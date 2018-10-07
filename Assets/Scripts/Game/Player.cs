@@ -18,7 +18,7 @@ namespace ShootAR
 		private int ammo;
 		private float nextFire;
 
-		private GameState gameState;
+		[SerializeField] private GameState gameState;
 		/// <summary>
 		/// The bullet prefab that gets instantiated when the player shoots.
 		/// </summary>

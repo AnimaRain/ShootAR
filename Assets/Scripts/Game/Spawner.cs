@@ -37,7 +37,7 @@ namespace ShootAR
 		public int SpawnCount { get; private set; }
 		public bool IsSpawning { get; private set; }
 
-		private GameState gameState;
+		[SerializeField] private GameState gameState;
 		[SerializeField] private AudioClip spawnSfx;
 		[SerializeField] private GameObject portal;
 		private AudioSource sfx;
@@ -136,8 +136,9 @@ namespace ShootAR
 				if (spawnSfx != null)
 					sfx.Play();
 
-				Instantiate((Object)ObjectToSpawn,
+				var spawned = Instantiate(ObjectToSpawn,
 					transform.localPosition, transform.localRotation);
+				spawned.GameState = gameState;
 				SpawnCount++;
 				if (SpawnCount == SpawnLimit) StopSpawning();
 			}

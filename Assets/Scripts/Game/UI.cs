@@ -96,7 +96,7 @@ namespace ShootAR
 			// not the optimal way but for the sake of readability
 			if (gameObject.activeSelf)
 			{
-				RoundIndex.text = "Round : " + gameState.Level;
+				RoundIndex.text = "Round: " + gameState.Level;
 				uiCanvas.SetActive(false);
 				pauseCanvas.SetActive(true);
 				Time.timeScale = 0f;

@@ -16,7 +16,7 @@ namespace ShootAR
 		[SerializeField] private ScoreManager scoreManager;
 		[Obsolete] private bool exitTap;
 		private AudioSource sfx;
-		private GameState gameState;
+		[SerializeField] private GameState gameState;
 
 		#region Dependencies
 		[SerializeField] private Button fireButton;
@@ -59,7 +59,7 @@ namespace ShootAR
 
 		private void Awake()
 		{
-#if UNITY_EDITOR || DEBUG || VERBOSE
+#if UNITY_EDITOR
 			Debug.unityLogger.logEnabled = true;
 #else
 			Debug.unityLogger.logEnabled = false;
@@ -84,13 +84,23 @@ namespace ShootAR
 
 		private void Start()
 		{
+			if (player == null)
+			{
+				const string error = "Player object not found";
+				Debug.LogError(error);
+				throw new Exception(error);
+			}
+			if (gameState == null)
+			{
+				const string error = "GameState object not found";
+				Debug.LogError(error);
+				throw new Exception(error);
+			}
+
 			ui.MessageOnScreen.text = "";
 			ui.BulletCount.text = "";
 			fireButton?.onClick.AddListener(OnTap);
 			sfx = gameObject.AddComponent<AudioSource>();
-
-			if (player == null)
-				Debug.LogError("Player object not found");
 
 			int? roundToPlay = FindObjectOfType<RoundSelectMenu>()?.RoundToPlay;
 			if (roundToPlay != null && roundToPlay > 0)
@@ -137,7 +147,7 @@ namespace ShootAR
 				{
 					Debug.Log("Round won");
 					gameState.RoundWon = true;
-					ui.MessageOnScreen.text = "Round Clear!\nTap to continue";
+					ui.MessageOnScreen.text = "Round Clear!";
 					sfx?.PlayOneShot(winSfx, 0.7f);
 					ClearScene();
 				}

@@ -909,6 +909,7 @@ MonoBehaviour:
   select: {fileID: 8300000, guid: c8db9f3ee4e3b0d448afc4907650eacf, type: 3}
   back: {fileID: 8300000, guid: 9b735df2335dde04d8efee4a92310e0b, type: 3}
   muteButton: {fileID: 636407670}
+  gameState: {fileID: 0}
 --- !u!82 &510969128
 AudioSource:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 {
     "name": "Main",
-    "references": ["Menu"],
+    "references": [],
     "optionalUnityReferences": [],
     "includePlatforms": [
         "Android",

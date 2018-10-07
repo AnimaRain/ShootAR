@@ -29,7 +29,7 @@ namespace ShootAR
 			if (cam == null)
 			{
 				const string error = "This device does not have a rear camera";
-				messageToPlayer.text = error + "\n\nTap to exit";
+				messageToPlayer.text = error;
 				Debug.LogError(error);
 				throw new System.Exception(error);
 			}

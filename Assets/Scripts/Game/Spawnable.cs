@@ -18,5 +18,14 @@ namespace ShootAR
 			get { return speed; }
 			protected set { speed = value; }
 		}
+
+		/// <summary>
+		/// Reference to the object holding the game-state.
+		/// </summary>
+		[SerializeField] protected GameState gameState;
+		public GameState GameState
+		{
+			set { gameState = value; }
+		}
 	}
 }

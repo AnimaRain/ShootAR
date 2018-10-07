@@ -144,6 +144,7 @@ MonoBehaviour:
     type: 2}
   maxDistanceToSpawn: 60
   minDistanceToSpawn: 35
+  gameState: {fileID: 0}
   spawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
   portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
 --- !u!114 &114209767139158460
@@ -161,6 +162,7 @@ MonoBehaviour:
     type: 2}
   maxDistanceToSpawn: 40
   minDistanceToSpawn: 25
+  gameState: {fileID: 0}
   spawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
   portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}
 --- !u!114 &114352869910997322
@@ -178,5 +180,6 @@ MonoBehaviour:
     type: 2}
   maxDistanceToSpawn: 50
   minDistanceToSpawn: 25
+  gameState: {fileID: 0}
   spawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}
   portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 2}

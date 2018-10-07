@@ -16,6 +16,7 @@ namespace ShootAR.Menu
 		[SerializeField] private AudioClip select;
 		[SerializeField] private AudioClip back;
 		[SerializeField] private MuteButton muteButton;
+		[SerializeField] private GameState gameState;
 
 
 		private void Start()
@@ -42,6 +43,7 @@ namespace ShootAR.Menu
 			mainMenu.SetActive(false);
 			subMenu.SetActive(true);
 			roundMenu.SetActive(true);
+
 			DontDestroyOnLoad(gameObject);
 
 			sfx.PlayOneShot(select, 1.2F);

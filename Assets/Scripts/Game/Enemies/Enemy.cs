@@ -26,7 +26,6 @@ namespace ShootAR.Enemies
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;
 		protected AudioSource sfx;
-		protected GameState gameState;
 		protected ScoreManager score;
 
 		protected void Awake()

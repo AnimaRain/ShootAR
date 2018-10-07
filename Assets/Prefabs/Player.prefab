@@ -61,6 +61,7 @@ MonoBehaviour:
   - {fileID: 0}
   health: 3
   ammo: 100
+  gameState: {fileID: 0}
   bullet: {fileID: 114966587524179450, guid: 95057ef19f604694e91f6e666846db2f, type: 2}
   shotSfx: {fileID: 8300000, guid: f605ad8805174674cb46f8a4f140baca, type: 3}
 --- !u!136 &136530930948006132
