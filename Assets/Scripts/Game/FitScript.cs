@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/* fixme: there is some magic happening here. I bet, that 2.7f was eyeballed.
+ * Also, Unity could possibly do what this script does, on its own... or not. I
+ * don't know. */
+
+using UnityEngine;
 
 public class FitScript : MonoBehaviour
 {

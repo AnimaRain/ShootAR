@@ -8,7 +8,7 @@ namespace ShootAR
 		private WebCamTexture cam;   //Rear Camera
 		[SerializeField] private RawImage backgroundTexture;
 
-		private Text buttonText;
+		[SerializeField] private Text messageToPlayer;
 
 		public void Start()
 		{
@@ -29,7 +29,7 @@ namespace ShootAR
 			if (cam == null)
 			{
 				const string error = "This device does not have a rear camera";
-				buttonText.text = error + "\n\nTap to exit";
+				messageToPlayer.text = error + "\n\nTap to exit";
 				Debug.LogError(error);
 				throw new System.Exception(error);
 			}

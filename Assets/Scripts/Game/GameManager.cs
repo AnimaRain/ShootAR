@@ -20,8 +20,6 @@ namespace ShootAR
 
 		#region Dependencies
 		[SerializeField] private Button fireButton;
-		//TODO: UI and buttons should be combined (?)
-		[SerializeField] private Button pauseButton, resumeButton;
 		[SerializeField] private UI ui;
 		private WebCamTexture cam;
 		[SerializeField] private Player player;
@@ -30,8 +28,7 @@ namespace ShootAR
 		public static GameManager Create(
 				Player player, GameState gameState, ScoreManager scoreManager = null,
 				AudioClip winSfx = null, AudioSource sfx = null,
-				Button fireButton = null, Button pauseButton = null,
-				Button resumeButton = null, UI ui = null
+				Button fireButton = null, UI ui = null
 			)
 		{
 			var o = new GameObject(nameof(GameManager)).AddComponent<GameManager>();
@@ -42,19 +39,16 @@ namespace ShootAR
 			o.winSfx = winSfx;
 			o.sfx = sfx;
 			o.fireButton = fireButton;
-			o.pauseButton = pauseButton;
-			o.resumeButton = resumeButton;
 
 			if (ui == null)
 			{
 				o.ui = UI.Create(
 					uiCanvas: new GameObject(),
 					pauseCanvas: new GameObject(),
-					bulletCountText: new GameObject().AddComponent<Text>(),
-					centerText: new GameObject().AddComponent<Text>(),
-					buttonText: new GameObject().AddComponent<Text>(),
-					scoreText: new GameObject().AddComponent<Text>(),
-					roundText: new GameObject().AddComponent<Text>(),
+					bulletCount: new GameObject().AddComponent<Text>(),
+					messageOnScreen: new GameObject().AddComponent<Text>(),
+					score: new GameObject().AddComponent<Text>(),
+					roundIndex: new GameObject().AddComponent<Text>(),
 					sfx: null, pauseSfx: null, gameState: o.gameState
 				);
 			}
@@ -90,7 +84,6 @@ namespace ShootAR
 
 		private void Start()
 		{
-			ui.SecondaryMessageOnScreen.text = "";
 			ui.MessageOnScreen.text = "";
 			ui.BulletCount.text = "";
 			fireButton?.onClick.AddListener(OnTap);
@@ -144,21 +137,22 @@ namespace ShootAR
 				{
 					Debug.Log("Round won");
 					gameState.RoundWon = true;
-					ui.MessageOnScreen.text = "Round Clear!";
+					ui.MessageOnScreen.text = "Round Clear!\nTap to continue";
 					sfx?.PlayOneShot(winSfx, 0.7f);
 					ClearScene();
-					ui.SecondaryMessageOnScreen.text = "Tap to continue";
 				}
 				#endregion
 
 				#region Defeat
-				else if (player.Health == 0 || (Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0 && player.Ammo == 0))
+				else if (player.Health == 0 ||
+					(Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0 &&
+					player.Ammo == 0))
 				{
 					Debug.Log("Player defeated");
-					ui.MessageOnScreen.text = "Rounds Survived : " + (gameState.Level - 1);
+					ui.MessageOnScreen.text =
+						$"Rounds Survived : {gameState.Level - 1}";
 					gameState.GameOver = true;
 					ClearScene();
-					ui.SecondaryMessageOnScreen.text = "Tap to continue";
 				}
 				#endregion
 			}
@@ -181,7 +175,6 @@ namespace ShootAR
 			{
 				gameState.GameOver = false;
 				ui.MessageOnScreen.text = "";
-				ui.SecondaryMessageOnScreen.text = "";
 				player.Ammo += 6;
 				AdvanceLevel();
 			}
@@ -201,7 +194,9 @@ namespace ShootAR
 		private void AdvanceLevel()
 		{
 			gameState.Level++;
+#if DEBUG
 			Debug.Log($"Advancing to level {gameState.Level}");
+#endif
 
 			foreach (var s in spawner)
 			{
