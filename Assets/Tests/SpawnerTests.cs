@@ -18,7 +18,8 @@ public class SpawnerTests
 			spawnLimit: 5,
 			spawnRate: 1,
 			maxDistanceToSpawn: 10f,
-			minDistanceToSpawn: 3f
+			minDistanceToSpawn: 3f,
+			initialDelay: 0f
 		);
 
 		spawner.StartSpawning();
@@ -36,7 +37,8 @@ public class SpawnerTests
 			spawnLimit: 5,
 			spawnRate: 1,
 			maxDistanceToSpawn: 10f,
-			minDistanceToSpawn: 3f
+			minDistanceToSpawn: 3f,
+			initialDelay: 0f
 		);
 
 		spawner.StartSpawning();
@@ -51,7 +53,7 @@ public class SpawnerTests
 	{
 		//Arrange
 		Spawner spawner = Spawner.Create(TestEnemy.Create(),
-			spawnLimit: 5, spawnRate: 1,
+			spawnLimit: 5, spawnRate: 1, initialDelay: 0f,
 			maxDistanceToSpawn: 10f, minDistanceToSpawn: 3f);
 
 		const int testLimit = 3;    //the # of spawns after which spawning will stop
@@ -71,7 +73,7 @@ public class SpawnerTests
 	public IEnumerator SpawnerStopsSpawningAtGameOver()
 	{
 		GameState gameState = GameState.Create(0);
-		Spawner spawner = Spawner.Create(TestEnemy.Create(), 99, 1, 5, 3, gameState);
+		Spawner spawner = Spawner.Create(TestEnemy.Create(), 99, 0f, 1f, 5f, 3f, gameState);
 
 		spawner.StartSpawning();
 		yield return new WaitUntil(() => spawner.SpawnCount == 3);
@@ -89,7 +91,7 @@ public class SpawnerTests
 		 * I feel confident enough that things workout, though.*/
 
 		var prefab = TestEnemy.Create();
-		Spawner spawner = Spawner.Create(prefab, 20, 0f, 5f, 3f);
+		Spawner spawner = Spawner.Create(prefab, 20, 0f, 0f, 5f, 3f);
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
@@ -97,9 +99,7 @@ public class SpawnerTests
 		Enemy[] enemies = Object.FindObjectsOfType<Enemy>();
 		foreach (var enemy in enemies)
 		{
-#pragma warning disable
 			if (enemy == spawner.ObjectToSpawn) continue;
-#pragma warning restore
 
 			var distance = enemy.transform.position.magnitude;
 			Assert.GreaterOrEqual(distance, spawner.MinDistanceToSpawn,

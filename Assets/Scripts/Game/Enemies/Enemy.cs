@@ -5,7 +5,6 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Parent class of all types of enemies.
 	/// </summary>
-	[RequireComponent(typeof(SphereCollider))]
 	public abstract class Enemy : Spawnable
 	{
 		/// <summary>
@@ -30,7 +29,6 @@ namespace ShootAR.Enemies
 
 		protected void Awake()
 		{
-			GetComponent<SphereCollider>().isTrigger = true;
 			ActiveCount++;
 		}
 

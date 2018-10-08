@@ -3,8 +3,11 @@
 namespace ShootAR
 {
 	/// <summary>
-	///	Holds the game-state. Changes are made outside this class.
+	///	Holds the game-state.
 	/// </summary>
+	/// <remarks>
+	/// Changes are made outside this class.
+	/// </remarks>
 	public class GameState : MonoBehaviour
 	{
 		public delegate void GameOverHandler();
@@ -12,8 +15,17 @@ namespace ShootAR
 		public delegate void RoundWonHandler();
 		public event RoundWonHandler OnRoundWon;
 
+		/// <summary>
+		/// Stores the round's index number
+		/// </summary>
 		public int Level { get; set; }
+		/// <summary>
+		/// True when player has lost
+		/// </summary>
 		public bool GameOver { get; set; }
+		/// <summary>
+		/// True when player wins the round
+		/// </summary>
 		public bool RoundWon { get; set; }
 
 		public static GameState Create(int level)

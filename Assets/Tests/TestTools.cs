@@ -6,6 +6,7 @@ namespace ShootAR.TestTools
 	/// <summary>
 	/// Test class for replacing enemy classes in tests.
 	/// </summary>
+	[RequireComponent(typeof(SphereCollider),typeof(Rigidbody))]
 	class TestEnemy : Enemy
 	{
 		public static TestEnemy Create(

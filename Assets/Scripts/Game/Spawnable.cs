@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace ShootAR
 {
-	[RequireComponent(typeof(SphereCollider),typeof(Rigidbody))]
 	public abstract class Spawnable : MonoBehaviour
 	{
 		/// <summary>
@@ -22,7 +21,7 @@ namespace ShootAR
 		/// <summary>
 		/// Reference to the object holding the game-state.
 		/// </summary>
-		[SerializeField] protected GameState gameState;
+		protected GameState gameState;
 		public GameState GameState
 		{
 			set { gameState = value; }

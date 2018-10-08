@@ -2,6 +2,7 @@
 
 namespace ShootAR.Enemies
 {
+	[RequireComponent(typeof(SphereCollider))]
 	public class Crasher : Boopboop
 	{
 		protected override void Start()

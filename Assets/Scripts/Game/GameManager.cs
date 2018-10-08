@@ -11,23 +11,20 @@ namespace ShootAR
 
 	public class GameManager : MonoBehaviour
 	{
-		[SerializeField] private AudioClip winSfx;
+		[SerializeField] private AudioClip victoryMusic;
 		private Dictionary<Type, Spawner> spawner;
 		[SerializeField] private ScoreManager scoreManager;
 		[Obsolete] private bool exitTap;
-		private AudioSource sfx;
+		private AudioSource audioPlayer;
 		[SerializeField] private GameState gameState;
-
-		#region Dependencies
 		[SerializeField] private Button fireButton;
 		[SerializeField] private UI ui;
-		private WebCamTexture cam;
+		[SerializeField] private WebCamTexture cam;
 		[SerializeField] private Player player;
-		#endregion
 
 		public static GameManager Create(
 				Player player, GameState gameState, ScoreManager scoreManager = null,
-				AudioClip winSfx = null, AudioSource sfx = null,
+				AudioClip victoryMusic = null, AudioSource sfx = null,
 				Button fireButton = null, UI ui = null
 			)
 		{
@@ -36,8 +33,8 @@ namespace ShootAR
 			o.player = player;
 			o.gameState = gameState;
 			o.scoreManager = scoreManager;
-			o.winSfx = winSfx;
-			o.sfx = sfx;
+			o.victoryMusic = victoryMusic;
+			o.audioPlayer = sfx;
 			o.fireButton = fireButton;
 
 			if (ui == null)
@@ -86,21 +83,17 @@ namespace ShootAR
 		{
 			if (player == null)
 			{
-				const string error = "Player object not found";
-				Debug.LogError(error);
-				throw new Exception(error);
+				throw new Exception("Player object not found");
 			}
 			if (gameState == null)
 			{
-				const string error = "GameState object not found";
-				Debug.LogError(error);
-				throw new Exception(error);
+				throw new Exception("GameState object not found");
 			}
 
 			ui.MessageOnScreen.text = "";
 			ui.BulletCount.text = "";
 			fireButton?.onClick.AddListener(OnTap);
-			sfx = gameObject.AddComponent<AudioSource>();
+			audioPlayer = gameObject.AddComponent<AudioSource>();
 
 			int? roundToPlay = FindObjectOfType<RoundSelectMenu>()?.RoundToPlay;
 			if (roundToPlay != null && roundToPlay > 0)
@@ -112,7 +105,7 @@ namespace ShootAR
 			Spawner[] spawners = FindObjectsOfType<Spawner>();
 			if (spawners == null)
 			{
-				Debug.LogError("Could not find spawners.");
+				throw new Exception("Could not find spawners.");
 			}
 			else
 			{
@@ -127,11 +120,13 @@ namespace ShootAR
 			}
 
 			AdvanceLevel();
+			foreach (Spawner spawner in spawner.Values)
+				spawner?.StartSpawning();
 
 			GC.Collect();
 		}
 
-		private void FixedUpdate()
+		private void Update()
 		{
 			if (!gameState.GameOver)
 			{
@@ -148,7 +143,7 @@ namespace ShootAR
 					Debug.Log("Round won");
 					gameState.RoundWon = true;
 					ui.MessageOnScreen.text = "Round Clear!";
-					sfx?.PlayOneShot(winSfx, 0.7f);
+					audioPlayer?.PlayOneShot(victoryMusic, 0.7f);
 					ClearScene();
 				}
 				#endregion
@@ -210,20 +205,38 @@ namespace ShootAR
 
 			foreach (var s in spawner)
 			{
-				switch (s.Key.ToString())
+				#region Spawn Patterns
+				if (s.Key == typeof(Crasher))
+					s.Value.StartSpawning(4 * gameState.Level + 8);
+				else if (s.Key == typeof(Drone))
+					s.Value.StartSpawning(3 * gameState.Level + 6);
+				else if (s.Key == typeof(Capsule))
+					s.Value.StartSpawning(gameState.Level + 2);
+				else throw new Exception($"Unrecognised type of spawner: {s.Key}");
+
+				/* hack: Until Unity upgrades to C# 7.0, which allows match
+				 * expressions in "switch" to be any non-null type, the code above 
+				 * is used.
+				switch (s.Key)
 				{
 					#region Spawn Patterns
-					case nameof(Crasher):
+					case typeof(Crasher):
 						s.Value.StartSpawning(4 * gameState.Level + 8);
 						break;
-					case nameof(Drone):
+					case typeof(Drone):
 						s.Value.StartSpawning(3 * gameState.Level + 6);
 						break;
-					case nameof(Capsule):
+					case typeof(Capsule):
 						s.Value.StartSpawning(gameState.Level + 2);
 						break;
-						#endregion
+					default:
+						throw new Exception(
+							$"Unrecognised type of spawner: {s.Key}"
+						);
+					#endregion
 				}
+				*/
+				#endregion
 			}
 
 			gameState.RoundWon = false;

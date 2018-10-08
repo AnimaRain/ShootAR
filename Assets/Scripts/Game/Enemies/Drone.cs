@@ -1,5 +1,8 @@
-﻿namespace ShootAR.Enemies
+﻿using UnityEngine;
+
+namespace ShootAR.Enemies
 {
+	[RequireComponent(typeof(CapsuleCollider))]
 	public class Drone : Pyoopyoo
 	{
 		private const float ShootDelay = 5f;

@@ -73,8 +73,12 @@ namespace ShootAR
 		{
 			var o = new GameObject(nameof(Player)).AddComponent<Player>();
 
+			var healthUI = new GameObject("HealthUI").transform;
 			for (int i = 0; i < MAXIMUM_HEALTH; i++)
+			{
 				o.healthIndicator[i] = new GameObject("HealthIndicator");
+				o.healthIndicator[i].transform.parent = healthUI;
+			}
 			o.Health = health;
 			o.Ammo = ammo;
 			o.bullet = bullet;

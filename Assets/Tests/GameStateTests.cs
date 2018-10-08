@@ -10,8 +10,7 @@ public class GameStateTests
 	[UnityTest]
 	public IEnumerator UseLastShotToHitCapsuleAndTakeBullets()
 	{
-		var gameState = GameState.Create(0);
-
+		GameState gameState = GameState.Create(0);
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject().AddComponent<Camera>(),
@@ -23,13 +22,14 @@ public class GameStateTests
 			speed: 0,
 			player: player,
 			gameState: gameState);
+		GameManager.Create(player, gameState);
 
 		player.transform.LookAt(capsule.transform);
 		player.Shoot();
 
 		yield return new WaitWhile(() => player.Ammo > 0);
 
-		Assert.That(!gameState.GameOver,
+		Assert.False(gameState.GameOver,
 				"The game must not end, if restocked on bullets.");
 	}
 

@@ -7,20 +7,40 @@ namespace ShootAR
 	public class Spawner : MonoBehaviour
 	{
 		[SerializeField] private Spawnable objectToSpawn;
+		/// <summary>
+		/// Reference to the <see cref="Spawnable"/> prefab to copy
+		/// while spawnning.
+		/// </summary>
 		public Spawnable ObjectToSpawn {
 			get {return objectToSpawn; }
 			private set {objectToSpawn = value; }
 		}
-		public float SpawnRate { get; set; }
 		/// <summary>
-		/// Distance away from player.
+		/// The time interval between each spawn.
 		/// </summary>
+		public float SpawnRate { get; set; }
+		[SerializeField] private float initialDelay;
+		/// <summary>
+		/// The initial delay before spawning the first object.
+		/// </summary>
+		public float InitialDelay{
+			get { return initialDelay; }
+			set { initialDelay = value; }
+		}
 		[SerializeField] private float maxDistanceToSpawn, minDistanceToSpawn;
+		/// <summary>
+		/// Maximum distance away from player that <see cref="ObjectToSpawn"/> is
+		/// allowed to spawn.
+		/// </summary>
 		public float MaxDistanceToSpawn
 		{
 			get { return maxDistanceToSpawn; }
 			private set { maxDistanceToSpawn = value; }
 		}
+		/// <summary>
+		/// Minimum distance away from player that <see cref="ObjectToSpawn"/> is
+		/// allowed to spawn.
+		/// </summary>
 		public float MinDistanceToSpawn
 		{
 			get { return minDistanceToSpawn; }
@@ -31,9 +51,11 @@ namespace ShootAR
 		/// </summary>
 		public int SpawnLimit { get; private set; }
 		/// <summary>
-		/// Counts how many instances of ObjectToSpawn were spawned. Resets 
-		/// every time StartSpawning is called.
+		/// Count of how many instances of <see cref="ObjectToSpawn"/> were spawned.
 		/// </summary>
+		/// <remarks>
+		/// Resets every time StartSpawning is called.
+		/// </remarks>
 		public int SpawnCount { get; private set; }
 		public bool IsSpawning { get; private set; }
 
@@ -43,7 +65,7 @@ namespace ShootAR
 		private AudioSource sfx;
 
 		public static Spawner Create(
-			Spawnable objectToSpawn, int spawnLimit, float spawnRate, 
+			Spawnable objectToSpawn, int spawnLimit, float initialDelay, float spawnRate, 
 			float maxDistanceToSpawn, float minDistanceToSpawn,
 			GameState gameState = null)
 		{
@@ -66,13 +88,6 @@ namespace ShootAR
 			}
 
 			return o;
-		}
-
-		private void Awake()
-		{
-			//Initial value should not be 0 to refrain from enabling
-			//"Game Over" state when the game has just started.
-			if (SpawnLimit == 0) SpawnLimit = -1;
 		}
 
 		private void Start()
@@ -106,15 +121,18 @@ namespace ShootAR
 		/// <summary>
 		/// Spawn objects until the spawn-limit is reached.
 		/// </summary>
-		/// <returns></returns>
+		/// <remarks>
+		/// Automaticaly called through <see cref="StartSpawning"/>. Iteration will
+		/// stop when the limit defined by <see cref="SpawnLimit"/> is reached or
+		/// can be manually stopped, using <see cref="StopSpawning"/>.
+		/// </remarks>
 		public IEnumerator Spawn()
 		{
 			IsSpawning = true;
-			while (IsSpawning)
+			yield return new WaitForSeconds(initialDelay);
+			do
 			{
-				yield return new WaitForSeconds(SpawnRate);
-
-				/* IsSpawning is checked again, in case StopSpawning() is called
+				/* IsSpawning is checked here, in case StopSpawning() is called
 				 * while being in the middle of this function call. */
 				if (!IsSpawning) break;
 
@@ -141,9 +159,14 @@ namespace ShootAR
 				spawned.GameState = gameState;
 				SpawnCount++;
 				if (SpawnCount == SpawnLimit) StopSpawning();
-			}
+
+				yield return new WaitForSeconds(SpawnRate);
+			} while (IsSpawning);
 		}
 
+		/// <summary>
+		/// Automatically start a <see cref="Spawn"/> coroutine.
+		/// </summary>
 		public void StartSpawning()
 		{
 			SpawnCount = 0;
@@ -151,7 +174,7 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Automatically start a Spawn coroutine after setting the spawn limit
+		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit
 		/// </summary>
 		/// <param name="spawnLimit">Number of objects to spawn</param>
 		public void StartSpawning(int spawnLimit)
@@ -161,7 +184,7 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Automatically start a Spawn coroutine after setting the spawn limit and
+		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit and
 		/// the rate of spawn.
 		/// </summary>
 		/// <param name="spawnLimit">Number of objects to spawn</param>
