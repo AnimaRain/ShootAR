@@ -109,6 +109,28 @@ public class SpawnerTests
 		}
 	}
 
+	[Test]
+	public void SpawnerShouldNotBeRestartedWhileRunning()
+	{
+		Spawner spawner = Spawner.Create(
+			TestEnemy.Create(), 100, 100f, 100f, 100f, 1f);
+		UnityException error = null;
+
+		try
+		{
+			spawner.StartSpawning();
+			spawner.StartSpawning();
+		}
+		catch (UnityException e)
+		{
+			error = e;
+		}
+
+		Assert.IsNotNull(error,
+			"Should not be able to restart a spawner while it is" +
+			" currently spawning"
+		);
+	}
 	[TearDown]
 	public void ClearTestEnvironment()
 	{

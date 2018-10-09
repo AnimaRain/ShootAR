@@ -19,14 +19,10 @@ namespace ShootAR
 		/// The time interval between each spawn.
 		/// </summary>
 		public float SpawnRate { get; set; }
-		[SerializeField] private float initialDelay;
 		/// <summary>
 		/// The initial delay before spawning the first object.
 		/// </summary>
-		public float InitialDelay{
-			get { return initialDelay; }
-			set { initialDelay = value; }
-		}
+		public float InitialDelay { get; private set; }
 		[SerializeField] private float maxDistanceToSpawn, minDistanceToSpawn;
 		/// <summary>
 		/// Maximum distance away from player that <see cref="ObjectToSpawn"/> is
@@ -63,6 +59,13 @@ namespace ShootAR
 		[SerializeField] private AudioClip spawnSfx;
 		[SerializeField] private GameObject portal;
 		private AudioSource sfx;
+
+		private void Awake()
+		{
+			//Initial value should not be 0 to refrain from enabling
+			//"Game Over" state when the game has just started.
+			if (SpawnLimit == 0) SpawnLimit = -1;
+		}
 
 		public static Spawner Create(
 			Spawnable objectToSpawn, int spawnLimit, float initialDelay, float spawnRate, 
@@ -128,13 +131,15 @@ namespace ShootAR
 		/// </remarks>
 		public IEnumerator Spawn()
 		{
-			IsSpawning = true;
-			yield return new WaitForSeconds(initialDelay);
+			yield return new WaitForSeconds(InitialDelay);
 			do
 			{
+				Debug.Log("Spawn...");
+
 				/* IsSpawning is checked here, in case StopSpawning() is called
 				 * while being in the middle of this function call. */
 				if (!IsSpawning) break;
+				Debug.Log("Spawn!!!");
 
 				float r = Random.Range(minDistanceToSpawn, maxDistanceToSpawn);
 				float theta = Random.Range(0f, Mathf.PI);
@@ -159,7 +164,6 @@ namespace ShootAR
 				spawned.GameState = gameState;
 				SpawnCount++;
 				if (SpawnCount == SpawnLimit) StopSpawning();
-
 				yield return new WaitForSeconds(SpawnRate);
 			} while (IsSpawning);
 		}
@@ -169,17 +173,22 @@ namespace ShootAR
 		/// </summary>
 		public void StartSpawning()
 		{
+			if (IsSpawning)
+				throw new UnityException(
+					"A spawner should not be restarted before stopping it first");
+					
 			SpawnCount = 0;
+			IsSpawning = true;
 			StartCoroutine(Spawn());
 		}
 
 		/// <summary>
 		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit
 		/// </summary>
-		/// <param name="spawnLimit">Number of objects to spawn</param>
-		public void StartSpawning(int spawnLimit)
+		/// <param name="limit">Number of objects to spawn</param>
+		public void StartSpawning(int limit)
 		{
-			SpawnLimit = spawnLimit;
+			SpawnLimit = limit;
 			StartSpawning();
 		}
 
@@ -187,17 +196,35 @@ namespace ShootAR
 		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit and
 		/// the rate of spawn.
 		/// </summary>
-		/// <param name="spawnLimit">Number of objects to spawn</param>
-		/// <param name="rateOfSpawn">The time in seconds to wait before each spawn</param>
-		public void StartSpawning(int spawnLimit, float rateOfSpawn)
+		/// <param name="limit">Number of objects to spawn</param>
+		/// <param name="rate">The time in seconds to wait before each spawn</param>
+		public void StartSpawning(int limit, float rate)
 		{
-			SpawnRate = rateOfSpawn;
-			SpawnLimit = spawnLimit;
+			SpawnRate = rate;
+			SpawnLimit = limit;
 			StartSpawning();
+		}
+
+		/// <summary>
+		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit,
+		/// the rate of spawn and the initial delay.
+		/// </summary>
+		/// <param name="limit">Number of objects to spawn</param>
+		/// <param name="rate">The time in seconds to wait before each spawn</param>
+		/// <param name="delay">The time in seconds to wait before first spawn</param>
+		/// <seealso cref="SpawnLimit"/>
+		/// <seealso cref="SpawnRate"/>
+		/// <seealso cref="SpawnDelay"/>
+		public void StartSpawning(int limit, float rate, float delay)
+		{
+			InitialDelay = delay;
+			StartSpawning(limit, rate);
 		}
 
 		public void StopSpawning()
 		{
+			Debug.Log("Spawn stopped");
+
 			IsSpawning = false;
 			StopCoroutine(Spawn());
 		}

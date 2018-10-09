@@ -7,10 +7,14 @@ namespace ShootAR.Enemies
 	/// </summary>
 	public abstract class Enemy : Spawnable
 	{
+		[SerializeField] private int pointsValue;
 		/// <summary>
 		/// The amount of points added to the player's score when destroyed.
 		/// </summary>
-		public int PointsValue { get; protected set; }
+		public int PointsValue {
+			get { return pointsValue; }
+			protected set { pointsValue = value; }
+		}
 		/// <summary>
 		/// The amount of damage the player recieves from this object's attack.
 		/// </summary>

@@ -37,7 +37,7 @@ namespace ShootAR
 			return o;
 		}
 
-		private void FixedUpdate()
+		private void Update()
 		{
 			if (GameOver && OnGameOver != null) OnGameOver();
 			if (RoundWon && OnRoundWon != null) OnRoundWon();

@@ -21,6 +21,7 @@ namespace ShootAR
 		[SerializeField] private UI ui;
 		[SerializeField] private WebCamTexture cam;
 		[SerializeField] private Player player;
+		private const int CAPSULE_BONUS_POINTS = 50;
 
 		public static GameManager Create(
 				Player player, GameState gameState, ScoreManager scoreManager = null,
@@ -120,24 +121,25 @@ namespace ShootAR
 			}
 
 			AdvanceLevel();
-			foreach (Spawner spawner in spawner.Values)
-				spawner?.StartSpawning();
 
 			GC.Collect();
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
 			if (!gameState.GameOver)
 			{
 				#region Round Won
+
 				bool spawnersStoped = true;
 				foreach (var type in spawner.Keys)
-					if (type == typeof(Enemy) && spawner[type].IsSpawning)
+				{
+					if (type.IsSubclassOf(typeof(Enemy)) && spawner[type].IsSpawning)
 					{
 						spawnersStoped = false;
 						break;
 					}
+				}
 				if (spawnersStoped && Enemy.ActiveCount == 0)
 				{
 					Debug.Log("Round won");
@@ -149,6 +151,7 @@ namespace ShootAR
 				#endregion
 
 				#region Defeat
+
 				else if (player.Health == 0 ||
 					(Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0 &&
 					player.Ammo == 0))
@@ -194,7 +197,7 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Prepares for the next level.
+		/// Increments the level index, sets spawners and starts them
 		/// </summary>
 		private void AdvanceLevel()
 		{
@@ -206,12 +209,22 @@ namespace ShootAR
 			foreach (var s in spawner)
 			{
 				#region Spawn Patterns
+
 				if (s.Key == typeof(Crasher))
-					s.Value.StartSpawning(4 * gameState.Level + 8);
+					s.Value.StartSpawning(
+						limit: 4 * gameState.Level + 8,
+						rate: 3f - gameState.Level * .1f,
+						delay: 3f);
 				else if (s.Key == typeof(Drone))
-					s.Value.StartSpawning(3 * gameState.Level + 6);
+					s.Value.StartSpawning(
+						limit: 3 * gameState.Level + 6,
+						rate: 3f - gameState.Level * .1f,
+						delay: 4f);
 				else if (s.Key == typeof(Capsule))
-					s.Value.StartSpawning(gameState.Level + 2);
+					s.Value.StartSpawning(
+						limit: gameState.Level + 2,
+						rate: 3f + gameState.Level * .5f,
+						delay: 10f);
 				else throw new Exception($"Unrecognised type of spawner: {s.Key}");
 
 				/* hack: Until Unity upgrades to C# 7.0, which allows match
@@ -243,20 +256,17 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Deactivates spawners and destroys all spawned objects. 
+		/// Destroys all spawned objects. 
 		/// </summary>
 		private void ClearScene()
 		{
 			Debug.Log("Clearing scene...");
 
-			foreach (Spawner spawner in spawner.Values)
-				spawner?.StopSpawning();
-
 			Enemy[] enemies = FindObjectsOfType<Enemy>();
 			foreach (var e in enemies) Destroy(e.gameObject);
 			Capsule[] capsules = FindObjectsOfType<Capsule>();
 			if (gameState.RoundWon && scoreManager != null)
-				scoreManager.AddScore(capsules.Length * Capsule.BONUS_POINTS);
+				scoreManager.AddScore(capsules.Length * CAPSULE_BONUS_POINTS);
 			foreach (var c in capsules) Destroy(c.gameObject);
 		}
 

@@ -17,12 +17,6 @@ namespace ShootAR
 			return o;
 		}
 
-		private void Start()
-		{
-			if (scoreLabel == null)
-				scoreLabel = FindObjectOfType<UI>()?.Score;
-		}
-
 		/// <summary>
 		/// Adds points to the score and updates the GUI.
 		/// </summary>

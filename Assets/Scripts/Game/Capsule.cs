@@ -5,8 +5,6 @@ namespace ShootAR
 	[RequireComponent(typeof(AudioSource))]
 	public class Capsule : Spawnable
 	{
-		public const int BONUS_POINTS = 50;
-
 		public enum CapsuleType
 		{
 			Bullet,
