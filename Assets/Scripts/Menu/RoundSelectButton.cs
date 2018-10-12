@@ -15,16 +15,11 @@ namespace ShootAR.Menu
 		/// </summary>
 		private int numberOnLabel;
 
-		private RoundSelectMenu menu;
+		[SerializeField] private RoundSelectMenu menu;
 
 		private void Start()
 		{
-			menu = FindObjectOfType<RoundSelectMenu>();
-			if (menu == null)
-			{
-				Debug.LogError("Round Select Menu not found!");
-				return;
-			}
+			if (menu == null) throw new UnityException("Round Select Menu not found!");
 
 			string label = GetComponentInChildren<Text>().text;
 			if (int.TryParse(label, out numberOnLabel))
@@ -38,8 +33,7 @@ namespace ShootAR.Menu
 		}
 
 		/// <summary>
-		/// Takes the label of the button, converts it into a number and adds it to 
-		/// the level index.
+		/// Adds the number on the label of the button to the level index.
 		/// </summary>
 		public void ChangeLevelIndex()
 		{

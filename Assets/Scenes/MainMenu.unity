@@ -498,6 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6e89cf87165ef4d8244b2a05709aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menu: {fileID: 1753912206}
 --- !u!114 &188359325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -909,7 +910,6 @@ MonoBehaviour:
   select: {fileID: 8300000, guid: c8db9f3ee4e3b0d448afc4907650eacf, type: 3}
   back: {fileID: 8300000, guid: 9b735df2335dde04d8efee4a92310e0b, type: 3}
   muteButton: {fileID: 636407670}
-  gameState: {fileID: 0}
 --- !u!82 &510969128
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1332,6 +1332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6e89cf87165ef4d8244b2a05709aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menu: {fileID: 1753912206}
 --- !u!114 &657649076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3295,6 +3296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6e89cf87165ef4d8244b2a05709aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menu: {fileID: 1753912206}
 --- !u!1 &1928752750
 GameObject:
   m_ObjectHideFlags: 0
@@ -3381,6 +3383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6e89cf87165ef4d8244b2a05709aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menu: {fileID: 1753912206}
 --- !u!114 &1936506068
 MonoBehaviour:
   m_ObjectHideFlags: 0

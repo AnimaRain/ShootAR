@@ -96,10 +96,10 @@ namespace ShootAR
 			fireButton?.onClick.AddListener(OnTap);
 			audioPlayer = gameObject.AddComponent<AudioSource>();
 
-			int? roundToPlay = FindObjectOfType<RoundSelectMenu>()?.RoundToPlay;
-			if (roundToPlay != null && roundToPlay > 0)
+			int roundToPlay = Configuration.ChosenLevel;
+			if (roundToPlay > 0)
 			{
-				gameState.Level = (int)roundToPlay - 1;
+				gameState.Level = roundToPlay - 1;
 			}
 
 			spawner = new Dictionary<Type, Spawner>();

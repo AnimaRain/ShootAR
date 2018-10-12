@@ -3,7 +3,11 @@ using UnityEngine;
 
 namespace ShootAR.Menu
 {
-	public class MenuManager : MonoBehaviour
+	/// <remarks>
+	/// Most functions of this class are assigned as events on buttons
+	/// through the Inspector in the Editor.
+	/// </remarks>
+	public class MenuManager: MonoBehaviour
 	{
 
 		private AudioSource sfx;
@@ -16,7 +20,6 @@ namespace ShootAR.Menu
 		[SerializeField] private AudioClip select;
 		[SerializeField] private AudioClip back;
 		[SerializeField] private MuteButton muteButton;
-		[SerializeField] private GameState gameState;
 
 
 		private void Start()
@@ -44,8 +47,6 @@ namespace ShootAR.Menu
 			subMenu.SetActive(true);
 			roundMenu.SetActive(true);
 
-			DontDestroyOnLoad(gameObject);
-
 			sfx.PlayOneShot(select, 1.2F);
 		}
 
@@ -69,7 +70,7 @@ namespace ShootAR.Menu
 
 		public void QuitApp()
 		{
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 #endif
 			Application.Quit();
