@@ -19,7 +19,7 @@ namespace ShootAR
 		[SerializeField] private GameState gameState;
 		[SerializeField] private Button fireButton;
 		[SerializeField] private UI ui;
-		[SerializeField] private WebCamTexture cam;
+		private WebCamTexture cam;
 		[SerializeField] private Player player;
 		private const int CAPSULE_BONUS_POINTS = 50;
 
@@ -100,6 +100,7 @@ namespace ShootAR
 			if (roundToPlay > 0)
 			{
 				gameState.Level = roundToPlay - 1;
+				player.Ammo += gameState.Level * 15;	//initial Ammo value set in Inspector
 			}
 
 			spawner = new Dictionary<Type, Spawner>();

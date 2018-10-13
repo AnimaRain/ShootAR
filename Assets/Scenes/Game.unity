@@ -923,12 +923,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65a66110b9f002a4fbb0b5bda95f9729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  victoryMusic: {fileID: 0}
+  victoryMusic: {fileID: 8300000, guid: 25ec12bee3d72a8479e6c560cc1624ea, type: 3}
   scoreManager: {fileID: 23858081}
   gameState: {fileID: 604156530}
   fireButton: {fileID: 869210693}
   ui: {fileID: 1310314011}
-  cam: {fileID: 0}
   player: {fileID: 1143016213}
 --- !u!4 &540221806
 Transform:
@@ -1954,6 +1953,11 @@ Prefab:
       propertyPath: gameState
       value: 
       objectReference: {fileID: 604156530}
+    - target: {fileID: 114688883888379934, guid: 43a7f556013b93a45b49b1ccc85522f3,
+        type: 2}
+      propertyPath: ammo
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43a7f556013b93a45b49b1ccc85522f3, type: 2}
   m_IsPrefabAsset: 0
