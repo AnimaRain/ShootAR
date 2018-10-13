@@ -134,12 +134,9 @@ namespace ShootAR
 			yield return new WaitForSeconds(InitialDelay);
 			do
 			{
-				Debug.Log("Spawn...");
-
 				/* IsSpawning is checked here, in case StopSpawning() is called
 				 * while being in the middle of this function call. */
 				if (!IsSpawning) break;
-				Debug.Log("Spawn!!!");
 
 				float r = Random.Range(minDistanceToSpawn, maxDistanceToSpawn);
 				float theta = Random.Range(0f, Mathf.PI);
@@ -223,7 +220,9 @@ namespace ShootAR
 
 		public void StopSpawning()
 		{
+#if DEBUG
 			Debug.Log("Spawn stopped");
+#endif
 
 			IsSpawning = false;
 			StopCoroutine(Spawn());

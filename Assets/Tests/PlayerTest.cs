@@ -17,7 +17,7 @@ class PlayerTest
 		Bullet shotBullet = player.Shoot();
 		shotBullet.gameObject.SetActive(true);
 
-		Assert.That(shotBullet != null,
+		Assert.IsNotNull(shotBullet,
 			"Player must be able to fire bullets.");
 	}
 
@@ -104,7 +104,7 @@ class PlayerTest
 
 		var firedBullet = player.Shoot();
 
-		Assert.That(firedBullet == null,
+		Assert.IsNull(firedBullet,
 			"Player shouldn't be able to shoot without ammo.");
 	}
 

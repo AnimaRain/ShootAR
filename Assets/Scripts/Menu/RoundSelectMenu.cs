@@ -14,7 +14,7 @@ namespace ShootAR.Menu
 			{
 				roundToPlay = Mathf.Clamp(value, 1, 999);
 				labelOnUI.text = roundToPlay.ToString();
-				Configuration.ChosenLevel = roundToPlay;
+				Configuration.StartingLevel = roundToPlay;
 			}
 		}
 

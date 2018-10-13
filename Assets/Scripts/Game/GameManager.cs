@@ -1,5 +1,4 @@
 ﻿using ShootAR.Enemies;
-using ShootAR.Menu;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,7 +95,7 @@ namespace ShootAR
 			fireButton?.onClick.AddListener(OnTap);
 			audioPlayer = gameObject.AddComponent<AudioSource>();
 
-			int roundToPlay = Configuration.ChosenLevel;
+			int roundToPlay = Configuration.StartingLevel;
 			if (roundToPlay > 0)
 			{
 				gameState.Level = roundToPlay - 1;
@@ -172,7 +171,7 @@ namespace ShootAR
 			gameState.GameOver = true;
 			ClearScene();
 
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 #endif
 		}
@@ -266,6 +265,7 @@ namespace ShootAR
 			Enemy[] enemies = FindObjectsOfType<Enemy>();
 			foreach (var e in enemies) Destroy(e.gameObject);
 			Capsule[] capsules = FindObjectsOfType<Capsule>();
+			// Be merciful. Player deserves some points for the unused capsules.
 			if (gameState.RoundWon && scoreManager != null)
 				scoreManager.AddScore(capsules.Length * CAPSULE_BONUS_POINTS);
 			foreach (var c in capsules) Destroy(c.gameObject);
