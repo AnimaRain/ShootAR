@@ -30,7 +30,7 @@ namespace ShootAR.Enemies
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;
 		protected AudioSource sfx;
-		[SerializeField] protected ScoreManager score;
+		[SerializeField] protected static ScoreManager score;
 
 		protected void Awake()
 		{
@@ -39,6 +39,8 @@ namespace ShootAR.Enemies
 
 		protected virtual void Start()
 		{
+			if (score == null) score = FindObjectOfType<ScoreManager>();
+
 			sfx = GetComponent<AudioSource>();
 			/* If the AudioSource component on all enemy prefabs are distinctively
 			 * configured, either through scripts or the inspector, and you are

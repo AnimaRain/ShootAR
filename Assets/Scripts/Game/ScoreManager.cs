@@ -17,6 +17,11 @@ namespace ShootAR
 			return o;
 		}
 
+		private void Start()
+		{
+			scoreLabel.text = "Score: 0";
+		}
+
 		/// <summary>
 		/// Adds points to the score and updates the GUI.
 		/// </summary>
