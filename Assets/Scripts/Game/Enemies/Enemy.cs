@@ -5,6 +5,7 @@ namespace ShootAR.Enemies
 	/// <summary>
 	/// Parent class of all types of enemies.
 	/// </summary>
+	[RequireComponent(typeof(AudioSource))]
 	public abstract class Enemy : Spawnable
 	{
 		[SerializeField] private int pointsValue;
@@ -29,7 +30,7 @@ namespace ShootAR.Enemies
 		[SerializeField] protected AudioClip attackSfx;
 		[SerializeField] protected GameObject explosion;
 		protected AudioSource sfx;
-		protected ScoreManager score;
+		[SerializeField] protected ScoreManager score;
 
 		protected void Awake()
 		{
@@ -38,8 +39,11 @@ namespace ShootAR.Enemies
 
 		protected virtual void Start()
 		{
-			//Create an audio source to play the audio clips
-			sfx = gameObject.AddComponent<AudioSource>();
+			sfx = GetComponent<AudioSource>();
+			/* If the AudioSource component on all enemy prefabs are distinctively
+			 * configured, either through scripts or the inspector, and you are
+			 * sure of it because you just checked, the following lines can be
+			 * removed. */
 			sfx.clip = attackSfx;
 			sfx.volume = 0.3f;
 			sfx.playOnAwake = false;
@@ -74,7 +78,8 @@ namespace ShootAR.Enemies
 		public void OrbitAround(Orbit orbit)
 		{
 			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
-			transform.RotateAround(orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);
+			transform.RotateAround(
+				orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);
 		}
 	}
 }

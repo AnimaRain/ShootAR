@@ -238,9 +238,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  pointsValue: 0
   damage: 1
   attackSfx: {fileID: 8300000, guid: f1364d48e48ea4fdab44868cc9b2a10e, type: 3}
   explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
+  score: {fileID: 114449424329967522, guid: 23cf2f61da6b8ae4b8240febae17465b, type: 2}
   bullet: {fileID: 114055429372661458, guid: 29203ff5a97e7984db5f0e8ce8b82a8b, type: 2}
   bulletSpawnPoint: {fileID: 4375857931890688}
 --- !u!136 &136045155009768204

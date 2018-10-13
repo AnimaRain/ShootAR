@@ -7,6 +7,8 @@ namespace ShootAR.Enemies
 	{
 		protected override void Start()
 		{
+			base.Start();
+
 			MoveTo(Vector3.zero);
 		}
 	}
