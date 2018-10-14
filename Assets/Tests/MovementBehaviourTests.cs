@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System.Collections;
 using ShootAR;
 
-class SpawnableTests
+class MovementBehaviourTests
 {
 	internal class EndPoint : MonoBehaviour {
 		public bool testObjectPassedThePoint;

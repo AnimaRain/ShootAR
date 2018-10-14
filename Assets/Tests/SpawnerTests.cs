@@ -131,6 +131,50 @@ public class SpawnerTests
 			" currently spawning"
 		);
 	}
+
+
+	/**<summary>
+	 * <see cref="Spawner"/>s should yield their spawning behaviour when the
+	 * global limit of allowed <see cref="Spawnable"/>s has been reached.
+	 * </summary>
+	 * <remarks>
+	 * In order to maintain the performance as well as the playability of the
+	 * game in acceptable levels, there should be an upper limit of how many
+	 * <see cref="Spawnable"/>s of any kind can be spawned by the spawners.
+	 * </remarks>
+	 * <seealso cref="Enemy"/>
+	 * <seealso cref="Capsule"/> */
+	[UnityTest]
+	public IEnumerator SpawnersHaveAGlobalSpawningLimit()
+	{
+		int limit = 100;    // Should be used only for the following check
+							// and assigning spawnLimit.
+		Assert.Less(Spawnable.GLOBAL_SPAWN_LIMIT, limit,
+				$"Test is not set up correctly:\n" +
+				$"The spawner's limit ({limit}) is lower than the " +
+				$"global spawn limit ({Spawnable.GLOBAL_SPAWN_LIMIT})."
+			);
+
+		Spawner spawner = Spawner.Create(
+			objectToSpawn: TestEnemy.Create(),
+			spawnLimit: limit,
+			initialDelay: 0f,
+			spawnRate: 0f,
+			maxDistanceToSpawn: 100f,
+			minDistanceToSpawn: 0f
+		);
+
+		spawner.StartSpawning();
+		yield return new WaitUntil(
+			() => spawner.SpawnCount == Spawnable.GLOBAL_SPAWN_LIMIT);
+		yield return new WaitForSecondsRealtime(.5f);
+
+		Assert.That(spawner.IsSpawning, "Spawner should not stop spawning.");
+		Assert.LessOrEqual(spawner.SpawnCount, Spawnable.GLOBAL_SPAWN_LIMIT,
+			"Spawners must respect the global spawn limit."
+		);
+	}
+
 	[TearDown]
 	public void ClearTestEnvironment()
 	{

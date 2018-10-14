@@ -132,11 +132,14 @@ namespace ShootAR
 		public IEnumerator Spawn()
 		{
 			yield return new WaitForSeconds(InitialDelay);
-			do
+			while (IsSpawning)
 			{
+				yield return new WaitForSeconds(SpawnRate);
+
 				/* IsSpawning is checked here, in case StopSpawning() is called
 				 * while being in the middle of this function call. */
 				if (!IsSpawning) break;
+				if (SpawnCount >= Spawnable.GLOBAL_SPAWN_LIMIT) continue;
 
 				float r = Random.Range(minDistanceToSpawn, maxDistanceToSpawn);
 				float theta = Random.Range(0f, Mathf.PI);
@@ -160,9 +163,9 @@ namespace ShootAR
 					transform.localPosition, transform.localRotation);
 				spawned.GameState = gameState;
 				SpawnCount++;
+
 				if (SpawnCount == SpawnLimit) StopSpawning();
-				yield return new WaitForSeconds(SpawnRate);
-			} while (IsSpawning);
+			}
 		}
 
 		/// <summary>

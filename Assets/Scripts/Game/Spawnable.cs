@@ -9,6 +9,8 @@ namespace ShootAR
 {
 	public abstract class Spawnable : MonoBehaviour
 	{
+		public const int GLOBAL_SPAWN_LIMIT = 50;
+
 		/// <summary>
 		/// The speed at which this object is moving.
 		/// </summary>
