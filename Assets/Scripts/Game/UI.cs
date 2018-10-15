@@ -5,21 +5,17 @@ namespace ShootAR
 {
 	public class UI : MonoBehaviour
 	{
-		public delegate void GuiUpdateHandler();
-		public event GuiUpdateHandler UpdateGui;
-
 		[SerializeField] private GameObject uiCanvas;
 		[SerializeField] private GameObject pauseCanvas;
 		[SerializeField] private Text bulletCount;
 		[SerializeField] private Text messageOnScreen;
 		[SerializeField] private Text score;
 		[SerializeField] private Text roundIndex;
-
+		[SerializeField] private GameState gameState;
 		private AudioSource sfx;
 		[SerializeField]
 		private AudioClip pauseSfx;
 
-		private GameState gameState;
 
 		public Text BulletCount
 		{
@@ -70,7 +66,6 @@ namespace ShootAR
 		public void Start()
 		{
 
-			//Create the audio source for pausing
 			if (pauseSfx != null)
 			{
 				sfx = gameObject.AddComponent<AudioSource>();
@@ -84,31 +79,26 @@ namespace ShootAR
 
 		}
 
-		public void Update()
-		{
-			UpdateGui?.Invoke();
-		}
-
 		public void TogglePauseMenu()
 		{
 			sfx.PlayOneShot(pauseSfx, 1f);
 
-			// not the optimal way but for the sake of readability
-			if (gameObject.activeSelf)
+			if (!pauseCanvas.gameObject.activeSelf)
 			{
 				RoundIndex.text = "Round: " + gameState.Level;
 				uiCanvas.SetActive(false);
 				pauseCanvas.SetActive(true);
-				Time.timeScale = 0f;
+				gameState.Paused = true;
 			}
 			else
 			{
 				uiCanvas.SetActive(true);
 				pauseCanvas.SetActive(false);
-				Time.timeScale = 1.0f;
+				gameState.Paused = false;
 			}
-
+#if DEBUG
 			Debug.Log("UIMANAGER:: TimeScale: " + Time.timeScale);
+#endif
 		}
 	}
 }

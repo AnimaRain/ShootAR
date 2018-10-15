@@ -14,6 +14,8 @@ namespace ShootAR
 		public event GameOverHandler OnGameOver;
 		public delegate void RoundWonHandler();
 		public event RoundWonHandler OnRoundWon;
+		public delegate void PauseHandler();
+		public event PauseHandler OnPause;
 
 		/// <summary>
 		/// Stores the round's index number
@@ -27,6 +29,15 @@ namespace ShootAR
 		/// True when player wins the round
 		/// </summary>
 		public bool RoundWon { get; set; }
+		private bool paused;
+		public bool Paused {
+			get { return paused; }
+			set {
+				paused = value;
+				Time.timeScale = value ? 0f : 1f;
+				Time.fixedDeltaTime = value ? 0f : 0.02f;	//0.02 is Unity's default
+			}
+		}
 
 		public static GameState Create(int level)
 		{
@@ -39,8 +50,11 @@ namespace ShootAR
 
 		private void Update()
 		{
-			if (GameOver && OnGameOver != null) OnGameOver();
-			if (RoundWon && OnRoundWon != null) OnRoundWon();
+			if (!Paused)
+			{
+				if (GameOver && OnGameOver != null) OnGameOver();
+				if (RoundWon && OnRoundWon != null) OnRoundWon();
+			}
 		}
 	}
 }
