@@ -7,15 +7,18 @@ using ShootAR.TestTools;
 
 class PlayerTest
 {
-	[Test]
-	public void PlayerCanShoot()
+	[UnityTest]
+	public IEnumerator PlayerCanShoot()
 	{
 		Player player = Player.Create(
-			Player.MAXIMUM_HEALTH, new GameObject().AddComponent<Camera>(),
-			Bullet.Create(50f), 10);
+			health: Player.MAXIMUM_HEALTH,
+			camera: new GameObject("Camera").AddComponent<Camera>(),
+			bullet: Bullet.Create(50f),
+			ammo: 10);
 
+		yield return null;
 		Bullet shotBullet = player.Shoot();
-		shotBullet.gameObject.SetActive(true);
+		shotBullet?.gameObject.SetActive(true);
 
 		Assert.IsNotNull(shotBullet,
 			"Player must be able to fire bullets.");
@@ -51,33 +54,35 @@ class PlayerTest
 			"health is depleted.");
 	}
 
-	[Test]
-	public void ArmorProtectsFromDamage()
+	[UnityTest]
+	public IEnumerator ArmorProtectsFromDamage()
 	{
 		Player player = Player.Create(Player.MAXIMUM_HEALTH);
 		player.HasArmor = true;
 
+		yield return null;
 		player.GetDamaged(1);
 
 		Assert.That(player.Health == Player.MAXIMUM_HEALTH,
 			"When player gets damaged and has armor, health should not be reduced.");
 	}
 
-	[Test]
-	public void ArmorLostWhenPlayerGetsDamaged()
+	[UnityTest]
+	public IEnumerator ArmorLostWhenPlayerGetsDamaged()
 	{
 
 		Player player = Player.Create();
 		player.HasArmor = true;
 
+		yield return null;
 		player.GetDamaged(1);
 
 		Assert.IsFalse(player.HasArmor,
 			"Armored player should lose its armor when damaged.");
 	}
 
-	[Test]
-	public void ShootingUsesUpAmmo()
+	[UnityTest]
+	public IEnumerator ShootingUsesUpAmmo()
 	{
 		const int initialAmmoAmount = 10;
 		Player player = Player.Create(
@@ -86,6 +91,7 @@ class PlayerTest
 			bullet: Bullet.Create(1),
 			ammo: initialAmmoAmount);
 
+		yield return null;
 		var bullet = player.Shoot();
 		bullet.gameObject.SetActive(true);
 
@@ -93,8 +99,8 @@ class PlayerTest
 			"After shooting, player should have one less bullet.");
 	}
 
-	[Test]
-	public void CannotShootWithoutAmmo()
+	[UnityTest]
+	public IEnumerator CannotShootWithoutAmmo()
 	{
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
@@ -102,6 +108,7 @@ class PlayerTest
 			bullet: Bullet.Create(0),
 			ammo: 0);
 
+		yield return null;
 		var firedBullet = player.Shoot();
 
 		Assert.IsNull(firedBullet,

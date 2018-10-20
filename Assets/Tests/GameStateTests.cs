@@ -22,10 +22,20 @@ public class GameStateTests
 			speed: 0,
 			player: player,
 			gameState: gameState);
+
+		// Create an enemy to stop game manager from switching state to "round won".
+		var enemy = TestTarget.Create();
+		enemy.transform.Translate(Vector3.right * 500f);
+
 		GameManager.Create(player, gameState);
 
+		yield return null;	// without this, player.Shoot() will return null.
+
+		capsule.transform.Translate(new Vector3(10f, 10f, 10f));
 		player.transform.LookAt(capsule.transform);
-		player.Shoot();
+		player.Shoot()
+			.gameObject.SetActive(true);
+
 
 		yield return new WaitWhile(() => player.Ammo > 0);
 
@@ -46,7 +56,9 @@ public class GameStateTests
 			gameState: gameState);
 		TestEnemy enemy = TestEnemy.Create(0, 0, 0, 10, 10, 10, gameState);
 		GameManager.Create(player, gameState);
-		
+
+		yield return null;	//without this, firedBullet will be null
+
 		camera.transform.LookAt(enemy.transform);
 		var firedBullet = player.Shoot();
 		firedBullet.gameObject.SetActive(true);

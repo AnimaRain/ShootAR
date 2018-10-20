@@ -109,13 +109,14 @@ public class SpawnerTests
 		}
 	}
 
-	[Test]
-	public void SpawnerShouldNotBeRestartedWhileRunning()
+	[UnityTest]
+	public IEnumerator SpawnerShouldNotBeRestartedWhileRunning()
 	{
 		Spawner spawner = Spawner.Create(
 			TestEnemy.Create(), 100, 100f, 100f, 100f, 1f);
 		UnityException error = null;
 
+		yield return null;
 		try
 		{
 			spawner.StartSpawning();

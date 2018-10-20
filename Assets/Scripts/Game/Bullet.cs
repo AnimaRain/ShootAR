@@ -14,7 +14,7 @@ namespace ShootAR
 		/// </summary>
 		public static int ActiveCount { get; private set; }
 
-		public static Bullet Create(float speed, UnityEngine.UI.Text countText = null)
+		public static Bullet Create(float speed)
 		{
 			var o = new GameObject(nameof(Bullet)).AddComponent<Bullet>();
 

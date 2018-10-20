@@ -7,7 +7,7 @@ namespace ShootAR
 	{
 		//Set here how much health the player is allowed to have.
 		public const sbyte MAXIMUM_HEALTH = 6;
-		private const float SHOT_COOLDOWN = 0.35f;
+		private const float SHOT_COOLDOWN = 0.50f;
 
 		[SerializeField]
 		private GameObject[] healthIndicator = new GameObject[MAXIMUM_HEALTH];
@@ -20,11 +20,13 @@ namespace ShootAR
 
 		[SerializeField] private GameState gameState;
 		/// <summary>
-		/// The bullet prefab that gets instantiated when the player shoots.
+		/// The <see cref="Bullet"/> prefab that gets instantiated when the player shoots.
 		/// </summary>
+		/// <seealso cref="Shoot"/>
 		[SerializeField] private Bullet bullet;
 		private AudioSource audioSource;
 		[SerializeField] private AudioClip shotSfx;
+		[SerializeField] private UnityEngine.UI.Text bulletCount;
 
 		/// <summary>
 		/// Player's health.
@@ -45,22 +47,27 @@ namespace ShootAR
 
 		private void UpdateHealthUI()
 		{
+			if (healthIndicator[0] == null) return;
+
 			for (int i = 0; i < MAXIMUM_HEALTH; i++)
 			{
-				healthIndicator[i]?.SetActive(i < health);
+				healthIndicator[i].SetActive(i < health);
 			}
 		}
 
 		/// <summary>
 		/// The ammount of bullets the player has.
 		/// </summary>
+		/// <remarks>
+		/// Setting this, also sets the bullet count on the UI.
+		/// </remarks>
 		public int Ammo
 		{
 			get { return ammo; }
-			set
-			{
+			set {
 				ammo = value;
-				CanShoot = ammo >= 0;
+				if (bulletCount != null)
+					bulletCount.text = ammo.ToString();
 			}
 		}
 
@@ -94,14 +101,15 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Instantiate a bullet if there is enough ammo and the cooldown has expired.
+		/// Instantiate a bullet if able, there is enough ammo and the cooldown
+		/// has expired.
 		/// </summary>
 		/// <returns>
 		/// a reference to the bullet fired or null if conditions are not met
 		/// </returns>
 		public Bullet Shoot()
 		{
-			if (Ammo > 0 && Time.time >= nextFire)
+			if (CanShoot && Ammo > 0 && Time.time >= nextFire)
 			{
 				Ammo--;
 				nextFire = Time.time + SHOT_COOLDOWN;
@@ -115,15 +123,18 @@ namespace ShootAR
 		private void Start()
 		{
 			audioSource = GetComponent<AudioSource>();
-
+			if (bulletCount != null)
+				bulletCount.text = Ammo.ToString();
+			CanShoot = true;
 			UpdateHealthUI();
 		}
 
 		/// <summary>
-		/// Player's health is reduced by damage.
+		/// Player's health is reduced by <paramref name="damage"/>.
 		/// If health vanishes, GameOver state is set.
 		/// </summary>
 		/// <param name="damage">the amount by which health is reduced</param>
+		/// <seealso cref="GameState.GameOver"/>
 		public void GetDamaged(int damage)
 		{
 			if (damage < 0) return;

@@ -7,7 +7,7 @@ namespace ShootAR.TestTools
 	/// Test class for replacing enemy classes in tests.
 	/// </summary>
 	[RequireComponent(typeof(SphereCollider),typeof(Rigidbody))]
-	class TestEnemy : Enemy
+	internal class TestEnemy : Enemy
 	{
 		public static TestEnemy Create(
 			float speed = default(float),
@@ -66,13 +66,13 @@ namespace ShootAR.TestTools
 		}
 	}
 
-	class TestShooter : Pyoopyoo { private new void OnDestroy() { ActiveCount--; } }
-	class TestMeleer : Boopboop { private new void OnDestroy() { ActiveCount--; } }
+	internal class TestShooter : Pyoopyoo { private new void OnDestroy() { ActiveCount--; } }
+	internal class TestMeleer : Boopboop { private new void OnDestroy() { ActiveCount--; } }
 
 	/// <summary>
 	/// Target for testing purposes.
 	/// </summary>
-	class TestTarget : Enemy
+	internal class TestTarget : Enemy
 	{
 		public bool GotHit { get; private set; }
 
@@ -84,6 +84,12 @@ namespace ShootAR.TestTools
 		private new void Start()
 		{
 			gameObject.AddComponent<SphereCollider>();
+		}
+
+		public static TestTarget Create()
+		{
+			var o = new GameObject("TestTarget").AddComponent<TestTarget>();
+			return o;
 		}
 	}
 }

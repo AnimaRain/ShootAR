@@ -77,6 +77,9 @@ namespace ShootAR
 				Debug.LogWarning("Pause audio-clip has not been assigned.");
 			}
 
+			MessageOnScreen.text = "";
+			BulletCount.text = "";
+
 		}
 
 		public void TogglePauseMenu()

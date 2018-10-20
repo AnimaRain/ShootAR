@@ -82,24 +82,38 @@ namespace ShootAR
 		private void Start()
 		{
 			if (player == null)
-			{
-				throw new Exception("Player object not found");
-			}
+				throw new UnityException("Player object not found");
 			if (gameState == null)
-			{
-				throw new Exception("GameState object not found");
-			}
+				throw new UnityException("GameState object not found");
 
-			ui.MessageOnScreen.text = "";
-			ui.BulletCount.text = "";
-			fireButton?.onClick.AddListener(OnTap);
+			fireButton?
+				.onClick.AddListener(() =>
+			{
+				Debug.Log("Tap");
+				if (gameState.GameOver)
+				{
+					// TODO: Comment why cam.Stop() is required here.
+					cam.Stop();
+					SceneManager.LoadScene(1);
+				}
+				else if (gameState.RoundWon)
+				{
+					gameState.GameOver = false;
+					ui.MessageOnScreen.text = "";
+					player.Ammo += 6;
+					AdvanceLevel();
+				}
+				else
+					player.Shoot();
+			});
+
 			audioPlayer = gameObject.AddComponent<AudioSource>();
 
 			int roundToPlay = Configuration.StartingLevel;
 			if (roundToPlay > 0)
 			{
 				gameState.Level = roundToPlay - 1;
-				player.Ammo += gameState.Level * 15;	//initial Ammo value set in Inspector
+				player.Ammo += gameState.Level * 15;    //initial Ammo value set in Inspector
 			}
 
 			spawner = new Dictionary<Type, Spawner>();
@@ -134,7 +148,8 @@ namespace ShootAR
 				bool spawnersStoped = true;
 				foreach (var type in spawner.Keys)
 				{
-					if (type.IsSubclassOf(typeof(Enemy)) && spawner[type].IsSpawning)
+					if (type.IsSubclassOf(typeof(Enemy))
+						&& spawner[type].IsSpawning)
 					{
 						spawnersStoped = false;
 						break;
@@ -152,9 +167,9 @@ namespace ShootAR
 
 				#region Defeat
 
-				else if (player.Health == 0 ||
-					(Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0 &&
-					player.Ammo == 0))
+				else if (player.Health == 0
+					|| (Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0
+					&& player.Ammo == 0))
 				{
 					Debug.Log("Player defeated");
 					ui.MessageOnScreen.text =
@@ -176,25 +191,6 @@ namespace ShootAR
 #endif
 		}
 
-
-		public void OnTap()
-		{
-			if (gameState.RoundWon)
-			{
-				gameState.GameOver = false;
-				ui.MessageOnScreen.text = "";
-				player.Ammo += 6;
-				AdvanceLevel();
-			}
-			else if (gameState.GameOver)
-			{
-				// TODO: Comment why cam.Stop() is required here.
-				cam.Stop();
-				SceneManager.LoadScene(1);
-			}
-			else
-				player.Shoot();
-		}
 
 		/// <summary>
 		/// Increments the level index, sets spawners and starts them

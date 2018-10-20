@@ -6,13 +6,14 @@ using ShootAR;
 
 public class CapsuleTests {
 
-    [Test]
-    public void CapsuleGivesBullets() {
+    [UnityTest]
+    public IEnumerator CapsuleGivesBullets() {
 		//Set up Test
 		Player player = Player.Create();
 		Capsule capsule =
 			Capsule.Create(Capsule.CapsuleType.Bullet, 0, player);
 
+		yield return null;
 		//Perform Test
 		capsule.GivePowerUp();
 
