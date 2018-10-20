@@ -1,7 +1,8 @@
 ﻿namespace ShootAR
 {
 	/// <summary>
-	/// Contains all game settings configured by the player.
+	/// Contains all game settings configured by the player, that persist
+	/// to all scenes and between game sessions.
 	/// </summary>
 	public static class Configuration
 	{

@@ -10,7 +10,7 @@ namespace ShootAR.Menu
 		{
 			get { return roundToPlay; }
 
-			set
+			internal set
 			{
 				roundToPlay = Mathf.Clamp(value, 1, 999);
 				labelOnUI.text = roundToPlay.ToString();
