@@ -208,12 +208,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030aa1d69d4cb584b93da3fbb2ad4d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
+  speed: 11
   pointsValue: 5
   damage: 0
   attackSfx: {fileID: 8300000, guid: b407b11420329cc4dbb66f8c7efd7682, type: 3}
   explosion: {fileID: 1039357608938372, guid: 808fe7b924b97c4408c4df3d46323643, type: 2}
-  score: {fileID: 114449424329967522, guid: 23cf2f61da6b8ae4b8240febae17465b, type: 2}
 --- !u!135 &135749938694432774
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -35,12 +35,12 @@ namespace ShootAR.Enemies
 		protected void Awake()
 		{
 			ActiveCount++;
+
+			if (score == null) score = FindObjectOfType<ScoreManager>();
 		}
 
 		protected virtual void Start()
 		{
-			if (score == null) score = FindObjectOfType<ScoreManager>();
-
 			sfx = GetComponent<AudioSource>();
 			/* If the AudioSource component on all enemy prefabs are distinctively
 			 * configured, either through scripts or the inspector, and you are

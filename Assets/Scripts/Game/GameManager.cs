@@ -13,19 +13,21 @@ namespace ShootAR
 		[SerializeField] private AudioClip victoryMusic;
 		private Dictionary<Type, Spawner> spawner;
 		[SerializeField] private ScoreManager scoreManager;
-		[Obsolete] private bool exitTap;
+		[Obsolete] private bool exitTap;    // Why do we need this? Should be removed?
 		private AudioSource audioPlayer;
 		[SerializeField] private GameState gameState;
 		[SerializeField] private Button fireButton;
 		[SerializeField] private UI ui;
 		private WebCamTexture cam;
+		[SerializeField] private RawImage backgroundTexture;
 		[SerializeField] private Player player;
 		private const int CAPSULE_BONUS_POINTS = 50;
 
 		public static GameManager Create(
 				Player player, GameState gameState, ScoreManager scoreManager = null,
 				AudioClip victoryMusic = null, AudioSource sfx = null,
-				Button fireButton = null, UI ui = null
+				Button fireButton = null, RawImage background = null,
+				UI ui = null
 			)
 		{
 			var o = new GameObject(nameof(GameManager)).AddComponent<GameManager>();
@@ -36,10 +38,10 @@ namespace ShootAR
 			o.victoryMusic = victoryMusic;
 			o.audioPlayer = sfx;
 			o.fireButton = fireButton;
-
-			if (ui == null)
-			{
-				o.ui = UI.Create(
+			o.backgroundTexture = background ?? new GameObject("Background")
+														.AddComponent<RawImage>();
+			o.ui = ui ??
+				UI.Create(
 					uiCanvas: new GameObject(),
 					pauseCanvas: new GameObject(),
 					bulletCount: new GameObject().AddComponent<Text>(),
@@ -48,34 +50,41 @@ namespace ShootAR
 					roundIndex: new GameObject().AddComponent<Text>(),
 					sfx: null, pauseSfx: null, gameState: o.gameState
 				);
-			}
-			else o.ui = ui;
 
 			return o;
 		}
 
 		private void Awake()
 		{
-#if UNITY_EDITOR
-			Debug.unityLogger.logEnabled = true;
-#else
-			Debug.unityLogger.logEnabled = false;
-#endif
-
 #if UNITY_ANDROID
+			Debug.unityLogger.logEnabled = false;
 
 			if (!SystemInfo.supportsGyroscope)
 			{
-				const string error = "This device does not have Gyroscope";
-				Debug.LogError(error);
-				ui.buttonText.text = error + "\n\nTap to exit";
 				exitTap = true;
+				const string error = "This device does not have Gyroscope";
+				ui.MessageOnScreen.text = error;
+				throw new UnityException(error);
 			}
 			else
 			{
 				//Enable gyro
 				Input.gyro.enabled = true;
 			}
+
+			//Set up the rear camera
+			for (int i = 0; i < WebCamTexture.devices.Length; i++)
+			{
+				if (!WebCamTexture.devices[i].isFrontFacing)
+				{
+					cam = new WebCamTexture(WebCamTexture.devices[i].name, Screen.width, Screen.height);
+					break;
+				}
+			}
+#elif UNITY_EDITOR
+			Debug.unityLogger.logEnabled = true;
+
+			cam = new WebCamTexture();
 #endif
 		}
 
@@ -85,11 +94,22 @@ namespace ShootAR
 				throw new UnityException("Player object not found");
 			if (gameState == null)
 				throw new UnityException("GameState object not found");
+			if (cam == null)
+			{
+				const string error = "This device does not have a rear camera";
+				ui.MessageOnScreen.text = error;
+				throw new UnityException(error);
+			}
+
+			cam.Play();
+			backgroundTexture.texture = cam;
+			backgroundTexture.rectTransform.localEulerAngles = new Vector3(0, 0, cam.videoRotationAngle);
+			float scaleY = cam.videoVerticallyMirrored ? -1.0f : 1.0f;
+			backgroundTexture.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
 
 			fireButton?
 				.onClick.AddListener(() =>
 			{
-				Debug.Log("Tap");
 				if (gameState.GameOver)
 				{
 					// TODO: Comment why cam.Stop() is required here.
@@ -98,7 +118,6 @@ namespace ShootAR
 				}
 				else if (gameState.RoundWon)
 				{
-					gameState.GameOver = false;
 					ui.MessageOnScreen.text = "";
 					player.Ammo += 6;
 					AdvanceLevel();
@@ -143,8 +162,7 @@ namespace ShootAR
 		{
 			if (!gameState.GameOver)
 			{
-				#region Round Won
-
+				// Round Won
 				bool spawnersStoped = true;
 				foreach (var type in spawner.Keys)
 				{
@@ -157,27 +175,15 @@ namespace ShootAR
 				}
 				if (spawnersStoped && Enemy.ActiveCount == 0)
 				{
-					Debug.Log("Round won");
 					gameState.RoundWon = true;
-					ui.MessageOnScreen.text = "Round Clear!";
-					audioPlayer?.PlayOneShot(victoryMusic, 0.7f);
-					ClearScene();
 				}
-				#endregion
 
-				#region Defeat
-
-				else if (player.Health == 0
-					|| (Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0
-					&& player.Ammo == 0))
+				// Defeat
+				else if (Enemy.ActiveCount > 0 && Bullet.ActiveCount == 0
+						&& player.Ammo == 0)
 				{
-					Debug.Log("Player defeated");
-					ui.MessageOnScreen.text =
-						$"Rounds Survived : {gameState.Level - 1}";
 					gameState.GameOver = true;
-					ClearScene();
 				}
-				#endregion
 			}
 		}
 
@@ -193,11 +199,20 @@ namespace ShootAR
 
 
 		/// <summary>
-		/// Increments the level index, sets spawners and starts them
+		/// In here lies the code that runs before each round.
 		/// </summary>
 		private void AdvanceLevel()
 		{
 			gameState.Level++;
+
+			/* Subscribed functions in GameState events would be called continuesly
+			 * while game is in game-over or round-won state, resulting in them being
+			 * called hundreds of times and even exceeding a thousand calls when they
+			 * actually need to be run only once. So they are unsubscribed after
+			 * being run and they are resubscribed here. */
+			gameState.OnGameOver += OnGameOver;
+			gameState.OnRoundWon += OnRoundWon;
+
 #if DEBUG
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
@@ -256,21 +271,51 @@ namespace ShootAR
 		/// </summary>
 		private void ClearScene()
 		{
+#if DEBUG
 			Debug.Log("Clearing scene...");
+#endif
 
-			Enemy[] enemies = FindObjectsOfType<Enemy>();
-			foreach (var e in enemies) Destroy(e.gameObject);
-			Capsule[] capsules = FindObjectsOfType<Capsule>();
 			// Be merciful. Player deserves some points for the unused capsules.
-			if (gameState.RoundWon && scoreManager != null)
-				scoreManager.AddScore(capsules.Length * CAPSULE_BONUS_POINTS);
-			foreach (var c in capsules) Destroy(c.gameObject);
+			if (gameState.RoundWon)
+			{
+				Capsule[] capsules = FindObjectsOfType<Capsule>();
+				scoreManager?.AddScore(capsules.Length * CAPSULE_BONUS_POINTS);
+				foreach (var c in capsules) Destroy(c.gameObject);
+			}
+
+			Spawnable[] spawnables = FindObjectsOfType<Spawnable>();
+			foreach (var s in spawnables) Destroy(s.gameObject);
+
+#if DEBUG
+			Debug.Log("Scene cleared.");
+#endif
 		}
 
 		public void GoToMenu()
 		{
 			cam.Stop();
 			SceneManager.LoadScene("MainMenu");
+		}
+
+		private void OnGameOver()
+		{
+			Debug.Log("Player defeated");
+			ui.MessageOnScreen.text =
+				$"Game Over\n\n" +
+				$"Rounds Survived : {gameState.Level - 1}";
+			ClearScene();
+
+			gameState.OnGameOver -= OnGameOver;
+		}
+
+		private void OnRoundWon()
+		{
+			Debug.Log("Round won");
+			ui.MessageOnScreen.text = "Round Clear!";
+			audioPlayer?.PlayOneShot(victoryMusic, 0.7f);
+			ClearScene();
+
+			gameState.OnRoundWon -= OnRoundWon;
 		}
 
 

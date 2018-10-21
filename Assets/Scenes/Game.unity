@@ -865,6 +865,7 @@ MonoBehaviour:
   gameState: {fileID: 604156530}
   fireButton: {fileID: 869210693}
   ui: {fileID: 1310314011}
+  backgroundTexture: {fileID: 183891069}
   player: {fileID: 1143016213}
 --- !u!4 &540221806
 Transform:
@@ -890,7 +891,6 @@ GameObject:
   - component: {fileID: 563382495}
   - component: {fileID: 563382494}
   - component: {fileID: 563382493}
-  - component: {fileID: 563382492}
   m_Layer: 0
   m_Name: Background Camera
   m_TagString: Untagged
@@ -898,19 +898,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &563382492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 563382491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88aa38b01cc5c05459df3607495da97a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backgroundTexture: {fileID: 183891069}
-  messageToPlayer: {fileID: 2044034911}
 --- !u!124 &563382493
 Behaviour:
   m_ObjectHideFlags: 0

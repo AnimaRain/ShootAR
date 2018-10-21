@@ -11,19 +11,22 @@ namespace ShootAR
 	{
 		public const int GLOBAL_SPAWN_LIMIT = 50;
 
+		[SerializeField] private float speed;
 		/// <summary>
 		/// The speed at which this object is moving.
 		/// </summary>
-		[SerializeField] private float speed;
 		public float Speed {
 			get { return speed; }
 			protected set { speed = value; }
 		}
 
 		/// <summary>
-		/// Reference to the object holding the game-state.
+		/// Reference to the object holding the game state.
 		/// </summary>
 		protected GameState gameState;
+		/// <summary>
+		/// Setter for <see cref="Spawner"/>s to set a spawned object's game state.
+		/// </summary>
 		public GameState GameState
 		{
 			set { gameState = value; }

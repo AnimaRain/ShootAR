@@ -223,6 +223,7 @@ namespace ShootAR
 
 		public void StopSpawning()
 		{
+			if (!IsSpawning) return;
 #if DEBUG
 			Debug.Log("Spawn stopped");
 #endif
