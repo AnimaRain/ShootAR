@@ -63,12 +63,12 @@ namespace ShootAR
 			{
 				exitTap = true;
 				const string error = "This device does not have Gyroscope";
-				ui.MessageOnScreen.text = error;
+				if (ui != null)
+					ui.MessageOnScreen.text = error;
 				throw new UnityException(error);
 			}
 			else
 			{
-				//Enable gyro
 				Input.gyro.enabled = true;
 			}
 
