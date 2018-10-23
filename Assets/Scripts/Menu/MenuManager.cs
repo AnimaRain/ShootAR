@@ -24,6 +24,8 @@ namespace ShootAR.Menu
 
 		private void Start()
 		{
+			Application.runInBackground = false;
+
 			sfx = gameObject.AddComponent<AudioSource>();
 		}
 

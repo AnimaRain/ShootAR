@@ -57,8 +57,6 @@ namespace ShootAR
 		private void Awake()
 		{
 #if UNITY_ANDROID
-			Debug.unityLogger.logEnabled = false;
-
 			if (!SystemInfo.supportsGyroscope)
 			{
 				exitTap = true;
@@ -81,9 +79,13 @@ namespace ShootAR
 					break;
 				}
 			}
-#elif UNITY_EDITOR
-			Debug.unityLogger.logEnabled = true;
-
+#endif
+			/* Do not use elif here. While testing
+			 * using Unity Remote 5, it does not use
+			 * the camera on the phone and it has to
+			 * fall back on the webcam. We need both
+			 * UNITY_ANDROID and UNITY_EDITOR for this. */
+#if UNITY_EDITOR
 			cam = new WebCamTexture();
 #endif
 		}
@@ -322,7 +324,11 @@ namespace ShootAR
 #if DEBUG
 		private void OnGUI()
 		{
-			GUILayout.Label($"Game Over: {gameState.GameOver}\nRound Over: {gameState.RoundWon}");
+			GUILayout.Label(
+				$"Build {Application.version}\n" +
+				$"Game Over: {gameState.GameOver}\n" +
+				$"Round Over: {gameState.RoundWon}"
+			);
 		}
 #endif
 	}
