@@ -114,8 +114,6 @@ namespace ShootAR
 			{
 				if (gameState.GameOver)
 				{
-					// TODO: Comment why cam.Stop() is required here.
-					cam.Stop();
 					SceneManager.LoadScene(1);
 				}
 				else if (gameState.RoundWon)
@@ -191,11 +189,18 @@ namespace ShootAR
 			}
 		}
 
-		public void OnApplicationQuit()
+		private void OnDestroy()
 		{
+			/* cam.Stop() is required to stop the camera so it can be
+			 * restarted when the scene loads again; else, after the 
+			 * scene reloads, the feedback will be blank. */
+			cam.Stop();
 			gameState.GameOver = true;
 			ClearScene();
+		}
 
+		private void OnApplicationQuit()
+		{
 #if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 #endif

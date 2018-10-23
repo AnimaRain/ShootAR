@@ -11,6 +11,7 @@ namespace ShootAR
 		[SerializeField] private Text messageOnScreen;
 		[SerializeField] private Text score;
 		[SerializeField] private Text roundIndex;
+		[SerializeField] private Button pauseToMenuButton;
 		[SerializeField] private GameState gameState;
 		private AudioSource sfx;
 		[SerializeField]
@@ -80,6 +81,13 @@ namespace ShootAR
 			MessageOnScreen.text = "";
 			BulletCount.text = "";
 
+			pauseToMenuButton?.onClick
+				.AddListener(() =>
+				{
+					UnityEngine.SceneManagement.SceneManager
+						.LoadScene(0);
+				}
+			);
 		}
 
 		public void TogglePauseMenu()
