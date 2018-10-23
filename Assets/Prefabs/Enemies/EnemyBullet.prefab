@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030aa1d69d4cb584b93da3fbb2ad4d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 11
+  speed: 5
   pointsValue: 5
   damage: 0
   attackSfx: {fileID: 8300000, guid: b407b11420329cc4dbb66f8c7efd7682, type: 3}
