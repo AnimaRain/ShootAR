@@ -155,6 +155,8 @@ namespace ShootAR
 				}
 			}
 
+			ui.BulletCount.text = player.Ammo.ToString();
+
 			AdvanceLevel();
 
 			GC.Collect();
