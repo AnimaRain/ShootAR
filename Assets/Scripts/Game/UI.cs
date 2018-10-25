@@ -78,9 +78,6 @@ namespace ShootAR
 				Debug.LogWarning("Pause audio-clip has not been assigned.");
 			}
 
-			MessageOnScreen.text = "";
-			BulletCount.text = "";
-
 			pauseToMenuButton?.onClick
 				.AddListener(() =>
 				{
