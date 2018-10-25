@@ -21,21 +21,36 @@ namespace ShootAR
 		/// Stores the round's index number
 		/// </summary>
 		public int Level { get; set; }
+		private bool gameOver;
 		/// <summary>
 		/// True when player has lost
 		/// </summary>
-		public bool GameOver { get; set; }
+		public bool GameOver {
+			get { return gameOver; }
+			set {
+				gameOver = value;
+				if (value && OnGameOver != null) OnGameOver();
+			}
+		}
+		private bool roundWon;
 		/// <summary>
 		/// True when player wins the round
 		/// </summary>
-		public bool RoundWon { get; set; }
+		public bool RoundWon {
+			get { return roundWon; }
+			set {
+				roundWon = value;
+				if (value && OnRoundWon != null) OnRoundWon();
+			}
+		}
 		private bool paused;
 		public bool Paused {
 			get { return paused; }
 			set {
 				paused = value;
 				Time.timeScale = value ? 0f : 1f;
-				Time.fixedDeltaTime = value ? 0f : 0.02f;	//0.02 is Unity's default
+				Time.fixedDeltaTime = value ? 0f : 0.02f;   //0.02 is Unity's default
+				if (value && OnPause != null) OnPause();
 			}
 		}
 
@@ -46,15 +61,6 @@ namespace ShootAR
 			o.Level = level;
 
 			return o;
-		}
-
-		private void Update()
-		{
-			if (!Paused)
-			{
-				if (GameOver && OnGameOver != null) OnGameOver();
-				if (RoundWon && OnRoundWon != null) OnRoundWon();
-			}
 		}
 	}
 }

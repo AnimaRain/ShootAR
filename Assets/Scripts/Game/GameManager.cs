@@ -17,7 +17,7 @@ namespace ShootAR
 		private AudioSource audioPlayer;
 		[SerializeField] private GameState gameState;
 		[SerializeField] private Button fireButton;
-		[SerializeField] private UI ui;
+		[SerializeField] private UIManager ui;
 		private WebCamTexture cam;
 		[SerializeField] private RawImage backgroundTexture;
 		[SerializeField] private Player player;
@@ -27,7 +27,7 @@ namespace ShootAR
 				Player player, GameState gameState, ScoreManager scoreManager = null,
 				AudioClip victoryMusic = null, AudioSource sfx = null,
 				Button fireButton = null, RawImage background = null,
-				UI ui = null
+				UIManager ui = null
 			)
 		{
 			var o = new GameObject(nameof(GameManager)).AddComponent<GameManager>();
@@ -41,7 +41,7 @@ namespace ShootAR
 			o.backgroundTexture = background ?? new GameObject("Background")
 														.AddComponent<RawImage>();
 			o.ui = ui ??
-				UI.Create(
+				UIManager.Create(
 					uiCanvas: new GameObject(),
 					pauseCanvas: new GameObject(),
 					bulletCount: new GameObject().AddComponent<Text>(),
@@ -84,7 +84,7 @@ namespace ShootAR
 			 * using Unity Remote 5, it does not use
 			 * the camera on the phone and it has to
 			 * fall back on the webcam. We need both
-			 * UNITY_ANDROID and UNITY_EDITOR for this. */
+			 * UNITY_ANDROID and UNITY_EDITOR for that. */
 #if UNITY_EDITOR
 			cam = new WebCamTexture();
 #endif
@@ -96,6 +96,8 @@ namespace ShootAR
 				throw new UnityException("Player object not found");
 			if (gameState == null)
 				throw new UnityException("GameState object not found");
+			gameState.OnGameOver += OnGameOver;
+			gameState.OnRoundWon += OnRoundWon;
 			if (cam == null)
 			{
 				const string error = "This device does not have a rear camera";
@@ -127,6 +129,7 @@ namespace ShootAR
 			});
 
 			audioPlayer = gameObject.AddComponent<AudioSource>();
+			ui.BulletCount.text = player.Ammo.ToString();
 
 			int roundToPlay = Configuration.StartingLevel;
 			if (roundToPlay > 0)
@@ -152,8 +155,6 @@ namespace ShootAR
 #endif
 				}
 			}
-
-			ui.BulletCount.text = player.Ammo.ToString();
 
 			AdvanceLevel();
 
@@ -189,6 +190,15 @@ namespace ShootAR
 			}
 		}
 
+		private void OnDisable()
+		{
+			if (gameState != null)
+			{
+				gameState.OnGameOver -= OnGameOver;
+				gameState.OnRoundWon -= OnRoundWon;
+			}
+		}
+
 		private void OnDestroy()
 		{
 			/* cam.Stop() is required to stop the camera so it can be
@@ -213,15 +223,6 @@ namespace ShootAR
 		private void AdvanceLevel()
 		{
 			gameState.Level++;
-
-			/* Subscribed functions in GameState events would be called continuesly
-			 * while game is in game-over or round-won state, resulting in them being
-			 * called hundreds of times and even exceeding a thousand calls when they
-			 * actually need to be run only once. So they are unsubscribed after
-			 * being run and they are resubscribed here. */
-			gameState.OnGameOver += OnGameOver;
-			gameState.OnRoundWon += OnRoundWon;
-
 #if DEBUG
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
@@ -309,12 +310,11 @@ namespace ShootAR
 		private void OnGameOver()
 		{
 			Debug.Log("Player defeated");
-			ui.MessageOnScreen.text =
-				$"Game Over\n\n" +
-				$"Rounds Survived : {gameState.Level - 1}";
+			if (ui != null)
+				ui.MessageOnScreen.text =
+					$"Game Over\n\n" +
+					$"Rounds Survived : {gameState.Level - 1}";
 			ClearScene();
-
-			gameState.OnGameOver -= OnGameOver;
 		}
 
 		private void OnRoundWon()

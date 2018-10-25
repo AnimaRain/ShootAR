@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace ShootAR
 {
-	public class UI : MonoBehaviour
+	public class UIManager : MonoBehaviour
 	{
 		[SerializeField] private GameObject uiCanvas;
 		[SerializeField] private GameObject pauseCanvas;
@@ -42,14 +42,14 @@ namespace ShootAR
 			set { roundIndex = value; }
 		}
 
-		public static UI Create(
+		public static UIManager Create(
 				GameObject uiCanvas, GameObject pauseCanvas,
 				Text bulletCount, Text messageOnScreen,
 				Text score, Text roundIndex,
 				AudioSource sfx, AudioClip pauseSfx,
 				GameState gameState)
 		{
-			var o = new GameObject(nameof(UI)).AddComponent<UI>();
+			var o = new GameObject(nameof(UIManager)).AddComponent<UIManager>();
 
 			o.uiCanvas = uiCanvas;
 			o.pauseCanvas = pauseCanvas;
