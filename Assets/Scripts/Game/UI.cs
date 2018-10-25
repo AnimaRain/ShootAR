@@ -81,6 +81,7 @@ namespace ShootAR
 			pauseToMenuButton?.onClick
 				.AddListener(() =>
 				{
+					gameState.Paused = false;
 					UnityEngine.SceneManagement.SceneManager
 						.LoadScene(0);
 				}
