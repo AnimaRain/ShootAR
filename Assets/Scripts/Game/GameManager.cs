@@ -13,7 +13,7 @@ namespace ShootAR
 		[SerializeField] private AudioClip victoryMusic;
 		private Dictionary<Type, Spawner> spawner;
 		[SerializeField] private ScoreManager scoreManager;
-		[Obsolete] private bool exitTap;    // Why do we need this? Should be removed?
+		[Obsolete] private bool exitTap;    // Why do we need this? Should it be removed?
 		private AudioSource audioPlayer;
 		[SerializeField] private GameState gameState;
 		[SerializeField] private Button fireButton;
@@ -24,7 +24,8 @@ namespace ShootAR
 		private const int CAPSULE_BONUS_POINTS = 50;
 
 		public static GameManager Create(
-				Player player, GameState gameState, ScoreManager scoreManager = null,
+				Player player, GameState gameState,
+				ScoreManager scoreManager = null,
 				AudioClip victoryMusic = null, AudioSource sfx = null,
 				Button fireButton = null, RawImage background = null,
 				UIManager ui = null
@@ -107,36 +108,31 @@ namespace ShootAR
 
 			cam.Play();
 			backgroundTexture.texture = cam;
-			backgroundTexture.rectTransform.localEulerAngles = new Vector3(0, 0, cam.videoRotationAngle);
+			backgroundTexture.rectTransform
+				.localEulerAngles = new Vector3(0, 0, cam.videoRotationAngle);
 			float scaleY = cam.videoVerticallyMirrored ? -1.0f : 1.0f;
-			backgroundTexture.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
+			backgroundTexture.rectTransform
+				.localScale = new Vector3(1f, scaleY, 1f);
 
 			fireButton?
 				.onClick.AddListener(() =>
-			{
-				if (gameState.GameOver)
 				{
-					SceneManager.LoadScene(1);
-				}
-				else if (gameState.RoundWon)
-				{
-					ui.MessageOnScreen.text = "";
-					player.Ammo += 6;
-					AdvanceLevel();
-				}
-				else
-					player.Shoot();
-			});
+					if (gameState.GameOver)
+					{
+						SceneManager.LoadScene(1);
+					}
+					else if (gameState.RoundWon)
+					{
+						ui.MessageOnScreen.text = "";
+						player.Ammo += 6;
+						AdvanceLevel();
+					}
+					else
+						player.Shoot();
+				});
 
 			audioPlayer = gameObject.AddComponent<AudioSource>();
 			ui.BulletCount.text = player.Ammo.ToString();
-
-			int roundToPlay = Configuration.StartingLevel;
-			if (roundToPlay > 0)
-			{
-				gameState.Level = roundToPlay - 1;
-				player.Ammo += gameState.Level * 15;    //initial Ammo value set in Inspector
-			}
 
 			spawner = new Dictionary<Type, Spawner>();
 			Spawner[] spawners = FindObjectsOfType<Spawner>();
@@ -156,6 +152,11 @@ namespace ShootAR
 				}
 			}
 
+			/* The round index is assigned an initial value diminished by 1,
+			 * since AdvanceLevel will add it back. */
+			gameState.Level = Configuration.StartingLevel - 1;
+			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
+													 * Inspector */
 			AdvanceLevel();
 
 			GC.Collect();
@@ -311,9 +312,13 @@ namespace ShootAR
 		{
 			Debug.Log("Player defeated");
 			if (ui != null)
+			{
+				var survivedRounds = gameState.Level - Configuration.StartingLevel;
 				ui.MessageOnScreen.text =
 					$"Game Over\n\n" +
-					$"Rounds Survived : {gameState.Level - 1}";
+					$"Rounds Survived : {survivedRounds}";
+			}
+
 			ClearScene();
 		}
 
