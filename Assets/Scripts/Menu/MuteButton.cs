@@ -8,19 +8,20 @@ namespace ShootAR.Menu
 	{
 		[SerializeField] private Material soundOffIcon;
 		[SerializeField] private Material soundOnIcon;
+		private Image image;
 
 		public void ToggleSound()
 		{
-			if (AudioListener.volume > 0f)
+			Configuration.SoundMuted = !Configuration.SoundMuted;
+
+			if (Configuration.SoundMuted)
 			{
-				//Mute
-				GetComponent<Image>().material = soundOffIcon;
+				image.material = soundOffIcon;
 				AudioListener.volume = 0.0f;
 			}
 			else
 			{
-				//Unmute
-				GetComponent<Image>().material = soundOnIcon;
+				image.material = soundOnIcon;
 				AudioListener.volume = 1.0f;
 			}
 		}
@@ -28,6 +29,8 @@ namespace ShootAR.Menu
 		private void Start()
 		{
 			GetComponent<Button>().onClick.AddListener(ToggleSound);
+			image = GetComponent<Image>();
+			image.material = Configuration.SoundMuted ? soundOffIcon : soundOnIcon;
 		}
 	}
 
