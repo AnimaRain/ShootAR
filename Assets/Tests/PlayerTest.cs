@@ -33,11 +33,10 @@ class PlayerTest
 		playerCollider.isTrigger = true;
 
 		var bullet = TestBullet.Create(1);
-
-		bullet.transform.position = player.transform.position;
 		yield return new WaitUntil(() => bullet.hit);
 
-		Assert.AreEqual(Player.MAXIMUM_HEALTH - bullet.damage, player.Health, "Player must lose health when hit.");
+		Assert.AreEqual(Player.MAXIMUM_HEALTH - bullet.damage, player.Health,
+			"Player must lose health when hit.");
 	}
 
 	[UnityTest]
@@ -113,6 +112,23 @@ class PlayerTest
 
 		Assert.IsNull(firedBullet,
 			"Player shouldn't be able to shoot without ammo.");
+	}
+
+	[UnityTest]
+	public IEnumerator PlayerCanNotBeHitInARapidSuccession()
+	{
+		Player player = Player.Create();
+		var playerCollider = player.gameObject.AddComponent<CapsuleCollider>();
+		playerCollider.height = 2f;
+		playerCollider.isTrigger = true;
+
+		var bullet = TestBullet.Create(1);
+		yield return new WaitUntil(() => bullet.hit);
+		var secondBullet = TestBullet.Create(1);
+		yield return new WaitUntil(() => secondBullet.hit);
+
+		Assert.AreEqual(Player.MAXIMUM_HEALTH - bullet.damage, player.Health,
+			"Second hit must not damage player, since there is a cooldown.");
 	}
 
 	[TearDown]

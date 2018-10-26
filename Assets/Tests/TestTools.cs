@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using ShootAR.Enemies;
+﻿using ShootAR.Enemies;
+using UnityEngine;
 
 namespace ShootAR.TestTools
 {
 	/// <summary>
 	/// Test class for replacing enemy classes in tests.
 	/// </summary>
-	[RequireComponent(typeof(SphereCollider),typeof(Rigidbody))]
+	[RequireComponent(typeof(SphereCollider), typeof(Rigidbody))]
 	internal class TestEnemy : Enemy
 	{
 		public static TestEnemy Create(
@@ -60,8 +60,11 @@ namespace ShootAR.TestTools
 
 		private void OnTriggerEnter(Collider other)
 		{
+			var player = other.GetComponent<Player>();
+			if (player == null) return;
+
 			Debug.Log("Bullet hit!");
-			other.GetComponent<Player>().GetDamaged(damage);
+			player.GetDamaged(damage);
 			hit = true;
 		}
 	}

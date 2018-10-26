@@ -8,6 +8,7 @@ namespace ShootAR
 		//Set here how much health the player is allowed to have.
 		public const sbyte MAXIMUM_HEALTH = 6;
 		private const float SHOT_COOLDOWN = 0.50f;
+		private const float DAMAGE_COOLDOWN = 1f;
 
 		[SerializeField]
 		private GameObject[] healthIndicator = new GameObject[MAXIMUM_HEALTH];
@@ -17,6 +18,7 @@ namespace ShootAR
 		[Range(0, 999), SerializeField]
 		private int ammo;
 		private float nextFire;
+		private float nextDamage;
 
 		[SerializeField] private GameState gameState;
 		/// <summary>
@@ -36,8 +38,7 @@ namespace ShootAR
 		{
 			get { return health; }
 
-			set
-			{
+			set {
 				health = Mathf.Clamp(value, 0, MAXIMUM_HEALTH);
 				if (health == 0 && gameState != null)
 					gameState.GameOver = true;
@@ -137,7 +138,8 @@ namespace ShootAR
 		/// <seealso cref="GameState.GameOver"/>
 		public void GetDamaged(int damage)
 		{
-			if (damage < 0) return;
+			if (damage <= 0 || Time.time < nextDamage) return;
+			nextDamage = Time.time + DAMAGE_COOLDOWN;
 
 			if (HasArmor)
 			{
