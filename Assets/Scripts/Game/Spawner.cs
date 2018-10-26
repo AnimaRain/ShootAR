@@ -121,6 +121,15 @@ namespace ShootAR
 			}
 		}
 
+		private void OnDestroy()
+		{
+			if (gameState != null)
+			{
+				gameState.OnGameOver -= StopSpawning;
+				gameState.OnRoundWon -= StopSpawning;
+			}
+		}
+
 		/// <summary>
 		/// Spawn objects until the spawn-limit is reached.
 		/// </summary>
