@@ -118,7 +118,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.5.0.4
+  bundleVersion: 0.5.0.5
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -243,7 +243,7 @@ PlayerSettings:
   AndroidTargetArchitectures: 1
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/Rain/Work/Projects/FreakyTVProject/freakytv.keystore
+  AndroidKeystoreName: C:/Users/Rain/Work/Projects/ShootAR/shootar.keystore
   AndroidKeyaliasName: rain
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
