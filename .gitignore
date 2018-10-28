@@ -640,3 +640,5 @@ ASALocalRun/
 
 # keep .meta files for Unity's folders and let's hope that nothing else gets included
 !/*.meta
+
+apk/
