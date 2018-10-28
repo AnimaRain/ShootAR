@@ -22,6 +22,13 @@ namespace ShootAR.Menu
 		[SerializeField] private MuteButton muteButton;
 
 
+		private void Awake()
+		{
+#if UNITY_ANDROID && !UNITY_EDITOR
+			Debug.unityLogger.logEnabled = false;
+#endif
+		}
+
 		private void Start()
 		{
 			Application.runInBackground = false;
