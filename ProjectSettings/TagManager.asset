@@ -4,10 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - activebullets
   - Enemy
-  - remote
   - Capsule
+  - Remote
+  - TVScreen
+  - GameManager
   layers:
   - Default
   - TransparentFX

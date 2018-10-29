@@ -1,0 +1,11 @@
+{
+    "name": "Main",
+    "references": ["Menu"],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Android",
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
