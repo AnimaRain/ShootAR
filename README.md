@@ -203,7 +203,7 @@ you have a suggestion on a better way of writing tests, please feel free to shar
 #### Pull request and branch
 Create a branch branching out of the *master* branch, where you will be storing your changes. Can be done through a GUI,
 e.g. using Visual Studio or use git: (do `git checkout master` if you are not in *master*) `git checkout --branch
-<branch-name>`, where *<branch-name>* is the name of your branch. Give the branch a good descriptive name. If you want,
+<branch-name>`, where *\<branch-name\>* is the name of your branch. Give the branch a good descriptive name. If you want,
 push the branch to the server to keep a safe back–up of your work.
 
 [Create a pull request](https://github.com/AnimaRain/ShootAR/pulls) in which, what change will be made, must be described
