@@ -294,3 +294,6 @@ Ioannis Tantaoui
 
 ## Credits
 Petros Kouvariotis for being an awesome friend, playtester and supporter!
+
+Drone: https://assetstore.unity.com/packages/3d/low-poly-combat-drone-82234
+Crasher: https://assetstore.unity.com/packages/3d/characters/aaron-s-assets-89273
