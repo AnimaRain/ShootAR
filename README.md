@@ -73,16 +73,17 @@ Decompress the files and open the project folder in Unity:
   * go to `File` –> `Build Settings...`
   * press the `Player Settings...` button
   * got to the `Inspector` tab and find the `Publishing Settings`
-  * if you have a keystore file:
-    * choose `Use Existing Keystore`, press `Browse Keystore` and select the file
-    * enter the keystore password that you have been provided
-    * choose your key alias and enter your password
   * if you don't have a keystore file, you can create your own:
     * choose `Create a new Keystore...`, press `Browse Keystore` and type the name of the file to be created
     * type the new keystore password twice
+  * if you have a keystore file:
+    * choose `Use Existing Keystore`, press `Browse Keystore` and select the file
+    * enter the keystore password
+  * if you don't have a key:
     * open the drop–down menu next to *Alias* and select `Create a new key...`
     * fill the form that has popped up and hit `Create Key`
-    * enter your key password
+  * choose your key alias
+  * enter your key password
   * return to the *Build Settings* window
   * (recommended) set compression method to `LZ4HC`
 	
@@ -265,7 +266,9 @@ intentions of the coder, and it is easier to find the point at which a mistake w
 #### Push to upstream
 Before uploading anything read the [license section](#license). Also, if you have intention of uploading anything
 that has been made by a third party, make sure that you have their permission and that there is no conflicts with
-the license and principles of this project. They should, also, be credited.
+the license and principles of this project. They should, also, be credited. Make sure that none of the files to be
+uploaded contain any personal info, either yours or another's, or any information regarding security, like passwords
+or keys.
 
 To push the commits to the server having a branch and a pull request is required (as [described above](#pull-request-and-branch)).
 
