@@ -1,5 +1,6 @@
 # ShootAR
-This is our graduation project for [Computer & Informatics Engineering Department of Technological Educational Institute of Western Greece](http://www.cied.teiwest.gr).
+This is our graduation project for [Computer & Informatics Engineering Department of Technological Educational
+Institute of Western Greece](http://www.cied.teiwest.gr).
 
 ShootAR is an AR game for Android built with the Unity game engine. Enemies appear in the area around the player
 and the player uses the phone's camera and gyroscope to aim and shoot them.
@@ -14,13 +15,13 @@ or discrepancy in this readme, you are more than welcome to open a new issue or 
 3. [Building](#building)
 4. [How to play](#how-to-play)
 5. [Contributing](#contributing)
-	1. [Development environment](#development-environment)
-	2. [Coding style](#coding-style)
-	3. [Tests](#tests)
-	4. [Shipping changes](#shipping-changes)
-		1. [Pull request and branch](#pull-request-and-branch)
-		2. [Writing commits](#writing-commits)
-		3. [Push to upstream](#push-to-upstream)
+   1. [Development environment](#development-environment)
+   2. [Coding style](#coding-style)
+   3. [Tests](#tests)
+   4. [Shipping changes](#shipping-changes)
+      1. [Pull request and branch](#pull-request-and-branch)
+      2. [Writing commits](#writing-commits)
+      3. [Push to upstream](#push-to-upstream)
 6. [Known issues](#known-issues)
 7. [Changelog](#changelog)
 8. [License](#license)
@@ -32,9 +33,11 @@ or discrepancy in this readme, you are more than welcome to open a new issue or 
 An Android device running at least version 5.0 ("Lollipop") and it must have gyroscope.
 
 ## Installation
-The easiest way to install ShootAR, is to download the `.apk` of the latest release from [here](https://github.com/AnimaRain/ShootAR/releases) to your phone and run the installation.
+The easiest way to install ShootAR, is to download the `.apk` of the latest release from
+[here](https://github.com/AnimaRain/ShootAR/releases) to your phone and run the installation.
 
-*Note: By default, installation of APK files downloaded outside the Google Play is disabled. Enable "Unknown Sources" in the phone's (Security) settings.*
+*Note: By default, installation of APK files downloaded outside the Google Play is disabled.
+Enable "Unknown Sources" in the phone's (Security) settings.*
 
 If you want to built it yourself, you can follow the [instructions below](#building).
 
@@ -63,25 +66,25 @@ Decompress the files and open the project folder in Unity:
 * set build system to `Gradle`
 
 * to build a **development build**:
-	* enable `Development Build`
-	* (recommended) set compression method to `LZ4`
+  * enable `Development Build`
+  * (recommended) set compression method to `LZ4`
 	
 * to build a **release build**:
-	* go to `File` –> `Build Settings...`
-	* press the `Player Settings...` button
-	* got to the `Inspector` tab and find the `Publishing Settings`
-	* if you have a keystore file:
-		* choose `Use Existing Keystore`, press `Browse Keystore` and select the file
-		* enter the keystore password that you have been provided
-		* choose your key alias and enter your password
-	* if you don't have a keystore file, you can create your own:
-		* choose `Create a new Keystore...`, press `Browse Keystore` and type the name of the file to be created
-		* type the new keystore password twice
-		* open the drop–down menu next to *Alias* and select `Create a new key...`
-		* fill the form that has popped up and hit `Create Key`
-		* enter your key password
-	* return to the *Build Settings* window
-	* (recommended) set compression method to `LZ4HC`
+  * go to `File` –> `Build Settings...`
+  * press the `Player Settings...` button
+  * got to the `Inspector` tab and find the `Publishing Settings`
+  * if you have a keystore file:
+    * choose `Use Existing Keystore`, press `Browse Keystore` and select the file
+    * enter the keystore password that you have been provided
+    * choose your key alias and enter your password
+  * if you don't have a keystore file, you can create your own:
+    * choose `Create a new Keystore...`, press `Browse Keystore` and type the name of the file to be created
+    * type the new keystore password twice
+    * open the drop–down menu next to *Alias* and select `Create a new key...`
+    * fill the form that has popped up and hit `Create Key`
+    * enter your key password
+  * return to the *Build Settings* window
+  * (recommended) set compression method to `LZ4HC`
 	
 * hit `Build`
 * choose a name for the APK file and save it inside the `apk` folder
@@ -93,7 +96,8 @@ on the phone, enable *USB Debugging* and set *USB Configuration* to `MTP`. In th
 *Run Device* to your device and hit `Build and Run`. This will do the same as `Build` in addition to installing the
 game to the selected device.
 
-*Note: If the device can not be detected by Unity, try restarting Unity while the device is already physically connected to the computer.*
+*Note: If the device can not be detected by Unity, try restarting Unity while the device is already
+physically connected to the computer.*
 
 ## How to play
 To start playing hit the *Play* button in the main menu. Enemies will begin appearing in the space around you. Move
@@ -105,20 +109,21 @@ To start playing with a higher difficulty, go to *Select* in the main menu and c
 see (1) in the [known issues section](#known-issues).
 
 ## Contributing
-Feel free to contribute to this project. You could help with bug fixing; play the game and report any bug you may find ~~or
-create a pull request and start fixing any known issue~~. Ideas and suggestions are also welcomed. To report an issue or
-view the existing ones, go [here](https://github.com/AnimaRain/ShootAR/issues). Or you could just share the game with your
-friends. It is and will always be free.
+Feel free to contribute to this project. You could help with bug fixing or suggesting improvements; play the game
+and report any bugs you may find ~~or create a pull request and help in the development yourself~~. To share an
+idea or report a bug or view the existing ones, go [here](https://github.com/AnimaRain/ShootAR/issues). You could
+also just share the game with your friends. It is and will always be free.
 
 If you are not interested in developing the project, skip to the [next section](#known-issues).
 
 ### Development environment
-Read the [building](#building) section.
+Also read the ["Building"](#building) section.
 
 (Note that the Unity editor runs only under Windows and Mac.)
 
-On Windows, it is required to have a tool that can reliably utilize git's full potential, like [git for Windows](https://gitforwindows.org/).
-Also, download [git-lfs](https://git-lfs.github.com/), which handles the storage of large files in the repository.
+On Windows, it is required to have a tool that can reliably utilize git's full potential, like
+[git for Windows](https://gitforwindows.org/). Also, download [git-lfs](https://git-lfs.github.com/),
+which handles the storage of large files in the repository.
 
 ### Coding style
 Please, try to follow the existing coding style. If looking at the existing code results in ambiguity, at least follow these
@@ -154,10 +159,10 @@ int width;
 /* Depending on the situation, an even more descriptive name may be preferable.
  * Let's suppose that in the middle of a function, we need to store an image's and a box's width. */ 
 private void SomeFunction(Image image, Box box){
-	// ...
-	float imageWidth = image.Width;
-	float boxWidth = box.Width;
-	// ...
+    // ...
+    float imageWidth = image.Width;
+    float boxWidth = box.Width;
+    // ...
 }
 ```
 * An element's name should **not** reflect its type. **Do NOT use Hungarian notation!** The only exception accepted where
@@ -173,25 +178,26 @@ int age = 1;
 
 // Damage player
 void DamagePlayer(){
-	player.Health -= damage;
+    player.Health -= damage;
 }
 
 // Restore health if damaged
 if (player.Health < Player.MaxHealth)
-	player.RestoreHealth();
+    player.RestoreHealth();
 ```
 * If you think a piece of code is not easily comprehensible, comment it. If you can not write a comprehensible comment
 either, try a different approach to the problem.
 * Do **not** write/do something if you can not reason about it. Doing otherwise will result in unmaintainable bad code.
 This also applies to every other aspect of the project, not only code. History can explain it better.
-[This](https://github.com/AnimaRain/ShootAR/pull/23) was the result when the rules were not applied.
+[This](https://github.com/AnimaRain/ShootAR/pull/23) was the result when there were no rules.
 
 ### Tests
-Write tests if applicable. The tests should  If you prefer TDD or writing tests after or any other way, it is your own choice.
-The limitations imposed by Unity's *MonoBehaviour* class make it difficult to write unit tests without making the code more
-complicated than it should be. Current tests are an in–between of unit tests and implementation tests. Still write simple
-and one–thing focused tests as if they were unit tests. If you have a suggestion on a better way of writing tests, please
-feel free to share it.
+Writing tests is important. All code written should be testable, although it is not always applicable; testing the UI
+for example. The tests are run using the tools provided in the Unity editor. If you prefer TDD or writing tests after
+or any other way, it is your own choice. The limitations imposed by Unity's *MonoBehaviour* class make it difficult
+to write unit tests without making the code more complicated than it should be. Current tests are an in–between of
+unit tests and implementation tests. Still write simple and one–thing focused tests as if they were unit tests. If
+you have a suggestion on a better way of writing tests, please feel free to share it.
 
 ### Shipping changes
 #### Pull request and branch
@@ -248,10 +254,10 @@ fixes might be better to be split up in more than one commit, depending on the s
 this exact technique as long as the result is the same.<br/>
 (In the example `git add --all` is used, presuming that we are only dealing with files that we know what changes were made to.)
 
-You are not required to squash your commits. **This project is all about learning.** This also applies when you make a commit
-just to fix a typo missed in the previous commit. **It's fine! Humans make mistakes.** By keeping commits visible, one can
-learn from previous mistakes, helps better understanding the intentions of the coder, and it is easier to find
-the point at which a mistake was made.
+You are not required to squash your commits. **This project is all about learning.** This also applies when it is
+too late to ammend the previous commit and you have to make a commit just to fix a missed typo. **It's fine! Humans
+make mistakes.** By keeping commits visible, one can learn from previous mistakes, helps better understanding the
+intentions of the coder, and it is easier to find the point at which a mistake was made.
 
  For additional rules and more detail, read this very well–written [guide](https://chris.beams.io/posts/git-commit/)
  by Chris Beams. You are also expected to follow those rules.
@@ -259,14 +265,14 @@ the point at which a mistake was made.
 #### Push to upstream
 Before uploading anything read the [license section](#license). Also, if you have intention of uploading anything
 that has been made by a third party, make sure that you have their permission and that there is no conflicts with
-the license and principles of this project.
+the license and principles of this project. They should, also, be credited.
 
 To push the commits to the server having a branch and a pull request is required (as [described above](#pull-request-and-branch)).
 
-After pushing the last commits to the upstream branch, `git push` or if there is no upstream branch set, `git push
---set-upstream original <branch-name>`. If you have not created a pull request yet, do so (see [above](#pull-request-and-branch)).
-If you have already made one, go to your request and notify that your branch is ready to be merged. Await review by
-an administrator.
+Make sure that the code is passing all tests. Then push all commits to the upstream branch, `git push`;
+or if there is no upstream branch set, `git push --set-upstream original <branch-name>`. If you have not
+created a pull request yet, do so (see [above](#pull-request-and-branch)). If you have already made one,
+go to your request and notify that your branch is ready to be merged. Await review by an administrator.
 
 ## Known issues
 1. The game has not been optimized yet in any way. After a few levels, way too many enemies appear.
@@ -274,7 +280,7 @@ an administrator.
 
 [More issues.](https://github.com/AnimaRain/ShootAR/issues)
 
-## Change log
+## Changelog
 ### Version 0.5.1
 *WIP*
 
@@ -293,7 +299,7 @@ John Spyropoulos, a.k.a. AnimaRain \<ioannis_spyr@yahoo.gr\> | [@rainsoulwhisper
 Ioannis Tantaoui
 
 ## Credits
-Petros Kouvariotis for being an awesome friend, playtester and supporter!
+A thank–you to Petros Kouvariotis for being an awesome friend, playtester and supporter!
 
-Drone: https://assetstore.unity.com/packages/3d/low-poly-combat-drone-82234
+Drone: https://assetstore.unity.com/packages/3d/low-poly-combat-drone-82234<br/>
 Crasher: https://assetstore.unity.com/packages/3d/characters/aaron-s-assets-89273
