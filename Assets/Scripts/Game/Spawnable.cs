@@ -27,8 +27,7 @@ namespace ShootAR
 		/// <summary>
 		/// Setter for <see cref="Spawner"/>s to set a spawned object's game state.
 		/// </summary>
-		public GameState GameState
-		{
+		public GameState GameState {
 			set { gameState = value; }
 		}
 	}

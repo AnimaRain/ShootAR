@@ -18,26 +18,22 @@ namespace ShootAR
 		private AudioClip pauseSfx;
 
 
-		public Text BulletCount
-		{
+		public Text BulletCount {
 			get { return bulletCount; }
 			set { bulletCount = value; }
 		}
 
-		public Text MessageOnScreen
-		{
+		public Text MessageOnScreen {
 			get { return messageOnScreen; }
 			set { messageOnScreen = value; }
 		}
 
-		public Text Score
-		{
+		public Text Score {
 			get { return score; }
 			set { score = value; }
 		}
 
-		public Text RoundIndex
-		{
+		public Text RoundIndex {
 			get { return roundIndex; }
 			set { roundIndex = value; }
 		}
@@ -47,8 +43,7 @@ namespace ShootAR
 				Text bulletCount, Text messageOnScreen,
 				Text score, Text roundIndex,
 				AudioSource sfx, AudioClip pauseSfx,
-				GameState gameState)
-		{
+				GameState gameState) {
 			var o = new GameObject(nameof(UIManager)).AddComponent<UIManager>();
 
 			o.uiCanvas = uiCanvas;
@@ -64,43 +59,32 @@ namespace ShootAR
 			return o;
 		}
 
-		public void Start()
-		{
+		public void Start() {
 
-			if (pauseSfx != null)
-			{
+			if (pauseSfx != null) {
 				sfx = gameObject.AddComponent<AudioSource>();
 				sfx.clip = pauseSfx;
 				sfx.volume = 1f;
 			}
-			else
-			{
-				Debug.LogWarning("Pause audio-clip has not been assigned.");
-			}
+			else Debug.LogWarning("Pause audio-clip has not been assigned.");
 
-			pauseToMenuButton?.onClick
-				.AddListener(() =>
-				{
-					gameState.Paused = false;
-					UnityEngine.SceneManagement.SceneManager
-						.LoadScene(0);
-				}
-			);
+			pauseToMenuButton?.onClick.AddListener(() => {
+				gameState.Paused = false;
+				UnityEngine.SceneManagement.SceneManager
+					.LoadScene(0);
+			});
 		}
 
-		public void TogglePauseMenu()
-		{
+		public void TogglePauseMenu() {
 			sfx.PlayOneShot(pauseSfx, 1f);
 
-			if (!pauseCanvas.gameObject.activeSelf)
-			{
+			if (!pauseCanvas.gameObject.activeSelf) {
 				RoundIndex.text = "Round: " + gameState.Level;
 				uiCanvas.SetActive(false);
 				pauseCanvas.SetActive(true);
 				gameState.Paused = true;
 			}
-			else
-			{
+			else {
 				uiCanvas.SetActive(true);
 				pauseCanvas.SetActive(false);
 				gameState.Paused = false;

@@ -18,8 +18,7 @@ namespace ShootAR.Enemies
 		/// </summary>
 		protected EnemyBullet lastBullet;
 
-		protected virtual void Shoot()
-		{
+		protected virtual void Shoot() {
 			sfx.Play();
 			lastBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
 			lastBullet.Damage = Damage;

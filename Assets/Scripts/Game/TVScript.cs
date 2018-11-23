@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using ShootAR;
+﻿using ShootAR;
+using UnityEngine;
 
-#pragma warning disable 649	//the unassigned fields are actually assigned in Unity Editor
+#pragma warning disable 649   //the unassigned fields are actually assigned in Unity Editor
 
 public class TVScript : MonoBehaviour
 {
@@ -12,21 +12,18 @@ public class TVScript : MonoBehaviour
 	public bool tvOn;
 
 	private GameState gameState;
-	
 
-	private void Start()
-	{
+
+	private void Start() {
 		gameState = FindObjectOfType<GameState>();
 		Invoke("StartTV", tvRefreshTime);
 	}
 
-	private void Update()
-	{
+	private void Update() {
 		//UNDONE: while not game over, if turned off, turn on.
 	}
 
-	public void CloseTV()
-	{
+	public void CloseTV() {
 		GetComponent<Renderer>().material = blackScreen;
 		CancelInvoke("StartTV");
 		if (!gameState.GameOver)
@@ -34,8 +31,7 @@ public class TVScript : MonoBehaviour
 		tvOn = false;
 	}
 
-	public void StartTV()
-	{
+	public void StartTV() {
 		GetComponent<Renderer>().material = staticScreen;
 		CancelInvoke("StartTV");
 		tvOn = true;

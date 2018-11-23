@@ -12,12 +12,9 @@ namespace ShootAR.Enemies
 		/// </summary>
 		protected float nextShot;
 
-		protected void FixedUpdate()
-		{
-			if (!gameState.GameOver)
-			{
-				if (lastBullet == null && Time.time > nextShot)
-				{
+		protected void FixedUpdate() {
+			if (!gameState.GameOver) {
+				if (lastBullet == null && Time.time > nextShot) {
 					Shoot();
 					nextShot = Time.time + ShootDelay;
 				}

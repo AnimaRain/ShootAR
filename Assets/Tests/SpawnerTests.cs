@@ -1,17 +1,16 @@
-﻿using UnityEngine;
-using UnityEngine.TestTools;
-using NUnit.Framework;
-using System.Collections;
+﻿using NUnit.Framework;
 using ShootAR;
 using ShootAR.Enemies;
 using ShootAR.TestTools;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.TestTools;
 
-public class SpawnerTests
+internal class SpawnerTests
 {
 
 	[UnityTest]
-	public IEnumerator SpawnerStopsWhenLimitReached()
-	{
+	public IEnumerator SpawnerStopsWhenLimitReached() {
 
 		Spawner spawner = Spawner.Create(
 			objectToSpawn: TestEnemy.Create(),
@@ -30,8 +29,7 @@ public class SpawnerTests
 	}
 
 	[UnityTest]
-	public IEnumerator SpawnerSpawnsTheCorrectNumberOfObjects()
-	{
+	public IEnumerator SpawnerSpawnsTheCorrectNumberOfObjects() {
 		Spawner spawner = Spawner.Create(
 			objectToSpawn: TestEnemy.Create(),
 			spawnLimit: 5,
@@ -49,8 +47,7 @@ public class SpawnerTests
 	}
 
 	[UnityTest]
-	public IEnumerator SpawnerCanStopSpawning()
-	{
+	public IEnumerator SpawnerCanStopSpawning() {
 		//Arrange
 		Spawner spawner = Spawner.Create(TestEnemy.Create(),
 			spawnLimit: 5, spawnRate: 1, initialDelay: 0f,
@@ -70,8 +67,7 @@ public class SpawnerTests
 	}
 
 	[UnityTest]
-	public IEnumerator SpawnerStopsSpawningAtGameOver()
-	{
+	public IEnumerator SpawnerStopsSpawningAtGameOver() {
 		GameState gameState = GameState.Create(0);
 		Spawner spawner = Spawner.Create(TestEnemy.Create(), 99, 0f, 1f, 5f, 3f, gameState);
 
@@ -85,8 +81,7 @@ public class SpawnerTests
 	}
 
 	[UnityTest]
-	public IEnumerator ObjectsAreSpawnedInsideTheDesignatedArea()
-	{
+	public IEnumerator ObjectsAreSpawnedInsideTheDesignatedArea() {
 		/* This test is based on luck, making it pretty much unreliable.
 		 * I feel confident enough that things workout, though.*/
 
@@ -97,9 +92,9 @@ public class SpawnerTests
 		yield return new WaitWhile(() => spawner.IsSpawning);
 		Object.Destroy(prefab.gameObject);
 		Enemy[] enemies = Object.FindObjectsOfType<Enemy>();
-		foreach (var enemy in enemies)
-		{
-			if (enemy == spawner.ObjectToSpawn) continue;
+		foreach (var enemy in enemies) {
+			if (enemy == spawner.ObjectToSpawn)
+				continue;
 
 			var distance = enemy.transform.position.magnitude;
 			Assert.GreaterOrEqual(distance, spawner.MinDistanceToSpawn,
@@ -110,20 +105,16 @@ public class SpawnerTests
 	}
 
 	[UnityTest]
-	public IEnumerator SpawnerShouldNotBeRestartedWhileRunning()
-	{
+	public IEnumerator SpawnerShouldNotBeRestartedWhileRunning() {
 		Spawner spawner = Spawner.Create(
 			TestEnemy.Create(), 100, 100f, 100f, 100f, 1f);
 		UnityException error = null;
 
 		yield return null;
-		try
-		{
+		try {
 			spawner.StartSpawning();
 			spawner.StartSpawning();
-		}
-		catch (UnityException e)
-		{
+		} catch (UnityException e) {
 			error = e;
 		}
 
@@ -146,8 +137,7 @@ public class SpawnerTests
 	 * <seealso cref="Enemy"/>
 	 * <seealso cref="Capsule"/> */
 	[UnityTest]
-	public IEnumerator SpawnersHaveAGlobalSpawningLimit()
-	{
+	public IEnumerator SpawnersHaveAGlobalSpawningLimit() {
 		int limit = 100;    // Should be used only for the following check
 							// and assigning spawnLimit.
 		Assert.Less(Spawnable.GLOBAL_SPAWN_LIMIT, limit,
@@ -177,11 +167,9 @@ public class SpawnerTests
 	}
 
 	[TearDown]
-	public void ClearTestEnvironment()
-	{
+	public void ClearTestEnvironment() {
 		GameObject[] objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects)
-		{
+		foreach (var o in objects) {
 			Object.Destroy(o.gameObject);
 		}
 	}

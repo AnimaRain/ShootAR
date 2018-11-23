@@ -39,15 +39,13 @@ namespace ShootAR.Enemies
 		 * </remarks> */
 		private bool noDeathSfx;
 
-		protected void Awake()
-		{
+		protected void Awake() {
 			ActiveCount++;
 
 			if (score == null) score = FindObjectOfType<ScoreManager>();
 		}
 
-		protected virtual void Start()
-		{
+		protected virtual void Start() {
 			sfx = GetComponent<AudioSource>();
 			/* If the AudioSource component on all enemy prefabs are distinctively
 			 * configured, either through scripts or the inspector, and you are
@@ -59,15 +57,12 @@ namespace ShootAR.Enemies
 			sfx.maxDistance = 10f;
 		}
 
-		protected virtual void OnApplicationQuit()
-		{
+		protected virtual void OnApplicationQuit() {
 			noDeathSfx = true;
 		}
 
-		protected virtual void OnDestroy()
-		{
-			if (gameState != null && !gameState.GameOver)
-			{
+		protected virtual void OnDestroy() {
+			if (gameState != null && !gameState.GameOver) {
 				score?.AddScore(PointsValue);
 				if (explosion != null && !noDeathSfx)
 					Instantiate(explosion, transform.position, transform.rotation);
@@ -78,8 +73,7 @@ namespace ShootAR.Enemies
 		/// <summary>
 		/// Enemy moves towards a point using the physics engine.
 		/// </summary>
-		public void MoveTo(Vector3 point)
-		{
+		public void MoveTo(Vector3 point) {
 			transform.LookAt(point);
 			transform.forward = -transform.position;
 			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
@@ -89,8 +83,7 @@ namespace ShootAR.Enemies
 		/// Object orbits around a defined point by an angle based on its speed.
 		/// </summary>
 		/// <param name="orbit">The orbit to move in</param>
-		public void OrbitAround(Orbit orbit)
-		{
+		public void OrbitAround(Orbit orbit) {
 			transform.LookAt(orbit.direction, orbit.perpendicularAxis);
 			transform.RotateAround(
 				orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);

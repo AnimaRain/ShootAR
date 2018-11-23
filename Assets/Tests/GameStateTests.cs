@@ -1,15 +1,14 @@
 ﻿using NUnit.Framework;
-using UnityEngine.TestTools;
-using UnityEngine;
-using System.Collections;
 using ShootAR;
 using ShootAR.TestTools;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 public class GameStateTests
 {
 	[UnityTest]
-	public IEnumerator UseLastShotToHitCapsuleAndTakeBullets()
-	{
+	public IEnumerator UseLastShotToHitCapsuleAndTakeBullets() {
 		GameState gameState = GameState.Create(0);
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
@@ -29,7 +28,7 @@ public class GameStateTests
 
 		GameManager.Create(player, gameState);
 
-		yield return null;	// without this, player.Shoot() will return null.
+		yield return null;  // without this, player.Shoot() will return null.
 
 		capsule.transform.Translate(new Vector3(10f, 10f, 10f));
 		player.transform.LookAt(capsule.transform);
@@ -44,8 +43,7 @@ public class GameStateTests
 	}
 
 	[UnityTest]
-	public IEnumerator UseLastShotToKillLastEnemy()
-	{
+	public IEnumerator UseLastShotToKillLastEnemy() {
 		GameState gameState = GameState.Create(0);
 		Camera camera = new GameObject("Camera").AddComponent<Camera>();
 		Player player = Player.Create(
@@ -57,7 +55,7 @@ public class GameStateTests
 		TestEnemy enemy = TestEnemy.Create(0, 0, 0, 10, 10, 10, gameState);
 		GameManager.Create(player, gameState);
 
-		yield return null;	//without this, firedBullet will be null
+		yield return null;  //without this, firedBullet will be null
 
 		camera.transform.LookAt(enemy.transform);
 		var firedBullet = player.Shoot();
@@ -72,9 +70,9 @@ public class GameStateTests
 	}
 
 	[TearDown]
-	public void CleanUp()
-	{
+	public void CleanUp() {
 		var objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects) Object.Destroy(o.gameObject);
+		foreach (var o in objects)
+			Object.Destroy(o.gameObject);
 	}
 }

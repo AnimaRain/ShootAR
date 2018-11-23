@@ -1,30 +1,28 @@
-﻿using UnityEngine;
-using UnityEngine.TestTools;
-using NUnit.Framework;
-using System.Collections;
+﻿using NUnit.Framework;
 using ShootAR;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.TestTools;
 
-class MovementBehaviourTests
+internal class MovementBehaviourTests
 {
-	internal class EndPoint : MonoBehaviour {
+	internal class EndPoint : MonoBehaviour
+	{
 		public bool testObjectPassedThePoint;
 		public Vector3 recordedPosition;
 
-		private void Start()
-		{
+		private void Start() {
 			var collider = gameObject.AddComponent<SphereCollider>();
 			collider.radius = 1f;
 			collider.isTrigger = true;
 		}
 
-		private void LateUpdate()
-		{
+		private void LateUpdate() {
 			Debug.DrawLine(transform.position, Vector3.zero,
 				testObjectPassedThePoint ? Color.green : Color.red);
 		}
 
-		private void OnTriggerEnter(Collider other)
-		{
+		private void OnTriggerEnter(Collider other) {
 			testObjectPassedThePoint = true;
 			recordedPosition = other.transform.position;
 			Debug.Log($"Object passed the trigger at {recordedPosition}");
@@ -67,11 +65,9 @@ class MovementBehaviourTests
 	}*/
 
 	[TearDown]
-	public void CleanUp()
-	{
+	public void CleanUp() {
 		var objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects)
-		{
+		foreach (var o in objects) {
 			Object.Destroy(o.gameObject);
 		}
 	}

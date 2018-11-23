@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace ShootAR
 {
@@ -12,8 +12,8 @@ namespace ShootAR
 		/// while spawnning.
 		/// </summary>
 		public Spawnable ObjectToSpawn {
-			get {return objectToSpawn; }
-			private set {objectToSpawn = value; }
+			get { return objectToSpawn; }
+			private set { objectToSpawn = value; }
 		}
 		/// <summary>
 		/// The time interval between each spawn.
@@ -28,8 +28,7 @@ namespace ShootAR
 		/// Maximum distance away from player that <see cref="ObjectToSpawn"/> is
 		/// allowed to spawn.
 		/// </summary>
-		public float MaxDistanceToSpawn
-		{
+		public float MaxDistanceToSpawn {
 			get { return maxDistanceToSpawn; }
 			private set { maxDistanceToSpawn = value; }
 		}
@@ -37,8 +36,7 @@ namespace ShootAR
 		/// Minimum distance away from player that <see cref="ObjectToSpawn"/> is
 		/// allowed to spawn.
 		/// </summary>
-		public float MinDistanceToSpawn
-		{
+		public float MinDistanceToSpawn {
 			get { return minDistanceToSpawn; }
 			private set { minDistanceToSpawn = value; }
 		}
@@ -60,18 +58,16 @@ namespace ShootAR
 		[SerializeField] private GameObject portal;
 		private AudioSource sfx;
 
-		private void Awake()
-		{
+		private void Awake() {
 			//Initial value should not be 0 to refrain from enabling
 			//"Game Over" state when the game has just started.
 			if (SpawnLimit == 0) SpawnLimit = -1;
 		}
 
 		public static Spawner Create(
-			Spawnable objectToSpawn, int spawnLimit, float initialDelay, float spawnRate, 
+			Spawnable objectToSpawn, int spawnLimit, float initialDelay, float spawnRate,
 			float maxDistanceToSpawn, float minDistanceToSpawn,
-			GameState gameState = null)
-		{
+			GameState gameState = null) {
 			var o = new GameObject(nameof(Spawner)).AddComponent<Spawner>();
 
 			o.ObjectToSpawn = objectToSpawn;
@@ -84,8 +80,7 @@ namespace ShootAR
 			// Since Create() is not an actual constructor, when object o is
 			// created, o.gameState is null and the code in OnEnable() won't
 			// run, so the following lines were copied here as well.
-			if (gameState != null)
-			{
+			if (gameState != null) {
 				gameState.OnGameOver += o.StopSpawning;
 				gameState.OnRoundWon += o.StopSpawning;
 			}
@@ -93,38 +88,30 @@ namespace ShootAR
 			return o;
 		}
 
-		private void Start()
-		{
-			if (spawnSfx != null)
-			{
+		private void Start() {
+			if (spawnSfx != null) {
 				sfx = gameObject.AddComponent<AudioSource>();
 				sfx.clip = spawnSfx;
 				sfx.volume = 0.2f;
 			}
 		}
 
-		private void OnEnable()
-		{
-			if (gameState != null)
-			{
+		private void OnEnable() {
+			if (gameState != null) {
 				gameState.OnGameOver += StopSpawning;
 				gameState.OnRoundWon += StopSpawning;
 			}
 		}
 
-		private void OnDisable()
-		{
-			if (gameState != null)
-			{
+		private void OnDisable() {
+			if (gameState != null) {
 				gameState.OnGameOver -= StopSpawning;
 				gameState.OnRoundWon -= StopSpawning;
 			}
 		}
 
-		private void OnDestroy()
-		{
-			if (gameState != null)
-			{
+		private void OnDestroy() {
+			if (gameState != null) {
 				gameState.OnGameOver -= StopSpawning;
 				gameState.OnRoundWon -= StopSpawning;
 			}
@@ -138,11 +125,9 @@ namespace ShootAR
 		/// stop when the limit defined by <see cref="SpawnLimit"/> is reached or
 		/// can be manually stopped, using <see cref="StopSpawning"/>.
 		/// </remarks>
-		public IEnumerator Spawn()
-		{
+		public IEnumerator Spawn() {
 			yield return new WaitForSeconds(InitialDelay);
-			while (IsSpawning)
-			{
+			while (IsSpawning) {
 				yield return new WaitForSeconds(SpawnRate);
 
 				/* IsSpawning is checked here, in case StopSpawning() is called
@@ -180,12 +165,11 @@ namespace ShootAR
 		/// <summary>
 		/// Automatically start a <see cref="Spawn"/> coroutine.
 		/// </summary>
-		public void StartSpawning()
-		{
+		public void StartSpawning() {
 			if (IsSpawning)
 				throw new UnityException(
 					"A spawner should not be restarted before stopping it first");
-					
+
 			SpawnCount = 0;
 			IsSpawning = true;
 			StartCoroutine(Spawn());
@@ -195,8 +179,7 @@ namespace ShootAR
 		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit
 		/// </summary>
 		/// <param name="limit">Number of objects to spawn</param>
-		public void StartSpawning(int limit)
-		{
+		public void StartSpawning(int limit) {
 			SpawnLimit = limit;
 			StartSpawning();
 		}
@@ -207,8 +190,7 @@ namespace ShootAR
 		/// </summary>
 		/// <param name="limit">Number of objects to spawn</param>
 		/// <param name="rate">The time in seconds to wait before each spawn</param>
-		public void StartSpawning(int limit, float rate)
-		{
+		public void StartSpawning(int limit, float rate) {
 			SpawnRate = rate;
 			SpawnLimit = limit;
 			StartSpawning();
@@ -224,14 +206,12 @@ namespace ShootAR
 		/// <seealso cref="SpawnLimit"/>
 		/// <seealso cref="SpawnRate"/>
 		/// <seealso cref="SpawnDelay"/>
-		public void StartSpawning(int limit, float rate, float delay)
-		{
+		public void StartSpawning(int limit, float rate, float delay) {
 			InitialDelay = delay;
 			StartSpawning(limit, rate);
 		}
 
-		public void StopSpawning()
-		{
+		public void StopSpawning() {
 			if (!IsSpawning) return;
 #if DEBUG
 			Debug.Log("Spawn stopped");

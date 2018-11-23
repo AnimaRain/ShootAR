@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.TestTools;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using ShootAR;
 using ShootAR.TestTools;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.TestTools;
 
-class PlayerTest
+internal class PlayerTest
 {
 	[UnityTest]
-	public IEnumerator PlayerCanShoot()
-	{
+	public IEnumerator PlayerCanShoot() {
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
@@ -25,8 +24,7 @@ class PlayerTest
 	}
 
 	[UnityTest]
-	public IEnumerator LoseHealthWhenHit()
-	{
+	public IEnumerator LoseHealthWhenHit() {
 		Player player = Player.Create();
 		var playerCollider = player.gameObject.AddComponent<CapsuleCollider>();
 		playerCollider.height = 2f;
@@ -40,8 +38,7 @@ class PlayerTest
 	}
 
 	[UnityTest]
-	public IEnumerator GameOverWhenHealthDepleted()
-	{
+	public IEnumerator GameOverWhenHealthDepleted() {
 		GameState gameState = GameState.Create(0);
 		Player player = Player.Create(1, null, null, 0, gameState);
 
@@ -54,8 +51,7 @@ class PlayerTest
 	}
 
 	[UnityTest]
-	public IEnumerator ArmorProtectsFromDamage()
-	{
+	public IEnumerator ArmorProtectsFromDamage() {
 		Player player = Player.Create(Player.MAXIMUM_HEALTH);
 		player.HasArmor = true;
 
@@ -67,8 +63,7 @@ class PlayerTest
 	}
 
 	[UnityTest]
-	public IEnumerator ArmorLostWhenPlayerGetsDamaged()
-	{
+	public IEnumerator ArmorLostWhenPlayerGetsDamaged() {
 
 		Player player = Player.Create();
 		player.HasArmor = true;
@@ -81,8 +76,7 @@ class PlayerTest
 	}
 
 	[UnityTest]
-	public IEnumerator ShootingUsesUpAmmo()
-	{
+	public IEnumerator ShootingUsesUpAmmo() {
 		const int initialAmmoAmount = 10;
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
@@ -99,8 +93,7 @@ class PlayerTest
 	}
 
 	[UnityTest]
-	public IEnumerator CannotShootWithoutAmmo()
-	{
+	public IEnumerator CannotShootWithoutAmmo() {
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
@@ -115,8 +108,7 @@ class PlayerTest
 	}
 
 	[UnityTest]
-	public IEnumerator PlayerCanNotBeHitInARapidSuccession()
-	{
+	public IEnumerator PlayerCanNotBeHitInARapidSuccession() {
 		Player player = Player.Create();
 		var playerCollider = player.gameObject.AddComponent<CapsuleCollider>();
 		playerCollider.height = 2f;
@@ -132,12 +124,10 @@ class PlayerTest
 	}
 
 	[TearDown]
-	public void ClearTestEnvironment()
-	{
+	public void ClearTestEnvironment() {
 		GameObject[] objects = Object.FindObjectsOfType<GameObject>();
 
-		foreach (GameObject o in objects)
-		{
+		foreach (GameObject o in objects) {
 			Object.Destroy(o.gameObject);
 		}
 	}

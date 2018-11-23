@@ -34,8 +34,7 @@ namespace ShootAR
 		/// Player's health.
 		/// If heatlh drops to zero, the game is over.
 		/// </summary>
-		public int Health
-		{
+		public int Health {
 			get { return health; }
 
 			set {
@@ -46,12 +45,10 @@ namespace ShootAR
 			}
 		}
 
-		private void UpdateHealthUI()
-		{
+		private void UpdateHealthUI() {
 			if (healthIndicator[0] == null) return;
 
-			for (int i = 0; i < MAXIMUM_HEALTH; i++)
-			{
+			for (int i = 0;i < MAXIMUM_HEALTH;i++) {
 				healthIndicator[i].SetActive(i < health);
 			}
 		}
@@ -62,8 +59,7 @@ namespace ShootAR
 		/// <remarks>
 		/// Setting this, also sets the bullet count on the UI.
 		/// </remarks>
-		public int Ammo
-		{
+		public int Ammo {
 			get { return ammo; }
 			set {
 				ammo = value;
@@ -77,13 +73,11 @@ namespace ShootAR
 
 		public static Player Create(
 			int health = MAXIMUM_HEALTH, Camera camera = null,
-			Bullet bullet = null, int ammo = 0, GameState gameState = null)
-		{
+			Bullet bullet = null, int ammo = 0, GameState gameState = null) {
 			var o = new GameObject(nameof(Player)).AddComponent<Player>();
 
 			var healthUI = new GameObject("HealthUI").transform;
-			for (int i = 0; i < MAXIMUM_HEALTH; i++)
-			{
+			for (int i = 0;i < MAXIMUM_HEALTH;i++) {
 				o.healthIndicator[i] = new GameObject("HealthIndicator");
 				o.healthIndicator[i].transform.parent = healthUI;
 			}
@@ -92,8 +86,7 @@ namespace ShootAR
 			o.bullet = bullet;
 			o.gameState = gameState;
 			if (camera != null) camera.tag = "MainCamera";
-			else if (bullet != null)
-			{
+			else if (bullet != null) {
 				Debug.LogWarning("No reference to main camera. Shooting" +
 					" functions will raise error if used.");
 			}
@@ -108,10 +101,8 @@ namespace ShootAR
 		/// <returns>
 		/// a reference to the bullet fired or null if conditions are not met
 		/// </returns>
-		public Bullet Shoot()
-		{
-			if (CanShoot && Ammo > 0 && Time.time >= nextFire)
-			{
+		public Bullet Shoot() {
+			if (CanShoot && Ammo > 0 && Time.time >= nextFire) {
 				Ammo--;
 				nextFire = Time.time + SHOT_COOLDOWN;
 				if (shotSfx != null) audioSource.PlayOneShot(shotSfx);
@@ -121,8 +112,7 @@ namespace ShootAR
 			return null;
 		}
 
-		private void Start()
-		{
+		private void Start() {
 			audioSource = GetComponent<AudioSource>();
 			if (bulletCount != null)
 				bulletCount.text = Ammo.ToString();
@@ -136,13 +126,11 @@ namespace ShootAR
 		/// </summary>
 		/// <param name="damage">the amount by which health is reduced</param>
 		/// <seealso cref="GameState.GameOver"/>
-		public void GetDamaged(int damage)
-		{
+		public void GetDamaged(int damage) {
 			if (damage <= 0 || Time.time < nextDamage) return;
 			nextDamage = Time.time + DAMAGE_COOLDOWN;
 
-			if (HasArmor)
-			{
+			if (HasArmor) {
 				HasArmor = false;
 				return;
 			}
@@ -150,10 +138,8 @@ namespace ShootAR
 			Health -= damage;
 		}
 
-		private void OnDestroy()
-		{
-			foreach (var h in healthIndicator)
-			{
+		private void OnDestroy() {
+			foreach (var h in healthIndicator) {
 				Destroy(h.gameObject);
 			}
 		}

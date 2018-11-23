@@ -14,8 +14,7 @@ namespace ShootAR
 		/// </summary>
 		public static int ActiveCount { get; private set; }
 
-		public static Bullet Create(float speed)
-		{
+		public static Bullet Create(float speed) {
 			var o = new GameObject(nameof(Bullet)).AddComponent<Bullet>();
 
 			o.GetComponent<Rigidbody>().useGravity = false;
@@ -30,8 +29,7 @@ namespace ShootAR
 			return o;
 		}
 
-		protected void Start()
-		{
+		protected void Start() {
 			transform.rotation = Camera.main.transform.rotation;
 			transform.position = Vector3.zero;
 			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
@@ -40,17 +38,14 @@ namespace ShootAR
 			ActiveCount++;
 		}
 
-		protected void OnTriggerEnter(Collider col)
-		{
-			if (col.GetComponent<Enemies.Enemy>() || col.GetComponent<Capsule>())
-			{
+		protected void OnTriggerEnter(Collider col) {
+			if (col.GetComponent<Enemies.Enemy>() || col.GetComponent<Capsule>()) {
 				Destroy(col.gameObject);
 				Destroy(gameObject);
 			}
 		}
 
-		protected void OnDestroy()
-		{
+		protected void OnDestroy() {
 			ActiveCount--;
 		}
 	}
