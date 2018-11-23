@@ -19,9 +19,8 @@ namespace ShootAR
 
 		[SerializeField] private Player player;
 
-		public static Capsule Create(CapsuleType type, float speed, 
-				Player player = null, GameState gameState = null)
-		{
+		public static Capsule Create(CapsuleType type, float speed,
+				Player player = null, GameState gameState = null) {
 			var o = new GameObject(nameof(Capsule)).AddComponent<Capsule>();
 			o.Type = type;
 			o.Speed = speed;
@@ -30,32 +29,27 @@ namespace ShootAR
 			return o;
 		}
 
-		protected void Start()
-		{
+		protected void Start() {
 			rotation = new Vector3(15, 30, 45);
 			pickUpSfx = GetComponent<AudioSource>();
 		}
 
-		private void Update()
-		{
+		private void Update() {
 			//rotation
 			transform.Rotate(rotation * Time.deltaTime);
 			//orbit
 			transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
 		}
 
-		protected void OnDestroy()
-		{
+		protected void OnDestroy() {
 			if (gameState != null ? gameState.GameOver : false) return;
 
 			GivePowerUp();
 			pickUpSfx?.Play();
 		}
 
-		public void GivePowerUp()
-		{
-			switch (Type)
-			{
+		public void GivePowerUp() {
+			switch (Type) {
 				case 0:
 					if (player != null)
 						player.Ammo += 10;

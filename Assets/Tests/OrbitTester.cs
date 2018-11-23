@@ -6,14 +6,12 @@ public class OrbitTester : Enemy
 {
 	private Orbit orbit;
 
-	protected override void Start()
-	{
+	protected override void Start() {
 		base.Start();
-		orbit =new Orbit(transform.position, Vector3.zero);
+		orbit = new Orbit(transform.position, Vector3.zero);
 	}
 
-	private void Update()
-	{
+	private void Update() {
 		OrbitAround(orbit);
 		Debug.DrawRay(orbit.centerPoint, orbit.perpendicularAxis, Color.blue);
 		Debug.DrawLine(orbit.direction, orbit.centerPoint);

@@ -54,8 +54,7 @@ namespace ShootAR
 			}
 		}
 
-		public static GameState Create(int level)
-		{
+		public static GameState Create(int level) {
 			var o = new GameObject(nameof(GameState)).AddComponent<GameState>();
 
 			o.Level = level;

@@ -6,12 +6,10 @@ namespace ShootAR.Menu
 	public class RoundSelectMenu : MonoBehaviour
 	{
 		private int roundToPlay;
-		public int RoundToPlay
-		{
+		public int RoundToPlay {
 			get { return roundToPlay; }
 
-			internal set
-			{
+			internal set {
 				roundToPlay = Mathf.Clamp(value, 1, 999);
 				labelOnUI.text = roundToPlay.ToString();
 				Configuration.StartingLevel = roundToPlay;
@@ -24,9 +22,8 @@ namespace ShootAR.Menu
 		[SerializeField]
 		private Text labelOnUI;
 
-		private void OnEnable()
-		{
+		private void OnEnable() {
 			if (RoundToPlay < 1) RoundToPlay = 1;
 		}
-	} 
+	}
 }

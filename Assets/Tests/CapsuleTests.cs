@@ -1,13 +1,14 @@
-﻿using UnityEngine;
-using UnityEngine.TestTools;
-using NUnit.Framework;
-using System.Collections;
+﻿using NUnit.Framework;
 using ShootAR;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.TestTools;
 
-public class CapsuleTests {
+public class CapsuleTests
+{
 
-    [UnityTest]
-    public IEnumerator CapsuleGivesBullets() {
+	[UnityTest]
+	public IEnumerator CapsuleGivesBullets() {
 		//Set up Test
 		Player player = Player.Create();
 		Capsule capsule =
@@ -19,7 +20,7 @@ public class CapsuleTests {
 
 		//Assert
 		Assert.Greater(player.Ammo, 0);
-    }
+	}
 
 	//UNDONE:
 	/* Tests for conditional-capsule
@@ -37,9 +38,9 @@ public class CapsuleTests {
 	*/
 
 	[TearDown]
-	public void ClearEnvironment()
-	{
+	public void ClearEnvironment() {
 		var objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects) Object.Destroy(o.gameObject);
+		foreach (var o in objects)
+			Object.Destroy(o.gameObject);
 	}
 }

@@ -17,18 +17,15 @@ namespace ShootAR.Menu
 
 		[SerializeField] private RoundSelectMenu menu;
 
-		private void Start()
-		{
+		private void Start() {
 			if (menu == null) throw new UnityException("Round Select Menu not found!");
 
 			/* When a button is pressed, add the number
 			 * on its label to the level index. */
 			string label = GetComponentInChildren<Text>().text;
-			if (int.TryParse(label, out numberOnLabel))
-			{
+			if (int.TryParse(label, out numberOnLabel)) {
 				GetComponent<Button>().onClick
-					.AddListener(() =>
-					{
+					.AddListener(() => {
 						menu.RoundToPlay += numberOnLabel;
 					}
 				);

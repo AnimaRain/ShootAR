@@ -1,5 +1,5 @@
-﻿using UnityEngine.SceneManagement;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ShootAR.Menu
 {
@@ -7,7 +7,7 @@ namespace ShootAR.Menu
 	/// Most functions of this class are assigned as events on buttons
 	/// through the Inspector in the Editor.
 	/// </remarks>
-	public class MenuManager: MonoBehaviour
+	public class MenuManager : MonoBehaviour
 	{
 
 		private AudioSource sfx;
@@ -22,22 +22,19 @@ namespace ShootAR.Menu
 		[SerializeField] private MuteButton muteButton;
 
 
-		private void Awake()
-		{
+		private void Awake() {
 #if UNITY_ANDROID && !UNITY_EDITOR
 			Debug.unityLogger.logEnabled = false;
 #endif
 		}
 
-		private void Start()
-		{
+		private void Start() {
 			Application.runInBackground = false;
 
 			sfx = gameObject.AddComponent<AudioSource>();
 		}
 
-		public void ToStartMenu()
-		{
+		public void ToStartMenu() {
 			mainMenu.SetActive(false);
 			subMenu.SetActive(true);
 			startMenu.SetActive(true);
@@ -45,13 +42,11 @@ namespace ShootAR.Menu
 			sfx.PlayOneShot(select, 1.2F);
 		}
 
-		public void StartGame()
-		{
+		public void StartGame() {
 			SceneManager.LoadScene(1);
 		}
 
-		public void ToRoundSelect()
-		{
+		public void ToRoundSelect() {
 			mainMenu.SetActive(false);
 			subMenu.SetActive(true);
 			roundMenu.SetActive(true);
@@ -59,15 +54,13 @@ namespace ShootAR.Menu
 			sfx.PlayOneShot(select, 1.2F);
 		}
 
-		public void ToCredits()
-		{
+		public void ToCredits() {
 			mainMenu.SetActive(false);
 			subMenu.SetActive(true);
 			creditsMenu.SetActive(true);
 		}
 
-		public void ToMainMenu()
-		{
+		public void ToMainMenu() {
 			creditsMenu.SetActive(false);
 			startMenu.SetActive(false);
 			roundMenu.SetActive(false);
@@ -77,8 +70,7 @@ namespace ShootAR.Menu
 			sfx.PlayOneShot(back, 1.5F);
 		}
 
-		public void QuitApp()
-		{
+		public void QuitApp() {
 #if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 #endif
