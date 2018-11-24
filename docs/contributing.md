@@ -55,7 +55,7 @@ code easier. [Here](/docs/coding-style.md) are the conventions that apply to thi
 ### Tests
 Writing tests is important. All code written should be testable, although it is not always applicable; testing the UI
 for example. The tests are run using the tools provided in the Unity editor. If you prefer TDD or writing tests after
-or any other way, it is your own choice. Write simple and one–thing focused tests.
+or any other way, it is your own choice. Write simple and oneâ€“thing focused tests.
 
 The limitations imposed by Unity's *MonoBehaviour* class make it difficult to write unit tests
 without making the code more complicated than it should be.
@@ -74,7 +74,7 @@ It is very important to work in one problem at a time. This allows to document t
 of the code in a clear manner. Break up the problem at task in as many smaller parts as you see
 fit! Consider those smaller parts your milestones. When a milestone is reached, commit your changes.
 
-Read this very well–written [guide by Chris Beams](https://chris.beams.io/posts/git-commit/)
+Read this very wellâ€“written [guide by Chris Beams](https://chris.beams.io/posts/git-commit/)
 on how to write good commits.
 
 Follow the classic style of writing a commit: i) a brief summary of what was changed, ii) an empty line iii) followed by a more
@@ -95,7 +95,7 @@ e.g. "Applying this commit will *Fix wrong number shown in defeat message*".
 
 Each commit should be focused on a distinct objective.<br/>For example, the previous example was taken from
 [this commit](https://github.com/AnimaRain/ShootAR/pull/23/commits/b597f7672a6b003c984da2e1c17e5ceca79396b0). This should
-have been two commits. The first being the fixing of the bug and the other the code clean–up; somewhat like
+have been two commits. The first being the fixing of the bug and the other the code cleanâ€“up; somewhat like
 the previous and the following examples:
 ```
 Clean up code
@@ -123,7 +123,7 @@ make mistakes.** By keeping commits visible, one can learn from previous mistake
 intentions of the coder, and it is easier to find the point at which a mistake was made.
 
 #### Push to upstream
-Before uploading anything read the [license section](#license). Also, if you have intention of uploading anything
+Before uploading anything read the [license section](/README.md#license). Also, if you have intention of uploading anything
 that has been made by a third party, make sure that you have their permission and that there is no conflicts with
 the license and principles of this project. They should, also, be credited. Make sure that none of the files to be
 uploaded contain any personal info, either yours or an other's, or any information regarding security, like passwords
