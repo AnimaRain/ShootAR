@@ -113,7 +113,7 @@ To start playing with a higher difficulty, go to *Select* in the main menu and c
 (warning: see (1) in the [known issues section](#known-issues).
 
 ## Contributing
-Feel free to contribute to this project. To learn how you could help, read the ["Contributing"](/contributing.md) page.
+Feel free to contribute to this project. To learn how you could help, read the ["Contributing"](/docs/contributing.md) page.
 
 You could, also, just share the game with your friends. It is and will always be free.
 
@@ -144,6 +144,6 @@ Ioannis Tantaoui
 ## Credits
 A thank–you to Petros Kouvariotis for being an awesome friend, playtester and supporter!
 
-Unity store assets used:
+Unity store assets used:<br/>
 Drone: https://assetstore.unity.com/packages/3d/low-poly-combat-drone-82234<br/>
 Crasher: https://assetstore.unity.com/packages/3d/characters/aaron-s-assets-89273
