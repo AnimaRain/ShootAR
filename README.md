@@ -13,6 +13,9 @@ or discrepancy in this readme, you are more than welcome to open a new issue or 
 1. [Requirements](#requirements)
 2. [Installation](#installation)
 3. [Building](#building)
+   1. [Required software](#required-software)
+   2. [Downloading the source files](#downloading-the-source-files)
+   3. [Compiling into APK](#compiling-into-apk)
 4. [How to play](#how-to-play)
 5. [Contributing](#contributing)
 6. [Known issues](#known-issues)
@@ -35,9 +38,12 @@ Enable "Unknown Sources" in the phone's (Security) settings.*
 If you want to built it yourself, you can follow the [instructions below](#building).
 
 ## Building
+### Required software
 In order to build the project yourself, you will need to have [Unity](https://unity3d.com/) installed.
 (If you meet the legal requirements, the [personal](https://store.unity.com/download?ref=personal) plan will do just fine.)
+(*Know that the Unity editor runs only under Windows and Mac.*)
 
+### Downloading the source files
 Download the latest released source files from [here](https://github.com/AnimaRain/ShootAR). If you prefer a previous
 or a test version, visit the [releases](https://github.com/AnimaRain/ShootAR/releases) page.
 
@@ -51,9 +57,13 @@ git clone git@github.com:AnimaRain/ShootAR.git <directory>
 ```
 where `<directory>` is the path to the desired location to download the files.
 
-Create folder `apk` in the
+### Compiling into APK
+Decompress the files if downloaded the ZIP or tarball version.
 
-Decompress the files and open the project folder in Unity:
+Create a folder named "apk" in the root of the project. (Technically, any folder would
+be fine, but we have instructed git to ignore this one.)
+
+Open the project folder in Unity:
 * go to `File` –> `Build Settings...`
 * if the selected platform is not Android, select it and hit the `Switch Platform` button
 * set build system to `Gradle`
@@ -99,8 +109,8 @@ the phone around to find them, line them up with the aim–dot and tap the scree
 you get points. Destroying the capsules floating around you, gives you more bullets. Defeat all enemies to advance to the
 next level. The game is over when player runs out of bullets or health.
 
-To start playing with a higher difficulty, go to *Select* in the main menu and choose the starting level. (warning,
-see (1) in the [known issues section](#known-issues).
+To start playing with a higher difficulty, go to *Select* in the main menu and choose the starting level.
+(warning: see (1) in the [known issues section](#known-issues).
 
 ## Contributing
 Feel free to contribute to this project. To learn how you could help, read the ["Contributing"](/contributing.md) page.
@@ -125,7 +135,7 @@ The general gist translated in Human is that you can pretty much do anything you
 If you believe that your work has been published to this repository without permission, please contact me at
 ioannis_spyr@yahoo.gr.
 
-## FAQ
+## ~FAQ~
 
 ## Authors
 John Spyropoulos, a.k.a. AnimaRain \<ioannis_spyr@yahoo.gr\> | [@rainsoulwhisper](https://twitter.com/rainsoulwhisper)<br/>
@@ -134,5 +144,6 @@ Ioannis Tantaoui
 ## Credits
 A thank–you to Petros Kouvariotis for being an awesome friend, playtester and supporter!
 
+Unity store assets used:
 Drone: https://assetstore.unity.com/packages/3d/low-poly-combat-drone-82234<br/>
 Crasher: https://assetstore.unity.com/packages/3d/characters/aaron-s-assets-89273

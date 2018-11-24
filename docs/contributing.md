@@ -38,7 +38,9 @@ issue before submitting it, by selecting the "Preview" tab.
 
 ## Developing the project
 ### Development environment
-Make sure you have also read the ["Building"](/README.md#building) section in the readme file.
+Make sure to also read the ["Building"](/README.md#building) section in the readme file for
+[additional software requirements](/README.md#required-software) and instruction on how to
+build the project.
 
 On Windows, it is required to have a tool that can reliably utilize git's full potential, like
 [git for Windows](https://gitforwindows.org/).
