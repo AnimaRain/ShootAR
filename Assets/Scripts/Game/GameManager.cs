@@ -100,18 +100,18 @@ namespace ShootAR
 
 			cam.Play();
 			backgroundTexture.texture = cam;
-            backgroundTexture.rectTransform
+			backgroundTexture.rectTransform
 				.localEulerAngles = new Vector3(0, 0, cam.videoRotationAngle);
 			float scaleY = cam.videoVerticallyMirrored ? -1.0f : 1.0f;
-            float videoRatio = (float)cam.width / (float)cam.height;
-            backgroundTexture.rectTransform.localScale = new Vector3(scaleY, scaleY/videoRatio, 1);  //Through testing i found out that using these settings makes the most optimal outcome
-           
-            /*
+			float videoRatio = (float)cam.width / (float)cam.height;
+			backgroundTexture.rectTransform.localScale = new Vector3(scaleY, scaleY / videoRatio, 1);  //Through testing i found out that using these settings makes the most optimal outcome
+
+			/*
 #if UNITY_ANDROID
             backgroundTexture.rectTransform.localScale = new Vector3(Screen.width, Screen.height, 0);    //Didnt try this, but got the inspiration from it
 #endif
             */
-            fireButton?
+			fireButton?
 				.onClick.AddListener(() => {
 					if (gameState.GameOver) {
 						SceneManager.LoadScene(1);
@@ -209,7 +209,7 @@ namespace ShootAR
 #endif
 
 			foreach (var s in spawner) {
-#region Spawn Patterns
+				#region Spawn Patterns
 
 				if (s.Key == typeof(Crasher))
 					s.Value.StartSpawning(
@@ -250,7 +250,7 @@ namespace ShootAR
 #endregion
 				}
 				*/
-#endregion
+				#endregion
 			}
 
 			gameState.RoundWon = false;
