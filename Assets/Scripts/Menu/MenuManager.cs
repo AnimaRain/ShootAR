@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace ShootAR.Menu
 {
@@ -12,39 +13,29 @@ namespace ShootAR.Menu
 
 		private AudioSource sfx;
 
-		[SerializeField] private GameObject mainMenu;
+		[SerializeField] private GameObject menu;
 		[SerializeField] private GameObject subMenu;
-		[SerializeField] private GameObject creditsMenu;
-		[SerializeField] private GameObject startMenu;
 		[SerializeField] private GameObject roundMenu;
-		[SerializeField] private AudioClip select;
+        [SerializeField] private GameObject mainMenu;
+        [SerializeField] private GameObject game;
+        [SerializeField] private GameObject gameui;
+        [SerializeField] private GameObject clouds;
+        [SerializeField] private AudioClip select;
 		[SerializeField] private AudioClip back;
-		[SerializeField] private MuteButton muteButton;
+        private bool toggleBool = false;
 
+        void Start()
+        {
+            sfx = gameObject.AddComponent<AudioSource>();
+            Screen.lockCursor = true;
+        }
 
-		private void Awake() {
-#if UNITY_ANDROID && !UNITY_EDITOR
-			Debug.unityLogger.logEnabled = false;
-#endif
-		}
-
-		private void Start() {
-			Application.runInBackground = false;
-
-			sfx = gameObject.AddComponent<AudioSource>();
-		}
-
-		public void ToStartMenu() {
-			mainMenu.SetActive(false);
-			subMenu.SetActive(true);
-			startMenu.SetActive(true);
-
-			sfx.PlayOneShot(select, 1.2F);
-		}
-
-		public void StartGame() {
-			SceneManager.LoadScene(1);
-		}
+		public void StartGame() { 
+            menu.SetActive(false);
+            gameui.SetActive(true);
+            Screen.lockCursor = false;
+            game.SetActive(true);
+        }
 
 		public void ToRoundSelect() {
 			mainMenu.SetActive(false);
@@ -54,27 +45,25 @@ namespace ShootAR.Menu
 			sfx.PlayOneShot(select, 1.2F);
 		}
 
-		public void ToCredits() {
-			mainMenu.SetActive(false);
-			subMenu.SetActive(true);
-			creditsMenu.SetActive(true);
-		}
 
 		public void ToMainMenu() {
-			creditsMenu.SetActive(false);
-			startMenu.SetActive(false);
-			roundMenu.SetActive(false);
+            roundMenu.SetActive(false);
 			subMenu.SetActive(false);
-			mainMenu.SetActive(true);
-
-			sfx.PlayOneShot(back, 1.5F);
+            mainMenu.SetActive(true);
+            sfx.PlayOneShot(back, 1.5F);
 		}
 
-		public void QuitApp() {
-#if UNITY_EDITOR
-			UnityEditor.EditorApplication.isPlaying = false;
-#endif
-			Application.Quit();
-		}
+        public void ActivateClouds()
+        {
+            toggleBool = !toggleBool;
+            clouds.SetActive(toggleBool);
+            Debug.LogError("There is the secret button");
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                Application.Quit();
+        }                
 	}
 }

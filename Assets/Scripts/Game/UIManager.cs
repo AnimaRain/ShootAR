@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using UnityEngine.UI;
 
 namespace ShootAR
@@ -13,7 +14,9 @@ namespace ShootAR
 		[SerializeField] private Text roundIndex;
 		[SerializeField] private Button pauseToMenuButton;
 		[SerializeField] private GameState gameState;
-		private AudioSource sfx;
+        [SerializeField] private GameManager gameManager;
+        [SerializeField] private ShootAR.Menu.MenuManager menuManager;
+        private AudioSource sfx;
 		[SerializeField]
 		private AudioClip pauseSfx;
 
@@ -69,10 +72,8 @@ namespace ShootAR
 			else Debug.LogWarning("Pause audio-clip has not been assigned.");
 
 			pauseToMenuButton?.onClick.AddListener(() => {
-				gameState.Paused = false;
-				UnityEngine.SceneManagement.SceneManager
-					.LoadScene(0);
-			});
+                gameManager.Restart();
+            });
 		}
 
 		public void TogglePauseMenu() {

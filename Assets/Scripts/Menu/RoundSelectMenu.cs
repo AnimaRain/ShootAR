@@ -20,7 +20,7 @@ namespace ShootAR.Menu
 		/// the text label shown in the menu UI
 		/// </summary>
 		[SerializeField]
-		private Text labelOnUI;
+		private TextMesh labelOnUI;
 
 		private void OnEnable() {
 			if (RoundToPlay < 1) RoundToPlay = 1;
