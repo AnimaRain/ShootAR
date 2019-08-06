@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class CapsuleTests
+public class CapsuleTests : ShootAR.TestTools.TestBase
 {
 
 	[UnityTest]
@@ -29,18 +29,11 @@ public class CapsuleTests
 	 * 
 	 * Maybe this belongs elsewhere. Maybe in spawners...
 	 * ...or in an other game-logic system?
-	 * 
+	 */
 	[UnityTest]
+	[Ignore("Not yet implemented")]
 	public IEnumerator BonusCapsuleAppearsAfterKillingXEnemiesConsecutively()
 	{
 		yield return null;
-	}
-	*/
-
-	[TearDown]
-	public void ClearEnvironment() {
-		var objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects)
-			Object.Destroy(o.gameObject);
 	}
 }

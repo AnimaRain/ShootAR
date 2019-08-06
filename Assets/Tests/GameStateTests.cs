@@ -5,7 +5,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class GameStateTests
+public class GameStateTests : TestBase
 {
 	[UnityTest]
 	public IEnumerator UseLastShotToHitCapsuleAndTakeBullets() {
@@ -67,12 +67,5 @@ public class GameStateTests
 			"The game must not end if the last enemy dies by the last bullet.");
 		Assert.True(gameState.RoundWon,
 			"The round should be won when the last enemy dies by the last bullet.");
-	}
-
-	[TearDown]
-	public void CleanUp() {
-		var objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects)
-			Object.Destroy(o.gameObject);
 	}
 }

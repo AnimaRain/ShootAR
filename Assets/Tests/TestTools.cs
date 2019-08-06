@@ -1,5 +1,6 @@
 ﻿using ShootAR.Enemies;
 using UnityEngine;
+using NUnit.Framework;
 
 namespace ShootAR.TestTools
 {
@@ -87,6 +88,18 @@ namespace ShootAR.TestTools
 		public static TestTarget Create() {
 			var o = new GameObject("TestTarget").AddComponent<TestTarget>();
 			return o;
+		}
+	}
+
+	public class TestBase
+	{
+		[TearDown]
+		public void ClearTestEnvironment() {
+			GameObject[] objects = Object.FindObjectsOfType<GameObject>();
+
+			foreach (GameObject o in objects) {
+				Object.Destroy(o.gameObject);
+			}
 		}
 	}
 }

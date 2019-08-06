@@ -6,7 +6,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-internal class SpawnerTests
+internal class SpawnerTests : TestBase
 {
 
 	[UnityTest]
@@ -164,13 +164,5 @@ internal class SpawnerTests
 		Assert.LessOrEqual(spawner.SpawnCount, Spawnable.GLOBAL_SPAWN_LIMIT,
 			"Spawners must respect the global spawn limit."
 		);
-	}
-
-	[TearDown]
-	public void ClearTestEnvironment() {
-		GameObject[] objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects) {
-			Object.Destroy(o.gameObject);
-		}
 	}
 }

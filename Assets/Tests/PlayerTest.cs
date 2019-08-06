@@ -5,7 +5,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-internal class PlayerTest
+internal class PlayerTest : TestBase
 {
 	[UnityTest]
 	public IEnumerator PlayerCanShoot() {
@@ -121,14 +121,5 @@ internal class PlayerTest
 
 		Assert.AreEqual(Player.MAXIMUM_HEALTH - bullet.damage, player.Health,
 			"Second hit must not damage player, since there is a cooldown.");
-	}
-
-	[TearDown]
-	public void ClearTestEnvironment() {
-		GameObject[] objects = Object.FindObjectsOfType<GameObject>();
-
-		foreach (GameObject o in objects) {
-			Object.Destroy(o.gameObject);
-		}
 	}
 }
