@@ -56,7 +56,7 @@ namespace ShootAR
 		[SerializeField] private GameState gameState;
 		[SerializeField] private AudioClip spawnSfx;
 		[SerializeField] private GameObject portal;
-		private AudioSource sfx;
+		private AudioSource audioPlayer;
 
 		private void Awake() {
 			//Initial value should not be 0 to refrain from enabling
@@ -90,9 +90,9 @@ namespace ShootAR
 
 		private void Start() {
 			if (spawnSfx != null) {
-				sfx = gameObject.AddComponent<AudioSource>();
-				sfx.clip = spawnSfx;
-				sfx.volume = 0.2f;
+				audioPlayer = gameObject.AddComponent<AudioSource>();
+				audioPlayer.clip = spawnSfx;
+				audioPlayer.volume = 0.2f;
 			}
 		}
 
@@ -124,13 +124,20 @@ namespace ShootAR
 		/// Automaticaly called through <see cref="StartSpawning"/>. Iteration will
 		/// stop when the limit defined by <see cref="SpawnLimit"/> is reached or
 		/// can be manually stopped, using <see cref="StopSpawning"/>.
+		///
+		/// The spawner changes its position and rotation before spawning an
+		/// object. The object is spawned at the same position and with the same
+		/// rotation as the spawner.
+		///
+		/// A pool containing copies of <see cref="objectToSpawn"/> is required.
 		/// </remarks>
-		public IEnumerator Spawn() {
+		/// <seealso cref="Spawnable.Pool{T}"/>
+		private IEnumerator Spawn() {
 			yield return new WaitForSeconds(InitialDelay);
 			while (IsSpawning) {
 				yield return new WaitForSeconds(SpawnRate);
 
-				/* IsSpawning is checked here, in case StopSpawning() is called
+				/* IsSpawning is checked here in case StopSpawning() is called
 				 * while being in the middle of this function call. */
 				if (!IsSpawning) break;
 				if (SpawnCount >= Spawnable.GLOBAL_SPAWN_LIMIT) continue;
@@ -151,7 +158,7 @@ namespace ShootAR
 					Instantiate(portal,
 						transform.localPosition, transform.localRotation);
 				if (spawnSfx != null)
-					sfx.Play();
+					audioPlayer.Play();
 
 				var spawned = Instantiate(ObjectToSpawn,
 					transform.localPosition, transform.localRotation);

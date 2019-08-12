@@ -40,7 +40,8 @@ internal class MovementBehaviourTests
 		OrbitTester orbiter = Object.Instantiate(
 			new GameObject("TestObject").AddComponent<OrbitTester>());
 		orbiter.transform.Translate(startingPoint);
-		//FIXME: orbiter.Speed = 100f;
+		/*FIXME: Fix this line
+		 * orbiter.Speed = 100f; */
 		var oCollider = orbiter.gameObject.AddComponent<SphereCollider>();
 		oCollider.radius = 1f;
 

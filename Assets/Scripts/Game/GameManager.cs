@@ -68,7 +68,7 @@ namespace ShootAR
 			}
 
 			//Set up the rear camera
-			for (int i = 0;i < WebCamTexture.devices.Length;i++) {
+			for (int i = 0; i < WebCamTexture.devices.Length; i++) {
 				if (!WebCamTexture.devices[i].isFrontFacing) {
 					cam = new WebCamTexture(WebCamTexture.devices[i].name, Screen.width, Screen.height);
 					break;

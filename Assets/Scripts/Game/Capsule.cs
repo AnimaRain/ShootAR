@@ -25,7 +25,7 @@ namespace ShootAR
 			o.Type = type;
 			o.Speed = speed;
 			o.player = player;
-			o.GameState = gameState;
+			o.gameState = gameState;
 			return o;
 		}
 

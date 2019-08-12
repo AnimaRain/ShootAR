@@ -33,6 +33,7 @@ namespace ShootAR.TestTools
 		protected override void OnDestroy() { ActiveCount--; }
 	}
 
+	//FIXME: Inherit from EnemyBullet.
 	/// <summary>
 	/// Bullet to test hitting player
 	/// </summary>
@@ -65,9 +66,6 @@ namespace ShootAR.TestTools
 			hit = true;
 		}
 	}
-
-	internal class TestShooter : Pyoopyoo { private new void OnDestroy() { ActiveCount--; } }
-	internal class TestMeleer : Boopboop { private new void OnDestroy() { ActiveCount--; } }
 
 	/// <summary>
 	/// Target for testing purposes.

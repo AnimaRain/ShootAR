@@ -22,8 +22,7 @@ public class CapsuleTests : ShootAR.TestTools.TestBase
 		Assert.Greater(player.Ammo, 0);
 	}
 
-	//UNDONE:
-	/* Tests for conditional-capsule
+	/*UNDONE: Tests for conditional-capsule
 	 * e.g. Capsules that appears after performing a combo, killing a couple of
 	 * enemies in row without missing.
 	 * 
