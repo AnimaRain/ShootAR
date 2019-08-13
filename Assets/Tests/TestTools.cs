@@ -89,6 +89,22 @@ namespace ShootAR.TestTools
 		}
 	}
 
+	/// <summary>
+	/// Bare bones <see cref="Spawnable"/> object for test purposes.
+	/// </summary>
+	internal class TestObject : Spawnable
+	{
+		public static TestObject Create(
+			float speed = default,
+			float x = 0, float y = 0, float z = 0,
+			GameState gameState = null) {
+			var o = new GameObject(nameof(TestObject)).AddComponent<TestObject>();
+			o.Speed = speed;
+			o.transform.position = new Vector3(x, y, z);
+			return o;
+		}
+	}
+
 	public class TestBase
 	{
 		[TearDown]
