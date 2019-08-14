@@ -38,6 +38,10 @@ namespace ShootAR
 			ActiveCount++;
 		}
 
+		public override void ResetState() {
+			throw new System.NotImplementedException();
+		}
+
 		protected void OnTriggerEnter(Collider col) {
 			if (col.GetComponent<Enemies.Enemy>() || col.GetComponent<Capsule>()) {
 				Destroy(col.gameObject);

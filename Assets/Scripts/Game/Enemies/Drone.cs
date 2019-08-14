@@ -12,6 +12,10 @@ namespace ShootAR.Enemies
 		/// </summary>
 		protected float nextShot;
 
+		public override void ResetState() {
+			throw new System.NotImplementedException();
+		}
+
 		protected void FixedUpdate() {
 			if (!gameState.GameOver) {
 				if (lastBullet == null && Time.time > nextShot) {

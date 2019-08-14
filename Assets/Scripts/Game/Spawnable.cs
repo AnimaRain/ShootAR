@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace ShootAR
 {
+	[RequireComponent(typeof(Transform))]
 	public abstract class Spawnable : MonoBehaviour
 	{
 		public const int GLOBAL_SPAWN_LIMIT = 50;
@@ -20,57 +21,81 @@ namespace ShootAR
 		/// Reference to the object holding the game state.
 		/// </summary>
 		protected GameState gameState;
+
 		/// <summary>
-		/// Setter for <see cref="Spawner"/>s to set a spawned object's game state.
+		/// Contains object pools that hold already instantiated objects ready
+		/// to be used when requested.
 		/// </summary>
-		public GameState GameState {
-			set { gameState = value; }
+		/// <typeparam name="T">
+		/// The type of object to match to a pool
+		/// </typeparam>
+		public static class Pool<T> where T : Spawnable
+		{
+			internal static Stack<T> objectStack = new Stack<T>(GLOBAL_SPAWN_LIMIT);
+
+			/// <summary>
+			/// The number of objects available in the pool
+			/// </summary>
+			public static int Count { get => objectStack.Count; }
+
+			/// <summary>
+			/// Fill the appropriate pool with copies of
+			/// <paramref name="referenceObject"/>.
+			/// </summary>
+			/// <param name="referenceObject"></param>
+			public static void Populate(T referenceObject) {
+				if (objectStack.Count > 0)
+					throw new UnityException("Trying to populate an already populated pool.");
+				else
+					for (int i = 0; i < GLOBAL_SPAWN_LIMIT; i++) {
+						T spawnedObject = Instantiate(referenceObject);
+						spawnedObject.gameObject.SetActive(false);
+						objectStack.Push(spawnedObject);
+					}
+			}
+
+			/// <summary>
+			/// Request an object of type <typeparamref name="T"/> from the
+			/// appropriate pool.
+			/// </summary>
+			/// <remarks><list type="bullet">
+			/// <item>Use <see cref="ResetState(Vector3, Quaternion)"/> before
+			/// using an object to set its initial values.</item>
+			/// <item>Returned object's <c>gameObject</c> need to be
+			/// activated manually.</item>
+			/// </list></remarks>
+			/// <returns>
+			/// reference to an available object of type <typeparamref name="T"/>
+			/// </returns>
+			public static T RequestObject() {
+				if (objectStack.Count == 0) return null;
+
+				return objectStack.Pop();
+			}
 		}
 
 		/// <summary>
-		/// A container of object pools.
+		/// Object is deactivated and returns to the pool to be used again when
+		/// needed.
 		/// </summary>
-		private static Dictionary<System.Type, Stack<Spawnable>> pools;
-
-		/// <summary>
-		/// Get the types of available object pools.
-		/// </summary>
-		/// <returns>an array containing the types</returns>
-		public static System.Type[] GetPools() {
-			System.Type[] types = new System.Type[pools.Count];
-			pools.Keys.CopyTo(types, 0);
-			return types;
-		}
-
-		/// <summary>
-		/// Request an object of type <typeparamref name="T"/> from the
-		/// appropriate pool.
-		/// </summary>
-		/// <typeparam name="T">The type of object to match to a pool</typeparam>
-		/// <returns>
-		/// reference to an available object of type <typeparamref name="T"/>
-		/// </returns>
-		public static T RequestObject<T>() where T : Spawnable {
-			//TODO: Check if there are available objects.
-			//TODO: Expand and repopulate pool if necessary.
-			T availableObject = (T)pools[typeof(T)].Pop();
-			//TODO: Create Initialize method
-			availableObject.ResetState();
-			return availableObject;
-		}
-
-		/// <summary>
-		/// Instead of destroying the object, deactivates and returns it to the pool
-		/// to be used again when needed.
-		/// </summary>
-		public void ReturnToPool() {
+		public void ReturnToPool<T>() where T : Spawnable {
 			gameObject.SetActive(false);
-			pools[GetType()].Push(this);
+			Pool<T>.objectStack.Push((T)this);
 		}
 
 		/// <summary>
-		/// Return the object to an "as new" state so it can be used again.
+		/// Set the desired values to prepare the object to be reused.
 		/// </summary>
-		protected virtual void ResetState() {}
+		public virtual void ResetState(Vector3 position, Quaternion rotation,
+				float speed = default) {
+			transform.position = position;
+			transform.rotation = rotation;
+			this.speed = speed;
+		}
+
+		/// <summary>
+		/// Reset object using the default values stored in the XML file.
+		/// </summary>
+		public abstract void ResetState();
 	}
 }

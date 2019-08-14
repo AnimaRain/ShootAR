@@ -34,6 +34,10 @@ namespace ShootAR
 			pickUpSfx = GetComponent<AudioSource>();
 		}
 
+		public override void ResetState() {
+			throw new System.NotImplementedException();
+		}
+
 		private void Update() {
 			//rotation
 			transform.Rotate(rotation * Time.deltaTime);

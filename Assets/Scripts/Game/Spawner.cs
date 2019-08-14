@@ -160,13 +160,30 @@ namespace ShootAR
 				if (spawnSfx != null)
 					audioPlayer.Play();
 
-				var spawned = Instantiate(ObjectToSpawn,
-					transform.localPosition, transform.localRotation);
-				spawned.GameState = gameState;
+				/* Make checks for each and every type of Spawnable, because
+				 * a class inheriting from MonoBehaviour cannot be a generic
+				 * class. */
+				if (objectToSpawn is Enemies.Boopboop)
+					ResetAndActivate<Enemies.Boopboop>();
+				else if (objectToSpawn is Capsule)
+					ResetAndActivate<Capsule>();
+				else
+					throw new UnityException(
+						$"Spawner cannot spawn this type of object.");
+
 				SpawnCount++;
 
 				if (SpawnCount == SpawnLimit) StopSpawning();
 			}
+		}
+
+		private void ResetAndActivate<T>() where T : Spawnable{
+			var spawned = Spawnable.Pool<Capsule>.RequestObject();
+			spawned.ResetState(
+				position: transform.localPosition,
+				rotation: transform.localRotation,
+				speed: objectToSpawn.Speed);
+			spawned.gameObject.SetActive(true);
 		}
 
 		/// <summary>

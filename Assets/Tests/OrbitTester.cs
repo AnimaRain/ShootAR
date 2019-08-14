@@ -18,4 +18,8 @@ public class OrbitTester : Enemy
 		Debug.DrawLine(transform.position, orbit.direction);
 		Debug.DrawLine(transform.position, orbit.perpendicularAxis, Color.magenta);
 	}
+
+	public override void ResetState() {
+		throw new System.NotImplementedException();
+	}
 }

@@ -9,23 +9,22 @@ using UnityEngine.TestTools;
 internal class SpawnerTests : TestBase
 {
 	[UnityTest]
-	public IEnumerator SpawnerCanSpawn() {
+	public IEnumerator SpawnerFetchesFromPool() {
 		Spawner spawner = Spawner.Create(
-			objectToSpawn: TestEnemy.Create(),
+			objectToSpawn: Capsule.Create(0, 0),
 			spawnLimit: 1,
 			initialDelay: 0,
 			spawnRate: 1,
 			maxDistanceToSpawn: 50,
 			minDistanceToSpawn: 20
 		);
+		Spawnable.Pool<Capsule>.Populate((Capsule)spawner.ObjectToSpawn);
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
 
-		var spawnedObject = Object.FindObjectsOfType<Spawnable>();
-		// Subtract 1 from the length, because a Spawnable was created
-		// earlier by TestEnemy.Create.
-		Assert.AreEqual(1, spawnedObject.Length - 1, "Spawned object not found.");
+		Assert.Less(Spawnable.Pool<Capsule>.Count, Spawnable.GLOBAL_SPAWN_LIMIT,
+				"Pool population is not diminishing.");
 	}
 
 	[UnityTest]

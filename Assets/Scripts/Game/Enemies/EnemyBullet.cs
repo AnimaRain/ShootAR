@@ -9,6 +9,10 @@ namespace ShootAR.Enemies
 			MoveTo(Vector3.zero);
 		}
 
+		public override void ResetState() {
+			throw new System.NotImplementedException();
+		}
+
 		public override void Attack(Player target) {
 			base.Attack(target);
 			Destroy(gameObject);

@@ -30,6 +30,10 @@ namespace ShootAR.TestTools
 			GetComponent<Rigidbody>().useGravity = false;
 		}
 
+		public override void ResetState() {
+			throw new System.NotImplementedException();
+		}
+
 		protected override void OnDestroy() { ActiveCount--; }
 	}
 
@@ -87,6 +91,10 @@ namespace ShootAR.TestTools
 			var o = new GameObject("TestTarget").AddComponent<TestTarget>();
 			return o;
 		}
+
+		public override void ResetState() {
+			throw new System.NotImplementedException();
+		}
 	}
 
 	/// <summary>
@@ -102,6 +110,10 @@ namespace ShootAR.TestTools
 			o.Speed = speed;
 			o.transform.position = new Vector3(x, y, z);
 			return o;
+		}
+
+		public override void ResetState() {
+			throw new System.NotImplementedException();
 		}
 	}
 
