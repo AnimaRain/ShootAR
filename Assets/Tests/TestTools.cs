@@ -126,6 +126,8 @@ namespace ShootAR.TestTools
 			foreach (GameObject o in objects) {
 				Object.Destroy(o.gameObject);
 			}
+
+			Spawnable.Pool<Capsule>.Empty();
 		}
 	}
 }

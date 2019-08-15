@@ -43,11 +43,11 @@ namespace ShootAR
 			/// <paramref name="referenceObject"/>.
 			/// </summary>
 			/// <param name="referenceObject"></param>
-			public static void Populate(T referenceObject) {
+			public static void Populate(T referenceObject, int lot = GLOBAL_SPAWN_LIMIT) {
 				if (objectStack.Count > 0)
 					throw new UnityException("Trying to populate an already populated pool.");
 				else
-					for (int i = 0; i < GLOBAL_SPAWN_LIMIT; i++) {
+					for (int i = 0; i < lot; i++) {
 						T spawnedObject = Instantiate(referenceObject);
 						spawnedObject.gameObject.SetActive(false);
 						objectStack.Push(spawnedObject);
@@ -72,12 +72,19 @@ namespace ShootAR
 
 				return objectStack.Pop();
 			}
+
+			public static void Empty() {
+				objectStack.Clear();
+			}
 		}
 
 		/// <summary>
 		/// Object is deactivated and returns to the pool to be used again when
 		/// needed.
 		/// </summary>
+		/// <typeparam name="T">
+		/// the type of pool the object will be returned to
+		/// </typeparam>
 		public void ReturnToPool<T>() where T : Spawnable {
 			gameObject.SetActive(false);
 			Pool<T>.objectStack.Push((T)this);
