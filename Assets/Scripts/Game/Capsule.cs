@@ -2,7 +2,8 @@
 
 namespace ShootAR
 {
-	[RequireComponent(typeof(AudioSource))]
+	[RequireComponent(typeof(AudioSource)),
+	 RequireComponent(typeof(CapsuleCollider))]
 	public class Capsule : Spawnable
 	{
 		public enum CapsuleType
@@ -20,12 +21,17 @@ namespace ShootAR
 		[SerializeField] private Player player;
 
 		public static Capsule Create(CapsuleType type, float speed,
-				Player player = null, GameState gameState = null) {
+				Player player = null) {
 			var o = new GameObject(nameof(Capsule)).AddComponent<Capsule>();
 			o.Type = type;
 			o.Speed = speed;
 			o.player = player;
-			o.gameState = gameState;
+
+			var capsuleCollider = o.GetComponent<CapsuleCollider>();
+			capsuleCollider.isTrigger = true;
+			capsuleCollider.radius = 0.5f;
+			capsuleCollider.height = 2f;
+
 			return o;
 		}
 
@@ -45,14 +51,13 @@ namespace ShootAR
 			transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
 		}
 
-		protected void OnDestroy() {
-			if (gameState != null ? gameState.GameOver : false) return;
-
+		public override void Destroy() {
 			GivePowerUp();
 			pickUpSfx?.Play();
+			ReturnToPool<Capsule>();
 		}
 
-		public void GivePowerUp() {
+		private void GivePowerUp() {
 			switch (Type) {
 				case 0:
 					if (player != null)

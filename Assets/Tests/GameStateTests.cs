@@ -19,8 +19,7 @@ public class GameStateTests : TestBase
 		Capsule capsule = Capsule.Create(
 			type: Capsule.CapsuleType.Bullet,
 			speed: 0,
-			player: player,
-			gameState: gameState);
+			player: player);
 
 		// Create an enemy to stop game manager from switching state to "round won".
 		var enemy = TestTarget.Create();

@@ -22,4 +22,8 @@ public class OrbitTester : Enemy
 	public override void ResetState() {
 		throw new System.NotImplementedException();
 	}
+
+	public override void Destroy() {
+		throw new System.NotImplementedException();
+	}
 }

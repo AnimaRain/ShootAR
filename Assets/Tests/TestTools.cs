@@ -35,6 +35,10 @@ namespace ShootAR.TestTools
 		}
 
 		protected override void OnDestroy() { ActiveCount--; }
+
+		public override void Destroy() {
+			throw new System.NotImplementedException();
+		}
 	}
 
 	//FIXME: Inherit from EnemyBullet.
@@ -78,7 +82,7 @@ namespace ShootAR.TestTools
 	{
 		public bool GotHit { get; private set; }
 
-		public void OnTriggerEnter(Collider other) {
+		public new void OnTriggerEnter(Collider other) {
 			if (other.GetComponent<Bullet>() != null)
 				GotHit = true;
 		}
@@ -93,6 +97,10 @@ namespace ShootAR.TestTools
 		}
 
 		public override void ResetState() {
+			throw new System.NotImplementedException();
+		}
+
+		public override void Destroy() {
 			throw new System.NotImplementedException();
 		}
 	}
@@ -110,6 +118,10 @@ namespace ShootAR.TestTools
 			o.Speed = speed;
 			o.transform.position = new Vector3(x, y, z);
 			return o;
+		}
+
+		public override void Destroy() {
+			throw new System.NotImplementedException();
 		}
 
 		public override void ResetState() {

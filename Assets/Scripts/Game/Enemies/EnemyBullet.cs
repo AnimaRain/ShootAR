@@ -17,5 +17,9 @@ namespace ShootAR.Enemies
 			base.Attack(target);
 			Destroy(gameObject);
 		}
+
+		public override void Destroy() {
+			throw new System.NotImplementedException();
+		}
 	}
 }

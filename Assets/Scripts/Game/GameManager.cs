@@ -268,7 +268,7 @@ namespace ShootAR
 			if (gameState.RoundWon) {
 				Capsule[] capsules = FindObjectsOfType<Capsule>();
 				scoreManager?.AddScore(capsules.Length * CAPSULE_BONUS_POINTS);
-				foreach (var c in capsules) Destroy(c.gameObject);
+				foreach (var c in capsules) c.Destroy();
 			}
 
 			Spawnable[] spawnables = FindObjectsOfType<Spawnable>();

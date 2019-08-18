@@ -12,6 +12,7 @@ namespace ShootAR.Enemies
 		/// </summary>
 		protected float nextShot;
 
+
 		public override void ResetState() {
 			throw new System.NotImplementedException();
 		}
@@ -25,6 +26,10 @@ namespace ShootAR.Enemies
 
 				//OrbitAround();
 			}
+		}
+
+		public override void Destroy() {
+			throw new System.NotImplementedException();
 		}
 	}
 }

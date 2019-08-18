@@ -104,5 +104,12 @@ namespace ShootAR
 		/// Reset object using the default values stored in the XML file.
 		/// </summary>
 		public abstract void ResetState();
+
+		protected virtual void OnTriggerEnter(Collider other) {
+			if (other.GetComponent<Bullet>())
+				Destroy();
+		}
+
+		public abstract void Destroy();
 	}
 }
