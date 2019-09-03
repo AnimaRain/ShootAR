@@ -164,12 +164,14 @@ namespace ShootAR
 				 * a class inheriting from MonoBehaviour cannot be a generic
 				 * class. */
 				if (objectToSpawn is Enemies.Boopboop)
-					ResetAndActivate<Enemies.Boopboop>();
+					InstantiateSpawnable<Enemies.Boopboop>();
 				else if (objectToSpawn is Capsule)
-					ResetAndActivate<Capsule>();
+					InstantiateSpawnable<Capsule>();
 				else
-					throw new UnityException(
-						$"Spawner cannot spawn this type of object.");
+					/* Used mainly for spawning test objects, since Unity does
+					 * not allow it to be done neatly using generics. */
+					Instantiate(objectToSpawn,
+						transform.localPosition, transform.localRotation);
 
 				SpawnCount++;
 
@@ -177,7 +179,7 @@ namespace ShootAR
 			}
 		}
 
-		private void ResetAndActivate<T>() where T : Spawnable{
+		private void InstantiateSpawnable<T>() where T : Spawnable{
 			var spawned = Spawnable.Pool<Capsule>.RequestObject();
 			spawned.ResetState(
 				position: transform.localPosition,

@@ -34,11 +34,7 @@ namespace ShootAR.TestTools
 			throw new System.NotImplementedException();
 		}
 
-		protected override void OnDestroy() { ActiveCount--; }
-
-		public override void Destroy() {
-			throw new System.NotImplementedException();
-		}
+		public override void Destroy() { ActiveCount--; }
 	}
 
 	//FIXME: Inherit from EnemyBullet.
