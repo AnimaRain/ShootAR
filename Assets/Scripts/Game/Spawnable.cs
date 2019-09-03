@@ -73,6 +73,9 @@ namespace ShootAR
 				return objectStack.Pop();
 			}
 
+			/// <summary>
+			/// Dereference all objects contained in the pool.
+			/// </summary>
 			public static void Empty() {
 				objectStack.Clear();
 			}

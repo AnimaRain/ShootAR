@@ -6,6 +6,10 @@ namespace ShootAR.Enemies
 	{
 		protected override void Start() {
 			base.Start();
+		}
+
+		protected override void OnEnable() {
+			base.OnEnable();
 			MoveTo(Vector3.zero);
 		}
 
@@ -15,11 +19,12 @@ namespace ShootAR.Enemies
 
 		public override void Attack(Player target) {
 			base.Attack(target);
-			Destroy(gameObject);
+			Destroy();
 		}
 
 		public override void Destroy() {
-			throw new System.NotImplementedException();
+			base.Destroy();
+			ReturnToPool<EnemyBullet>();
 		}
 	}
 }

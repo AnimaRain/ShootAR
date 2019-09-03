@@ -272,7 +272,7 @@ namespace ShootAR
 			}
 
 			Spawnable[] spawnables = FindObjectsOfType<Spawnable>();
-			foreach (var s in spawnables) Destroy(s.gameObject);
+			foreach (var s in spawnables) s.Destroy();
 
 #if DEBUG
 			Debug.Log("Scene cleared.");

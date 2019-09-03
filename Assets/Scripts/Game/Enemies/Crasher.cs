@@ -5,9 +5,8 @@ namespace ShootAR.Enemies
 	[RequireComponent(typeof(SphereCollider))]
 	public class Crasher : Boopboop
 	{
-		protected override void Start() {
-			base.Start();
-
+		protected override void OnEnable() {
+			base.OnEnable();
 			MoveTo(Vector3.zero);
 		}
 
@@ -16,7 +15,8 @@ namespace ShootAR.Enemies
 		}
 
 		public override void Destroy() {
-			throw new System.NotImplementedException();
+			base.Destroy();
+			ReturnToPool<Crasher>();
 		}
 	}
 }

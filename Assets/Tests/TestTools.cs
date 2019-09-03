@@ -95,10 +95,6 @@ namespace ShootAR.TestTools
 		public override void ResetState() {
 			throw new System.NotImplementedException();
 		}
-
-		public override void Destroy() {
-			throw new System.NotImplementedException();
-		}
 	}
 
 	/// <summary>
@@ -136,6 +132,8 @@ namespace ShootAR.TestTools
 			}
 
 			Spawnable.Pool<Capsule>.Empty();
+			Spawnable.Pool<Bullet>.Empty();
+			Spawnable.Pool<EnemyBullet>.Empty();
 		}
 	}
 }

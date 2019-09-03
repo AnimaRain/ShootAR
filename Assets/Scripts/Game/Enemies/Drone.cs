@@ -29,7 +29,8 @@ namespace ShootAR.Enemies
 		}
 
 		public override void Destroy() {
-			throw new System.NotImplementedException();
+			base.Destroy();
+			ReturnToPool<Drone>();
 		}
 	}
 }
