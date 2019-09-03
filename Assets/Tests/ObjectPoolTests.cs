@@ -19,17 +19,23 @@ public class ObjectPoolTests : ShootAR.TestTools.TestBase
 	[UnityTest]
 	public System.Collections.IEnumerator CreateNewObjectWhenPoolEmpty() {
 		const int limit = 3;
+
+		var objectToSpawn = Capsule.Create(0, 0);
 		Spawner spawner = Spawner.Create(
-				Capsule.Create(0, 0), limit, 0, 0, 10, 0);
-		Spawnable.Pool<Capsule>.Populate((Capsule)spawner.ObjectToSpawn);
+				objectToSpawn, limit, 0, 0, 10, 0);
+		Spawnable.Pool<Capsule>.Populate((Capsule)spawner.ObjectToSpawn, limit);
 
 		spawner.StartSpawning();
 		yield return new UnityEngine.WaitWhile(() => spawner.IsSpawning);
 		spawner.StartSpawning(1);
 		yield return new UnityEngine.WaitWhile(() => spawner.IsSpawning);
 
-		int	expectedValue = limit + 1,
-			actualValue = UnityEngine.Object.FindObjectsOfType<Capsule>().Length - 1;
+		int expectedValue = limit + 1;
+		/* Normal Destroy does not destroy the object before the assertion happens.
+		 * Using DestroyImmediate instead. */
+		UnityEngine.Object.DestroyImmediate(objectToSpawn.gameObject);
+		int actualValue = UnityEngine.Object.FindObjectsOfType<Capsule>().Length;
+
 		Assert.AreEqual(expectedValue, actualValue,
 				$"Expected {expectedValue} spawned objects but got {actualValue}.");
 	}

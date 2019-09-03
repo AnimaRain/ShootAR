@@ -180,7 +180,9 @@ namespace ShootAR
 		}
 
 		private void InstantiateSpawnable<T>() where T : Spawnable{
-			var spawned = Spawnable.Pool<Capsule>.RequestObject();
+			var spawned = Spawnable.Pool<Capsule>.RequestObject()
+					?? Instantiate(objectToSpawn);
+
 			spawned.ResetState(
 				position: transform.localPosition,
 				rotation: transform.localRotation,
