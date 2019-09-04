@@ -17,6 +17,12 @@ namespace ShootAR.Enemies
 			throw new System.NotImplementedException();
 		}
 
+		protected override void Start() {
+			base.Start();
+
+			gameState = FindObjectOfType<GameState>();
+		}
+
 		protected void FixedUpdate() {
 			if (!gameState.GameOver) {
 				if (lastBullet == null && Time.time > nextShot) {

@@ -8,6 +8,7 @@ namespace ShootAR.Enemies
 	public abstract class Pyoopyoo : Enemy
 	{
 		[SerializeField] protected EnemyBullet bullet;
+		public EnemyBullet Bullet { get => bullet; }
 		/// <summary>
 		/// the position where the bullets will get fired from
 		/// </summary>

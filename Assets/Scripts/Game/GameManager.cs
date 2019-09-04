@@ -131,7 +131,7 @@ namespace ShootAR
 			spawner = new Dictionary<Type, Spawner>();
 			Spawner[] spawners = FindObjectsOfType<Spawner>();
 			if (spawners == null) {
-				throw new Exception("Could not find spawners.");
+				throw new UnityException("Could not find spawners.");
 			}
 			else {
 				foreach (Spawner s in spawners) {
@@ -211,21 +211,39 @@ namespace ShootAR
 			foreach (var s in spawner) {
 				#region Spawn Patterns
 
-				if (s.Key == typeof(Crasher))
+				if (s.Key == typeof(Crasher)) {
 					s.Value.StartSpawning(
 						limit: 4 * gameState.Level + 8,
 						rate: 3f - gameState.Level * .1f,
 						delay: 3f);
-				else if (s.Key == typeof(Drone))
+
+					if (Spawnable.Pool<Crasher>.Count == 0)
+						Spawnable.Pool<Crasher>
+								.Populate((Crasher)s.Value.ObjectToSpawn);
+				}
+				else if (s.Key == typeof(Drone)) {
 					s.Value.StartSpawning(
 						limit: 3 * gameState.Level + 6,
 						rate: 3f - gameState.Level * .1f,
 						delay: 4f);
-				else if (s.Key == typeof(Capsule))
+
+					if (Spawnable.Pool<Drone>.Count == 0)
+						Spawnable.Pool<Drone>
+								.Populate((Drone)s.Value.ObjectToSpawn);
+					if (Spawnable.Pool<EnemyBullet>.Count == 0)
+						Spawnable.Pool<EnemyBullet>
+								.Populate(((Drone)s.Value.ObjectToSpawn).Bullet);
+				}
+				else if (s.Key == typeof(Capsule)) {
 					s.Value.StartSpawning(
 						limit: gameState.Level + 2,
 						rate: 3f + gameState.Level * .5f,
 						delay: 10f);
+
+					if (Spawnable.Pool<Capsule>.Count == 0)
+						Spawnable.Pool<Capsule>
+								.Populate((Capsule)s.Value.ObjectToSpawn);
+				}
 				else throw new Exception($"Unrecognised type of spawner: {s.Key}");
 
 				/* hack: Until Unity upgrades to C# 7.0, which allows match
