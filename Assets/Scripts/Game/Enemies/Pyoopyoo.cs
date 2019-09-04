@@ -19,9 +19,17 @@ namespace ShootAR.Enemies
 		protected EnemyBullet lastBullet;
 
 		protected virtual void Shoot() {
+			EnemyBullet bullet = Pool<EnemyBullet>.RequestObject();
+			if (bullet is null) return;
+
+			bullet.ResetState(
+				position: bulletSpawnPoint.position,
+				rotation: bulletSpawnPoint.rotation,
+				speed: 5);
+
+			bullet.Damage = Damage;
+
 			sfx.Play();
-			lastBullet = Instantiate(bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-			lastBullet.Damage = Damage;
 		}
 	}
 }
