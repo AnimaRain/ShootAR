@@ -14,10 +14,10 @@ internal class PlayerTest : TestBase
 			camera: new GameObject("Camera").AddComponent<Camera>(),
 			bullet: Bullet.Create(50f),
 			ammo: 10);
+		Spawnable.Pool<Bullet>.Populate(player.Bullet, 1);
 
 		yield return null;
 		Bullet shotBullet = player.Shoot();
-		shotBullet?.gameObject.SetActive(true);
 
 		Assert.IsNotNull(shotBullet,
 			"Player must be able to fire bullets.");
@@ -83,10 +83,10 @@ internal class PlayerTest : TestBase
 			camera: new GameObject().AddComponent<Camera>(),
 			bullet: Bullet.Create(1),
 			ammo: initialAmmoAmount);
+		Spawnable.Pool<Bullet>.Populate(player.Bullet, 1);
 
 		yield return null;
 		var bullet = player.Shoot();
-		bullet.gameObject.SetActive(true);
 
 		Assert.Less(player.Ammo, initialAmmoAmount,
 			"After shooting, player should have one less bullet.");

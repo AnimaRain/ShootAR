@@ -22,10 +22,12 @@ namespace ShootAR
 
 		[SerializeField] private GameState gameState;
 		/// <summary>
-		/// The <see cref="Bullet"/> prefab that gets instantiated when the player shoots.
+		/// The <see cref="ShootAR.Bullet"/> prefab that gets instantiated when
+		/// the player shoots.
 		/// </summary>
 		/// <seealso cref="Shoot"/>
 		[SerializeField] private Bullet bullet;
+		public Bullet Bullet { get => bullet; }
 		private AudioSource audioSource;
 		[SerializeField] private AudioClip shotSfx;
 		[SerializeField] private UnityEngine.UI.Text bulletCount;
@@ -103,10 +105,16 @@ namespace ShootAR
 		/// </returns>
 		public Bullet Shoot() {
 			if (CanShoot && Ammo > 0 && Time.time >= nextFire) {
+				Bullet bullet = Spawnable.Pool<Bullet>.RequestObject();
+				if (bullet is null) return null;
+
 				Ammo--;
 				nextFire = Time.time + SHOT_COOLDOWN;
 				if (shotSfx != null) audioSource.PlayOneShot(shotSfx);
-				return Instantiate(bullet, Vector3.zero, Camera.main.transform.rotation);
+				bullet.ResetState(Vector3.zero, Camera.main.transform.rotation,
+							this.bullet.Speed);
+				bullet.gameObject.SetActive(true);
+				return bullet;
 			}
 
 			return null;

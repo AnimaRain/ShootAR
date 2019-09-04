@@ -148,6 +148,7 @@ namespace ShootAR
 			gameState.Level = Configuration.StartingLevel - 1;
 			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
 													 * Inspector */
+			Spawnable.Pool<Bullet>.Populate(player.Bullet, 20);
 			AdvanceLevel();
 
 			GC.Collect();
