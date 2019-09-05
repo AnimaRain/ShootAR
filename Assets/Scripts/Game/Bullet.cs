@@ -5,6 +5,8 @@ namespace ShootAR
 	[RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 	public class Bullet : Spawnable
 	{
+		public const float MAX_TRAVEL_DISTANCE = 70f;
+
 		/// <summary>
 		/// Total count of spawned bullets during the current round.
 		/// </summary>
@@ -33,11 +35,23 @@ namespace ShootAR
 			transform.rotation =
 					Camera.main?.transform.rotation
 					?? new Quaternion(0, 0, 0, 0);
-			transform.position = Vector3.zero;
+		}
+
+		private void OnEnable() {
 			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
 			Count++;
 			ActiveCount++;
+		}
+
+		private void LateUpdate() {
+			if (transform.position.magnitude >= MAX_TRAVEL_DISTANCE) Destroy();
+		}
+
+		protected new void OnTriggerEnter(Collider other) {
+			if (other.GetComponent<Enemies.Enemy>()
+					|| other.GetComponent<Capsule>())
+				Destroy();
 		}
 
 		public override void ResetState() {
@@ -45,6 +59,7 @@ namespace ShootAR
 		}
 
 		public override void Destroy() {
+			ReturnToPool<Bullet>();
 			ActiveCount--;
 		}
 	}

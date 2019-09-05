@@ -122,4 +122,20 @@ internal class PlayerTest : TestBase
 		Assert.AreEqual(Player.MAXIMUM_HEALTH - bullet.damage, player.Health,
 			"Second hit must not damage player, since there is a cooldown.");
 	}
+
+	[UnityTest]
+	public IEnumerator BulletsAreDestroyedAfterTravelingTooFar() {
+		Bullet prefab = Bullet.Create(100f);
+		Spawnable.Pool<Bullet>.Populate(prefab, 1);
+		Object.Destroy(prefab.gameObject);
+
+		Bullet shotBullet = Spawnable.Pool<Bullet>.RequestObject();
+		shotBullet.gameObject.SetActive(true);
+		yield return new WaitUntil(
+						() => shotBullet.transform.position.magnitude
+								>= Bullet.MAX_TRAVEL_DISTANCE);
+
+		Assert.AreEqual(1, Spawnable.Pool<Bullet>.Count,
+				"Bullet has not returned to the pool.");
+	}
 }
