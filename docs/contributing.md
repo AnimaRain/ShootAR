@@ -118,6 +118,10 @@ too late to amend the previous commit and you have to make a commit just to fix 
 make mistakes.** By keeping commits visible, one can learn from previous mistakes, helps better understanding the
 intentions of the coder, and it is easier to find the point at which a mistake was made.
 
+When there are changes in file *ProjectSettings/ProjectSettings.asset*, before committing, make sure
+that *AndroidKeystoreName* and *AndroidKeyaliasName* are empty; if they are not, open the file in an
+editor and delete their values.
+
 #### Push to upstream
 Before uploading anything, read the [license section](/README.md#license). Also, if you have intention of uploading anything
 that has been made by a third party, make sure that you have their permission and that there is no conflicts with
