@@ -12,9 +12,8 @@ internal class PlayerTest : TestBase
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
-			bullet: Bullet.Create(50f),
 			ammo: 10);
-		Spawnable.Pool<Bullet>.Populate(player.Bullet, 1);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(50f), 1);
 
 		yield return null;
 		Bullet shotBullet = player.Shoot();
@@ -40,7 +39,7 @@ internal class PlayerTest : TestBase
 	[UnityTest]
 	public IEnumerator GameOverWhenHealthDepleted() {
 		GameState gameState = GameState.Create(0);
-		Player player = Player.Create(1, null, null, 0, gameState);
+		Player player = Player.Create(1, null, 0, gameState);
 
 		player.Health = 0;
 		yield return null;
@@ -81,9 +80,8 @@ internal class PlayerTest : TestBase
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject().AddComponent<Camera>(),
-			bullet: Bullet.Create(1),
 			ammo: initialAmmoAmount);
-		Spawnable.Pool<Bullet>.Populate(player.Bullet, 1);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(1), 1);
 
 		yield return null;
 		var bullet = player.Shoot();
@@ -97,8 +95,8 @@ internal class PlayerTest : TestBase
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
-			bullet: Bullet.Create(0),
 			ammo: 0);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(0f));
 
 		yield return null;
 		var firedBullet = player.Shoot();

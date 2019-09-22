@@ -44,6 +44,10 @@ namespace ShootAR
 			ActiveCount++;
 		}
 
+		private void OnDisable() {
+			ActiveCount--;
+		}
+
 		private void LateUpdate() {
 			if (transform.position.magnitude >= MAX_TRAVEL_DISTANCE) Destroy();
 		}
@@ -60,7 +64,6 @@ namespace ShootAR
 
 		public override void Destroy() {
 			ReturnToPool<Bullet>();
-			ActiveCount--;
 		}
 	}
 }

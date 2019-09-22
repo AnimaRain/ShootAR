@@ -17,6 +17,7 @@ namespace ShootAR
 		private int health;
 		[Range(0, 999), SerializeField]
 		private int ammo;
+		[SerializeField] private float bulletSpeed;
 		private float nextFire;
 		private float nextDamage;
 
@@ -26,8 +27,6 @@ namespace ShootAR
 		/// the player shoots.
 		/// </summary>
 		/// <seealso cref="Shoot"/>
-		[SerializeField] private Bullet bullet;
-		public Bullet Bullet { get => bullet; }
 		private AudioSource audioSource;
 		[SerializeField] private AudioClip shotSfx;
 		[SerializeField] private UnityEngine.UI.Text bulletCount;
@@ -75,7 +74,7 @@ namespace ShootAR
 
 		public static Player Create(
 			int health = MAXIMUM_HEALTH, Camera camera = null,
-			Bullet bullet = null, int ammo = 0, GameState gameState = null) {
+			int ammo = 0, GameState gameState = null) {
 			var o = new GameObject(nameof(Player)).AddComponent<Player>();
 
 			var healthUI = new GameObject("HealthUI").transform;
@@ -85,13 +84,8 @@ namespace ShootAR
 			}
 			o.Health = health;
 			o.Ammo = ammo;
-			o.bullet = bullet;
 			o.gameState = gameState;
 			if (camera != null) camera.tag = "MainCamera";
-			else if (bullet != null) {
-				Debug.LogWarning("No reference to main camera. Shooting" +
-					" functions will raise error if used.");
-			}
 
 			return o;
 		}
@@ -112,7 +106,7 @@ namespace ShootAR
 				nextFire = Time.time + SHOT_COOLDOWN;
 				if (shotSfx != null) audioSource.PlayOneShot(shotSfx);
 				bullet.ResetState(Vector3.zero, Camera.main.transform.rotation,
-							this.bullet.Speed);
+							bulletSpeed);
 				bullet.gameObject.SetActive(true);
 				return bullet;
 			}

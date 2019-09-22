@@ -13,13 +13,13 @@ public class GameStateTests : TestBase
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject().AddComponent<Camera>(),
-			bullet: Bullet.Create(10),
 			ammo: 1,
 			gameState: gameState);
 		Capsule capsule = Capsule.Create(
 			type: Capsule.CapsuleType.Bullet,
 			speed: 0,
 			player: player);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(10));
 
 		// Create an enemy to stop game manager from switching state to "round won".
 		var enemy = TestTarget.Create();
@@ -48,9 +48,9 @@ public class GameStateTests : TestBase
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: camera,
-			bullet: Bullet.Create(100f),
 			ammo: 1,
 			gameState: gameState);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(100f));
 		TestEnemy enemy = TestEnemy.Create(0, 0, 0, 10, 10, 10, gameState);
 		GameManager.Create(player, gameState);
 
