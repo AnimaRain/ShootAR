@@ -126,7 +126,6 @@ namespace ShootAR
 					}
 					else if (gameState.RoundWon) {
 						ui.MessageOnScreen.text = "";
-						player.Ammo += 6;
 						AdvanceLevel();
 					}
 					else
@@ -224,7 +223,6 @@ namespace ShootAR
 
 			foreach (var s in spawner) {
 				#region Spawn Patterns
-
 				if (s.Key == typeof(Crasher)) {
 					s.Value.StartSpawning(
 						limit: 4 * gameState.Level + 8,
@@ -259,30 +257,17 @@ namespace ShootAR
 								.Populate((Capsule)s.Value.ObjectToSpawn);
 				}
 				else throw new Exception($"Unrecognised type of spawner: {s.Key}");
-
-				/* hack: Until Unity upgrades to C# 7.0, which allows match
-				 * expressions in "switch" to be any non-null type, the code above 
-				 * is used.
-				switch (s.Key)
-				{
-#region Spawn Patterns
-					case typeof(Crasher):
-						s.Value.StartSpawning(4 * gameState.Level + 8);
-						break;
-					case typeof(Drone):
-						s.Value.StartSpawning(3 * gameState.Level + 6);
-						break;
-					case typeof(Capsule):
-						s.Value.StartSpawning(gameState.Level + 2);
-						break;
-					default:
-						throw new Exception(
-							$"Unrecognised type of spawner: {s.Key}"
-						);
-#endregion
-				}
-				*/
 				#endregion
+
+				int ammoEnemyDifference = player.Ammo - s.Value.SpawnLimit;
+				int ammoReward = 6;
+				if (ammoEnemyDifference > 0)
+					scoreManager.AddScore(ammoEnemyDifference * 10);
+				else if (ammoEnemyDifference < 0)
+					ammoReward += -ammoEnemyDifference;
+
+				player.Ammo += ammoReward;	// use sum of ammo rewards to avoid
+											// multiple GUI updates
 			}
 
 			gameState.RoundWon = false;
