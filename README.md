@@ -133,9 +133,12 @@ You could, also, just share the game with your friends. It is and will always be
 ## ~FAQ~
 
 ## License
-The project is currently under the [MIT license](/LICENSE).
+The project is currently under the [MIT license](/LICENSE).<br/>
 
 The general gist translated in Human is that you can pretty much do anything you want with this project.
+
+Third party licenses:<br/>
+Unity Asset Store \[[license](https://unity3d.com/legal/as_terms)\]<br/>
 
 If you believe that your work has been published to this repository without permission, please contact me at
 ioannis_spyr@yahoo.gr.
