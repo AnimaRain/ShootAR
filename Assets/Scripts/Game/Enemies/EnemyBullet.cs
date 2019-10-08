@@ -4,8 +4,15 @@ namespace ShootAR.Enemies
 {
 	public class EnemyBullet : Boopboop
 	{
+		private const float DEFAULT_SPEED = 5F;
+		private const int DEFAULT_POINTS = 5;
+
+		private static EnemyBullet prefab;
+
 		protected override void Start() {
 			base.Start();
+			if (prefab == null)
+				prefab = FindObjectOfType<PrefabContainer>()?.EnemyBullet;
 		}
 
 		protected override void OnEnable() {
@@ -14,7 +21,8 @@ namespace ShootAR.Enemies
 		}
 
 		public override void ResetState() {
-			throw new System.NotImplementedException();
+			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
+			PointsValue = prefab is null ? DEFAULT_POINTS: prefab.PointsValue;
 		}
 
 		public override void Attack(Player target) {

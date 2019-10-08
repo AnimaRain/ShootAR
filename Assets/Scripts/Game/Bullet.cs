@@ -5,7 +5,8 @@ namespace ShootAR
 	[RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 	public class Bullet : Spawnable
 	{
-		public const float MAX_TRAVEL_DISTANCE = 70f;
+		public const float	MAX_TRAVEL_DISTANCE = 70f,
+							DEFAULT_SPEED = 10f;
 
 		/// <summary>
 		/// Total count of spawned bullets during the current round.
@@ -15,6 +16,8 @@ namespace ShootAR
 		/// Count of currently active bullets.
 		/// </summary>
 		public static int ActiveCount { get; private set; }
+
+		private static Bullet prefab;
 
 		public static Bullet Create(float speed) {
 			var o = new GameObject(nameof(Bullet)).AddComponent<Bullet>();
@@ -31,7 +34,11 @@ namespace ShootAR
 			return o;
 		}
 
-		protected void Start() {
+		protected override void Start() {
+			base.Start();
+			if (prefab is null)
+				prefab = FindObjectOfType<PrefabContainer>()?.Bullet;
+
 			transform.rotation =
 					Camera.main?.transform.rotation
 					?? new Quaternion(0, 0, 0, 0);
@@ -59,7 +66,7 @@ namespace ShootAR
 		}
 
 		public override void ResetState() {
-			throw new System.NotImplementedException();
+			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
 		}
 
 		public override void Destroy() {

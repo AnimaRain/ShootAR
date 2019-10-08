@@ -1,6 +1,7 @@
 ﻿using ShootAR.Enemies;
 using System;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,8 +11,18 @@ namespace ShootAR
 
 	public class GameManager : MonoBehaviour
 	{
+		private const int   CAPSULE_BONUS_POINTS = 50,
+							ROUND_AMMO_REWARD = 6;
+#if DEBUG
+#pragma warning disable IDE1006 // Suppress naming rule violation
+		private string SPAWN_PATTERN_FILE_PATH;
+#pragma warning restore IDE1006
+#else
+		private const string SPAWN_PATTERN_FILE_PATH = "spawnpatterns.xml";
+#endif
+
 		[SerializeField] private AudioClip victoryMusic;
-		private Dictionary<Type, Spawner> spawner;
+		private Dictionary<Type, List<Spawner>> spawnerGroups;
 		[SerializeField] private ScoreManager scoreManager;
 		[Obsolete] private bool exitTap;    // Why do we need this? Should it be removed?
 		private AudioSource audioPlayer;
@@ -21,20 +32,25 @@ namespace ShootAR
 		private WebCamTexture cam;
 		[SerializeField] private RawImage backgroundTexture;
 		[SerializeField] private Player player;
-		[SerializeField] private Bullet bulletPrefab;
-		private const int CAPSULE_BONUS_POINTS = 50;
+		[SerializeField] private PrefabContainer prefabs;
+		private Stack<Spawner> stashedSpawners;
+		private XmlReader spawnPattern;
 
 		public static GameManager Create(
-				Player player, GameState gameState,
-				ScoreManager scoreManager = null,
-				AudioClip victoryMusic = null, AudioSource sfx = null,
-				Button fireButton = null, RawImage background = null,
-				UIManager ui = null
-			) {
+			string spawnPattern,
+			Player player, GameState gameState,
+			PrefabContainer prefabs,
+			ScoreManager scoreManager = null,
+			AudioClip victoryMusic = null, AudioSource sfx = null,
+			Button fireButton = null, RawImage background = null,
+			UIManager ui = null
+		) {
 			var o = new GameObject(nameof(GameManager)).AddComponent<GameManager>();
 
+			o.SPAWN_PATTERN_FILE_PATH = spawnPattern;
 			o.player = player;
 			o.gameState = gameState;
+			o.prefabs = prefabs;
 			o.scoreManager = scoreManager;
 			o.victoryMusic = victoryMusic;
 			o.audioPlayer = sfx;
@@ -43,13 +59,14 @@ namespace ShootAR
 														.AddComponent<RawImage>();
 			o.ui = ui ??
 				UIManager.Create(
-					uiCanvas: new GameObject(),
-					pauseCanvas: new GameObject(),
-					bulletCount: new GameObject().AddComponent<Text>(),
-					messageOnScreen: new GameObject().AddComponent<Text>(),
-					score: new GameObject().AddComponent<Text>(),
-					roundIndex: new GameObject().AddComponent<Text>(),
-					sfx: null, pauseSfx: null, gameState: o.gameState
+					uiCanvas: new GameObject("UI"),
+					pauseCanvas: new GameObject("PauseScreen"),
+					bulletCount: new GameObject("Ammo").AddComponent<Text>(),
+					messageOnScreen: new GameObject("Message").AddComponent<Text>(),
+					score: new GameObject("Score").AddComponent<Text>(),
+					roundIndex: new GameObject("Level").AddComponent<Text>(),
+					sfx: null, pauseSfx: null,
+					gameState: o.gameState
 				);
 
 			return o;
@@ -91,6 +108,8 @@ namespace ShootAR
 				throw new UnityException("Player object not found");
 			if (gameState == null)
 				throw new UnityException("GameState object not found");
+			if (prefabs is null)
+				throw new UnityException("Collection of prefabs not found");
 			if (cam == null) {
 				const string error = "This device does not have a rear camera";
 				ui.MessageOnScreen.text = error;
@@ -135,27 +154,16 @@ namespace ShootAR
 			audioPlayer = gameObject.AddComponent<AudioSource>();
 			ui.BulletCount.text = player.Ammo.ToString();
 
-			spawner = new Dictionary<Type, Spawner>();
-			Spawner[] spawners = FindObjectsOfType<Spawner>();
-			if (spawners == null) {
-				throw new UnityException("Could not find spawners.");
-			}
-			else {
-				foreach (Spawner s in spawners) {
-					Type type = s.ObjectToSpawn.GetType();
-					spawner.Add(type, s);
-#if DEBUG
-					Debug.Log($"Found spawner of type \"{type}\"");
-#endif
-				}
-			}
+			stashedSpawners = new Stack<Spawner>(2);
+			spawnerGroups = new Dictionary<Type, List<Spawner>>();
 
 			/* The round index is assigned an initial value diminished by 1,
 			 * since AdvanceLevel will add it back. */
 			gameState.Level = Configuration.StartingLevel - 1;
 			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
 													 * Inspector */
-			Spawnable.Pool<Bullet>.Populate(bulletPrefab, 10);
+			if (prefabs != null)
+				Spawnable.Pool<Bullet>.Populate(prefabs.Bullet, 10);
 			AdvanceLevel();
 
 			GC.Collect();
@@ -170,12 +178,13 @@ namespace ShootAR
 			if (!gameState.GameOver) {
 				// Round Won
 				bool spawnersStoped = true;
-				foreach (var type in spawner.Keys) {
-					if (type.IsSubclassOf(typeof(Enemy))
-						&& spawner[type].IsSpawning) {
-						spawnersStoped = false;
-						break;
-					}
+				foreach (var type in spawnerGroups.Keys) {
+					foreach (var spawner in spawnerGroups[type])
+						if (type.IsSubclassOf(typeof(Enemy))
+							&& spawner.IsSpawning) {
+							spawnersStoped = false;
+							break;
+						}
 				}
 				if (spawnersStoped && Enemy.ActiveCount == 0) {
 					gameState.RoundWon = true;
@@ -221,54 +230,144 @@ namespace ShootAR
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
 
-			foreach (var s in spawner) {
-				#region Spawn Patterns
-				if (s.Key == typeof(Crasher)) {
-					s.Value.StartSpawning(
-						limit: 4 * gameState.Level + 8,
-						rate: 3f - gameState.Level * .1f,
-						delay: 3f);
+			#region Spawn Pattern
+			Type type = default;
+			int limit = default, currentSpawnerIndex = -1,
+				ammoEnemyDifference = player.Ammo,
+				availableSpawners = 0, requiredSpawners = 0;
+			float   rate = default, delay = default,
+					maxDistance = default, minDistance = default;
+			List<Spawner> spawnerGroup = null;
+			bool newSpawnerRequired = false, addLimitToSum = false,
+				 doneParsingForCurrentLevel = false;
 
-					if (Spawnable.Pool<Crasher>.Count == 0)
-						Spawnable.Pool<Crasher>
-								.Populate((Crasher)s.Value.ObjectToSpawn);
+			while (!doneParsingForCurrentLevel) {
+				if (!(spawnPattern?.Read() ?? false)) {
+					spawnPattern = XmlReader.Create(SPAWN_PATTERN_FILE_PATH);
+					spawnPattern.MoveToContent();
 				}
-				else if (s.Key == typeof(Drone)) {
-					s.Value.StartSpawning(
-						limit: 3 * gameState.Level + 6,
-						rate: 3f - gameState.Level * .1f,
-						delay: 4f);
 
-					if (Spawnable.Pool<Drone>.Count == 0)
-						Spawnable.Pool<Drone>
-								.Populate((Drone)s.Value.ObjectToSpawn);
-					if (Spawnable.Pool<EnemyBullet>.Count == 0)
-						Spawnable.Pool<EnemyBullet>
-								.Populate(((Drone)s.Value.ObjectToSpawn).Bullet);
+				switch (spawnPattern.NodeType) {
+				case XmlNodeType.Element:
+					switch (spawnPattern.Name) {
+					// Find type of Spawnable and get the related spawner group.
+					case nameof(Crasher):
+						addLimitToSum = true;
+						type = typeof(Crasher);
+						if (Spawnable.Pool<Crasher>.Count == 0)
+							Spawnable.Pool<Crasher>.Populate(prefabs.Crasher);
+						goto case nameof(Spawnable);
+					case nameof(Drone):
+						addLimitToSum = true;
+						type = typeof(Drone);
+						if (Spawnable.Pool<Drone>.Count == 0) {
+							Spawnable.Pool<Drone>.Populate(prefabs.Drone);
+							Spawnable.Pool<EnemyBullet>
+								.Populate(prefabs.EnemyBullet);
+						}
+						goto case nameof(Spawnable);
+					case nameof(Capsule):
+						type = typeof(Capsule);
+						if (Spawnable.Pool<Capsule>.Count == 0)
+							Spawnable.Pool<Capsule>
+								.Populate(prefabs.Capsule);
+						goto case nameof(Spawnable);
+					case nameof(Spawnable):
+						if (!spawnerGroups.ContainsKey(type))
+							spawnerGroups.Add(type, new List<Spawner>());
+						spawnerGroup = spawnerGroups[type];
+						availableSpawners = spawnerGroup.Count;
+						break;
+
+
+					/* Count how many spawners of a type will be required.
+					 * If there are not enough spawners in the group, take
+					 * one from the stashed pile or mark that a new one should
+					 * be created. */
+					case "pattern":
+						if (availableSpawners - ++currentSpawnerIndex <= 0)
+							if (stashedSpawners.Count > 0)
+								spawnerGroup.Add(stashedSpawners.Pop());
+							else
+								newSpawnerRequired = true;
+						requiredSpawners++;
+						break;
+
+					// Get spawner configuration data.
+					case nameof(limit):
+						limit = spawnPattern.ReadElementContentAsInt();
+						if (addLimitToSum) ammoEnemyDifference -= limit;
+						addLimitToSum = false;
+						break;
+					case nameof(rate):
+						rate = spawnPattern.ReadElementContentAsFloat();
+						break;
+					case nameof(delay):
+						delay = spawnPattern.ReadElementContentAsFloat();
+						break;
+					case nameof(maxDistance):
+						maxDistance = spawnPattern.ReadElementContentAsFloat();
+						break;
+					case nameof(minDistance):
+						minDistance = spawnPattern.ReadElementContentAsFloat();
+						break;
+					}
+					break;
+
+				// Configure spawner using the retrieved data.
+				case XmlNodeType.EndElement
+				when spawnPattern.Name == "pattern":
+					if (newSpawnerRequired) {
+						spawnerGroup.Add(
+							Spawner.Create(
+								type, limit, rate, delay,
+								maxDistance, minDistance
+							)
+						);
+						spawnerGroup[currentSpawnerIndex].StartSpawning();
+
+						newSpawnerRequired = false;
+					}
+					else
+						spawnerGroup[currentSpawnerIndex]
+							.StartSpawning(
+								type, limit, rate, delay,
+								maxDistance, minDistance
+							);
+					break;
+
+				// When done with a type of Spawnable, stash leftover spawners.
+				case XmlNodeType.EndElement
+				when spawnPattern.Name == nameof(Crasher) ||
+					 spawnPattern.Name == nameof(Drone) ||
+					 spawnPattern.Name == nameof(Capsule):
+					for (int i = currentSpawnerIndex + 1;
+							availableSpawners - requiredSpawners > i;
+							i++) {
+						stashedSpawners.Push(spawnerGroup[i]);
+						spawnerGroup.RemoveAt(i);
+					}
+					currentSpawnerIndex = -1;
+					break;
+
+				case XmlNodeType.EndElement
+				when spawnPattern.Name == "level":
+
+					/* Player should always have enough ammo to play the next
+					 * round. If they already have more than enough, they get
+					 * points. */
+					if (ammoEnemyDifference > 0)
+						scoreManager.AddScore(ammoEnemyDifference * 10);
+					else if (ammoEnemyDifference < 0)
+						player.Ammo += -ammoEnemyDifference;
+
+					doneParsingForCurrentLevel = true;
+					break;
 				}
-				else if (s.Key == typeof(Capsule)) {
-					s.Value.StartSpawning(
-						limit: gameState.Level + 2,
-						rate: 3f + gameState.Level * .5f,
-						delay: 10f);
-
-					if (Spawnable.Pool<Capsule>.Count == 0)
-						Spawnable.Pool<Capsule>
-								.Populate((Capsule)s.Value.ObjectToSpawn);
-				}
-				else throw new Exception($"Unrecognised type of spawner: {s.Key}");
-				#endregion
-
-				int ammoEnemyDifference = player.Ammo - s.Value.SpawnLimit;
-				int ammoReward = 6;
-				if (ammoEnemyDifference > 0)
-					scoreManager.AddScore(ammoEnemyDifference * 10);
-				else if (ammoEnemyDifference < 0)
-					ammoReward += -ammoEnemyDifference;
-
-				player.Ammo += ammoReward;	// use sum of ammo rewards to avoid
-											// multiple GUI updates
 			}
+			//TODO: Stash entire group of spawners when that type is not used
+			// in a round.
+			#endregion
 
 			gameState.RoundWon = false;
 		}

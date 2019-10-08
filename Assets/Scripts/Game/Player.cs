@@ -105,8 +105,8 @@ namespace ShootAR
 				Ammo--;
 				nextFire = Time.time + SHOT_COOLDOWN;
 				if (shotSfx != null) audioSource.PlayOneShot(shotSfx);
-				bullet.ResetState(Vector3.zero, Camera.main.transform.rotation,
-							bulletSpeed);
+				bullet.transform.position = Vector3.zero;
+				bullet.transform.rotation = Camera.main.transform.rotation;
 				bullet.gameObject.SetActive(true);
 				return bullet;
 			}

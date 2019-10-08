@@ -6,6 +6,8 @@ namespace ShootAR
 	 RequireComponent(typeof(CapsuleCollider))]
 	public class Capsule : Spawnable
 	{
+		private const float DEFAULT_SPEED = 15F;
+
 		public enum CapsuleType
 		{
 			Bullet,
@@ -19,6 +21,7 @@ namespace ShootAR
 		private AudioSource pickUpSfx;
 
 		[SerializeField] private Player player;
+		private static Capsule prefab;
 
 		public static Capsule Create(CapsuleType type, float speed,
 				Player player = null) {
@@ -35,13 +38,18 @@ namespace ShootAR
 			return o;
 		}
 
-		protected void Start() {
-			rotation = new Vector3(15, 30, 45);
+		protected override void Start() {
+			base.Start();
+			if (prefab is null)
+				prefab = FindObjectOfType<PrefabContainer>()?.Capsule;
+
+			rotation = Random.rotation.eulerAngles;
 			pickUpSfx = GetComponent<AudioSource>();
 		}
 
 		public override void ResetState() {
-			throw new System.NotImplementedException();
+			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
+			Type = (CapsuleType)Random.Range(0, 4);
 		}
 
 		private void Update() {

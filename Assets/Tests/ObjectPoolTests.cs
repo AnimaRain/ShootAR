@@ -16,18 +16,19 @@ public class ObjectPoolTests : ShootAR.TestTools.TestBase
 				"A null reference should have been returned.");
 	}
 
-	[UnityTest]
+	//TODO: Should this be brought back or removed?
+	[UnityTest, Ignore("Deprecated functionality")]
 	public System.Collections.IEnumerator CreateNewObjectWhenPoolEmpty() {
 		const int limit = 3;
 
 		var objectToSpawn = Capsule.Create(0, 0);
 		Spawner spawner = Spawner.Create(
-				objectToSpawn, limit, 0, 0, 10, 0);
-		Spawnable.Pool<Capsule>.Populate((Capsule)spawner.ObjectToSpawn, limit);
+				typeof(Capsule), limit, 0, 0, 10, 0);
+		Spawnable.Pool<Capsule>.Populate(objectToSpawn, limit);
 
 		spawner.StartSpawning();
 		yield return new UnityEngine.WaitWhile(() => spawner.IsSpawning);
-		spawner.StartSpawning(1);
+		spawner.StartSpawning(typeof(Capsule), 1, 0, 0, 10, 0);
 		yield return new UnityEngine.WaitWhile(() => spawner.IsSpawning);
 
 		int expectedValue = limit + 1;

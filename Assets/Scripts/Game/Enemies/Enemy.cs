@@ -36,7 +36,7 @@ namespace ShootAR.Enemies
 			if (score == null) score = FindObjectOfType<ScoreManager>();
 		}
 
-		protected virtual void Start() {
+		protected override void Start() {
 			sfx = GetComponent<AudioSource>();
 			/* If the AudioSource component on all enemy prefabs are distinctively
 			 * configured, either through scripts or the inspector, and you are

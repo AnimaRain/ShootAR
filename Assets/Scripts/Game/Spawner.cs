@@ -6,12 +6,12 @@ namespace ShootAR
 
 	public class Spawner : MonoBehaviour
 	{
-		[SerializeField] private Spawnable objectToSpawn;
+		[SerializeField] private System.Type objectToSpawn;
 		/// <summary>
-		/// Reference to the <see cref="Spawnable"/> prefab to copy
+		/// Reference to the type of <see cref="Spawnable"/> prefab to copy
 		/// while spawnning.
 		/// </summary>
-		public Spawnable ObjectToSpawn {
+		public System.Type ObjectToSpawn {
 			get { return objectToSpawn; }
 			private set { objectToSpawn = value; }
 		}
@@ -65,8 +65,8 @@ namespace ShootAR
 		}
 
 		public static Spawner Create(
-			Spawnable objectToSpawn, int spawnLimit, float initialDelay, float spawnRate,
-			float maxDistanceToSpawn, float minDistanceToSpawn,
+			System.Type objectToSpawn, int spawnLimit, float initialDelay,
+			float spawnRate, float maxDistanceToSpawn, float minDistanceToSpawn,
 			GameState gameState = null) {
 			var o = new GameObject(nameof(Spawner)).AddComponent<Spawner>();
 
@@ -156,15 +156,14 @@ namespace ShootAR
 				/* Make checks for each and every type of Spawnable, because
 				 * a class inheriting from MonoBehaviour cannot be a generic
 				 * class. */
-				if (objectToSpawn is Enemies.Boopboop)
-					InstantiateSpawnable<Enemies.Boopboop>();
-				else if (objectToSpawn is Capsule)
+				if (objectToSpawn == typeof(Enemies.Crasher))
+					InstantiateSpawnable<Enemies.Crasher>();
+				else if (objectToSpawn == typeof(Enemies.Drone))
+					InstantiateSpawnable<Enemies.Drone>();
+				else if (objectToSpawn == typeof(Capsule))
 					InstantiateSpawnable<Capsule>();
 				else
-					/* Used mainly for spawning test objects, since Unity does
-					 * not allow it to be done neatly using generics. */
-					Instantiate(objectToSpawn,
-						transform.localPosition, transform.localRotation);
+					throw new UnityException("Unrecognised type of Spawnable");
 
 				SpawnCount++;
 
@@ -173,13 +172,10 @@ namespace ShootAR
 		}
 
 		private void InstantiateSpawnable<T>() where T : Spawnable{
-			var spawned = Spawnable.Pool<T>.RequestObject()
-					?? Instantiate(objectToSpawn);
+			var spawned = Spawnable.Pool<T>.RequestObject();
 
-			spawned.ResetState(
-				position: transform.localPosition,
-				rotation: transform.localRotation,
-				speed: objectToSpawn.Speed);
+			spawned.transform.position = transform.localPosition;
+			spawned.transform.rotation = transform.localRotation;
 			spawned.gameObject.SetActive(true);
 		}
 
@@ -197,39 +193,38 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit
+		/// Automatically start a <see cref="Spawn"/> coroutine after
+		/// configuring the spawner.
 		/// </summary>
+		/// <param name="type">The type of object to spawn</param>
 		/// <param name="limit">Number of objects to spawn</param>
-		public void StartSpawning(int limit) {
-			SpawnLimit = limit;
-			StartSpawning();
-		}
-
-		/// <summary>
-		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit and
-		/// the rate of spawn.
-		/// </summary>
-		/// <param name="limit">Number of objects to spawn</param>
-		/// <param name="rate">The time in seconds to wait before each spawn</param>
-		public void StartSpawning(int limit, float rate) {
-			SpawnRate = rate;
-			SpawnLimit = limit;
-			StartSpawning();
-		}
-
-		/// <summary>
-		/// Automatically start a <see cref="Spawn"/> coroutine after setting the spawn limit,
-		/// the rate of spawn and the initial delay.
-		/// </summary>
-		/// <param name="limit">Number of objects to spawn</param>
-		/// <param name="rate">The time in seconds to wait before each spawn</param>
-		/// <param name="delay">The time in seconds to wait before first spawn</param>
+		/// <param name="rate">
+		/// The time in seconds to wait before each spawn
+		/// </param>
+		/// <param name="delay">
+		/// The time in seconds to wait before first spawn
+		/// </param>
+		/// <param name="maxDistance">
+		/// Max distance allowed to spawn away from player
+		/// </param>
+		/// <param name="minDistance">
+		/// Min distance allowed to spawn away from player
+		/// </param>
+		/// <seealso cref="ObjectToSpawn"/>
 		/// <seealso cref="SpawnLimit"/>
 		/// <seealso cref="SpawnRate"/>
 		/// <seealso cref="SpawnDelay"/>
-		public void StartSpawning(int limit, float rate, float delay) {
+		/// <seealso cref="MaxDistanceToSpawn"/>
+		/// <seealso cref="MinDistanceToSpawn"/>
+		public void StartSpawning(System.Type type, int limit, float rate,
+					float delay, float maxDistance, float minDistance) {
+			ObjectToSpawn = type;
+			SpawnLimit = limit;
+			SpawnRate = rate;
 			InitialDelay = delay;
-			StartSpawning(limit, rate);
+			MaxDistanceToSpawn = maxDistance;
+			MinDistanceToSpawn = minDistance;
+			StartSpawning();
 		}
 
 		public void StopSpawning() {

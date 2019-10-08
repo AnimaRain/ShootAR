@@ -20,8 +20,12 @@ namespace ShootAR
 		/// <summary>
 		/// Reference to the object holding the game state.
 		/// </summary>
-		protected GameState gameState;
+		protected static GameState gameState;
 
+		protected virtual void Start() {
+			if (gameState is null)
+				gameState = FindObjectOfType<GameState>();
+		}
 		/// <summary>
 		/// Contains object pools that hold already instantiated objects ready
 		/// to be used when requested.
@@ -91,20 +95,11 @@ namespace ShootAR
 		public void ReturnToPool<T>() where T : Spawnable {
 			gameObject.SetActive(false);
 			Pool<T>.objectStack.Push((T)this);
+			ResetState();
 		}
 
 		/// <summary>
-		/// Set the desired values to prepare the object to be reused.
-		/// </summary>
-		public virtual void ResetState(Vector3 position, Quaternion rotation,
-				float speed = default) {
-			transform.position = position;
-			transform.rotation = rotation;
-			this.speed = speed;
-		}
-
-		/// <summary>
-		/// Reset object using the default values stored in the XML file.
+		/// Reset object to the default values.
 		/// </summary>
 		public abstract void ResetState();
 

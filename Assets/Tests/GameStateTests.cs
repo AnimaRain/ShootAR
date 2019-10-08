@@ -50,17 +50,25 @@ public class GameStateTests : TestBase
 			camera: camera,
 			ammo: 1,
 			gameState: gameState);
-		Spawnable.Pool<Bullet>.Populate(Bullet.Create(100f));
-		TestEnemy enemy = TestEnemy.Create(0, 0, 0, 10, 10, 10, gameState);
-		GameManager.Create(player, gameState);
+		GameManager.Create("Assets\\Tests\\GameStateTests-testpattern0.xml",
+			player, gameState,
+			PrefabContainer.Create(
+				cr: TestEnemy.Create(0, 0, 0, 10, 10, 10),
+				b: Bullet.Create(100f),
+				bc: null, ac: null, hc: null, pc: null, d: null, eb: null
+		));
 
-		yield return null;  //without this, firedBullet will be null
+		yield return new WaitForFixedUpdate();
+		yield return new WaitUntil(() => Object.FindObjectOfType<Spawner>()
+				.SpawnCount > 0);
 
+		TestEnemy enemy = Object
+				.FindObjectOfType<ShootAR.Enemies.Crasher>() as TestEnemy;
 		camera.transform.LookAt(enemy.transform);
-		var firedBullet = player.Shoot();
-		firedBullet.gameObject.SetActive(true);
+		player.Shoot();
 
-		yield return new WaitUntil(() => gameState.RoundWon);
+		yield return new WaitForSeconds(2f);
+		yield return new WaitForFixedUpdate();
 
 		Assert.False(gameState.GameOver,
 			"The game must not end if the last enemy dies by the last bullet.");

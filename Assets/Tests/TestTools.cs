@@ -8,33 +8,41 @@ namespace ShootAR.TestTools
 	/// Test class for replacing enemy classes in tests.
 	/// </summary>
 	[RequireComponent(typeof(SphereCollider), typeof(Rigidbody))]
-	internal class TestEnemy : Enemy
+	internal class TestEnemy : Crasher
 	{
+		public bool GotHit { get; private set; }
+
+		protected override void OnTriggerEnter(Collider other) {
+			base.OnTriggerEnter(other);
+			if (other.GetComponent<Bullet>() != null)
+				GotHit = true;
+		}
+
 		public static TestEnemy Create(
-			float speed = default(float),
-			int damage = default(int),
-			int pointsValue = default(int),
-			float x = 0, float y = 0, float z = 0,
-			GameState gameState = null) {
+				float speed = default(float),
+				int damage = default(int),
+				int pointsValue = default(int),
+				float x = 0, float y = 0, float z = 0) {
 			var o = new GameObject(nameof(TestEnemy)).AddComponent<TestEnemy>();
 			o.Speed = speed;
 			o.Damage = damage;
 			o.PointsValue = pointsValue;
 			o.transform.position = new Vector3(x, y, z);
-			o.gameState = gameState;
+			o.gameObject.SetActive(false);
 			return o;
 		}
 
-		protected override void Start() {
+		protected new void Start() {
 			GetComponent<SphereCollider>().isTrigger = true;
 			GetComponent<Rigidbody>().useGravity = false;
 		}
 
-		public override void ResetState() {
-			throw new System.NotImplementedException();
-		}
+		public new void ResetState() { }
 
-		public override void Destroy() { ActiveCount--; }
+		public new void Destroy() {
+			ReturnToPool<TestEnemy>();
+			ActiveCount--;
+		}
 	}
 
 	//FIXME: Inherit from EnemyBullet.
@@ -134,6 +142,9 @@ namespace ShootAR.TestTools
 			Spawnable.Pool<Capsule>.Empty();
 			Spawnable.Pool<Bullet>.Empty();
 			Spawnable.Pool<EnemyBullet>.Empty();
+			Spawnable.Pool<Crasher>.Empty();
+			Spawnable.Pool<Drone>.Empty();
+			Spawnable.Pool<TestEnemy>.Empty();
 		}
 	}
 }

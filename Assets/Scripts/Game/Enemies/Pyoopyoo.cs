@@ -23,11 +23,8 @@ namespace ShootAR.Enemies
 			EnemyBullet bullet = Pool<EnemyBullet>.RequestObject();
 			if (bullet is null) return;
 
-			bullet.ResetState(
-				position: bulletSpawnPoint.position,
-				rotation: bulletSpawnPoint.rotation,
-				speed: 5);
-
+			bullet.transform.position = bulletSpawnPoint.position;
+			bullet.transform.rotation = bulletSpawnPoint.rotation;
 			bullet.Damage = Damage;
 
 			sfx.Play();

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Pattern used for test "UseLastShotToKillLastEnemy" -->
+
+<spawnerconfiguration>
+	<level>
+		<Crasher>
+			<pattern>
+				<limit>1</limit>
+				<rate>0</rate>
+				<delay>0</delay>
+				<maxDistance>30</maxDistance>
+				<minDistance>15</minDistance>
+			</pattern>
+		</Crasher>
+	</level>
+</spawnerconfiguration>

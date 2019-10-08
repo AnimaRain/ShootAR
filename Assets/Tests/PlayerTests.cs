@@ -132,6 +132,7 @@ internal class PlayerTest : TestBase
 		yield return new WaitUntil(
 						() => shotBullet.transform.position.magnitude
 								>= Bullet.MAX_TRAVEL_DISTANCE);
+		yield return new WaitForFixedUpdate();
 
 		Assert.AreEqual(1, Spawnable.Pool<Bullet>.Count,
 				"Bullet has not returned to the pool.");
