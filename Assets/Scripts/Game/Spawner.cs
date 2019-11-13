@@ -160,8 +160,14 @@ namespace ShootAR
 					InstantiateSpawnable<Enemies.Crasher>();
 				else if (objectToSpawn == typeof(Enemies.Drone))
 					InstantiateSpawnable<Enemies.Drone>();
-				else if (objectToSpawn == typeof(Capsule))
-					InstantiateSpawnable<Capsule>();
+				else if (objectToSpawn == typeof(BulletCapsule))
+					InstantiateSpawnable<BulletCapsule>();
+				else if (objectToSpawn == typeof(ArmorCapsule))
+					InstantiateSpawnable<ArmorCapsule>();
+				else if (objectToSpawn == typeof(HealthCapsule))
+					InstantiateSpawnable<HealthCapsule>();
+				else if (objectToSpawn == typeof(PowerUpCapsule))
+					InstantiateSpawnable<PowerUpCapsule>();
 				else
 					throw new UnityException("Unrecognised type of Spawnable");
 

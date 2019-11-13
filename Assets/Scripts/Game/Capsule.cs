@@ -4,52 +4,39 @@ namespace ShootAR
 {
 	[RequireComponent(typeof(AudioSource)),
 	 RequireComponent(typeof(CapsuleCollider))]
-	public class Capsule : Spawnable
+	public abstract class Capsule : Spawnable
 	{
-		private const float DEFAULT_SPEED = 15F;
-
-		public enum CapsuleType
-		{
-			Bullet,
-			Health,
-			Armor,
-			PowerUp
-		}
-		public CapsuleType Type { get; private set; }
+		protected const float DEFAULT_SPEED = 15F;
 
 		private Vector3 rotation;
 		private AudioSource pickUpSfx;
 
-		[SerializeField] private Player player;
-		private static Capsule prefab;
+		protected static Player player;
 
-		public static Capsule Create(CapsuleType type, float speed,
-				Player player = null) {
-			var o = new GameObject(nameof(Capsule)).AddComponent<Capsule>();
-			o.Type = type;
-			o.Speed = speed;
-			o.player = player;
+		/// <summary>
+		/// Use in Capsule sub-classes. Sets the base of Capsules.
+		/// </summary>
+		protected void SetBase(float speed, Player player) {
+			Speed = speed;
+			Capsule.player = player;	/* Object.Instantiate can not set
+										 * reference to the player so this had
+										 * to be static */
 
-			var capsuleCollider = o.GetComponent<CapsuleCollider>();
+			var capsuleCollider = GetComponent<CapsuleCollider>();
 			capsuleCollider.isTrigger = true;
 			capsuleCollider.radius = 0.5f;
 			capsuleCollider.height = 2f;
 
-			return o;
+			gameObject.SetActive(false);
 		}
 
 		protected override void Start() {
 			base.Start();
-			if (prefab is null)
-				prefab = FindObjectOfType<PrefabContainer>()?.Capsule;
+			if (player is null)
+				player = FindObjectOfType<Player>();
 
 			rotation = Random.rotation.eulerAngles;
 			pickUpSfx = GetComponent<AudioSource>();
-		}
-
-		public override void ResetState() {
-			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
-			Type = (CapsuleType)Random.Range(0, 4);
 		}
 
 		private void Update() {
@@ -62,18 +49,8 @@ namespace ShootAR
 		public override void Destroy() {
 			GivePowerUp();
 			pickUpSfx?.Play();
-			ReturnToPool<Capsule>();
 		}
 
-		private void GivePowerUp() {
-			switch (Type) {
-				case 0:
-					if (player != null)
-						player.Ammo += 10;
-					break;
-
-					//UNDONE: Write cases for the rest of the types of capsule
-			}
-		}
+		protected abstract void GivePowerUp();
 	}
 }

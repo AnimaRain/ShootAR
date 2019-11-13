@@ -11,10 +11,10 @@ public class CapsuleTests : ShootAR.TestTools.TestBase
 	public IEnumerator CapsuleGivesBullets() {
 		//Set up Test
 		Player player = Player.Create();
-		Capsule capsule =
-			Capsule.Create(Capsule.CapsuleType.Bullet, 0, player);
+		BulletCapsule capsule =
+			BulletCapsule.Create(0, player);
 
-		yield return null;
+		yield return new WaitForSecondsRealtime(5f);
 		//Perform Test
 		capsule.Destroy();
 
@@ -37,15 +37,16 @@ public class CapsuleTests : ShootAR.TestTools.TestBase
 
 	[UnityTest]
 	public IEnumerator CapsuleDestroyedByBullet() {
-		var capsule = Capsule.Create(0, 0);
+		var capsule = BulletCapsule.Create(0, Player.Create());
 		var bullet = Bullet.Create(0);
 
+		capsule.gameObject.SetActive(true);
 		bullet.gameObject.SetActive(true);
 
 		yield return new WaitUntil(
-			() => Spawnable.Pool<Capsule>.Count > 0
+			() => Spawnable.Pool<BulletCapsule>.Count > 0
 		);
 
-		Assert.AreSame(capsule, Spawnable.Pool<Capsule>.RequestObject());
+		Assert.AreSame(capsule, Spawnable.Pool<BulletCapsule>.RequestObject());
 	}
 }

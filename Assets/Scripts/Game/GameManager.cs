@@ -136,7 +136,10 @@ namespace ShootAR
 						 * emptied when the scene is reloaded or else bugs will
 						 * occur. Not all pools are required to be emptied, but
 						 * this way it is easier to manage.*/
-						Spawnable.Pool<Capsule>.Empty();
+						Spawnable.Pool<BulletCapsule>.Empty();
+						Spawnable.Pool<ArmorCapsule>.Empty();
+						Spawnable.Pool<HealthCapsule>.Empty();
+						Spawnable.Pool<PowerUpCapsule>.Empty();
 						Spawnable.Pool<Crasher>.Empty();
 						Spawnable.Pool<Drone>.Empty();
 						Spawnable.Pool<Bullet>.Empty();
@@ -266,11 +269,29 @@ namespace ShootAR
 								.Populate(prefabs.EnemyBullet);
 						}
 						goto case nameof(Spawnable);
-					case nameof(Capsule):
-						type = typeof(Capsule);
-						if (Spawnable.Pool<Capsule>.Count == 0)
-							Spawnable.Pool<Capsule>
-								.Populate(prefabs.Capsule);
+					case nameof(BulletCapsule):
+						type = typeof(BulletCapsule);
+						if (Spawnable.Pool<BulletCapsule>.Count == 0)
+							Spawnable.Pool<BulletCapsule>
+								.Populate(prefabs.BulletCapsule);
+						goto case nameof(Spawnable);
+					case nameof(HealthCapsule):
+						type = typeof(HealthCapsule);
+						if (Spawnable.Pool<HealthCapsule>.Count == 0)
+							Spawnable.Pool<HealthCapsule>
+								.Populate(prefabs.HealthCapsule as HealthCapsule);
+						goto case nameof(Spawnable);
+					case nameof(ArmorCapsule):
+						type = typeof(ArmorCapsule);
+						if (Spawnable.Pool<ArmorCapsule>.Count == 0)
+							Spawnable.Pool<ArmorCapsule>
+								.Populate(prefabs.ArmorCapsule as ArmorCapsule);
+						goto case nameof(Spawnable);
+					case nameof(PowerUpCapsule):
+						type = typeof(PowerUpCapsule);
+						if (Spawnable.Pool<PowerUpCapsule>.Count == 0)
+							Spawnable.Pool<PowerUpCapsule>
+								.Populate(prefabs.PowerUpCapsule as PowerUpCapsule);
 						goto case nameof(Spawnable);
 					case nameof(Spawnable):
 						if (!spawnerGroups.ContainsKey(type))
@@ -340,7 +361,10 @@ namespace ShootAR
 				case XmlNodeType.EndElement
 				when spawnPattern.Name == nameof(Crasher) ||
 					 spawnPattern.Name == nameof(Drone) ||
-					 spawnPattern.Name == nameof(Capsule):
+					 spawnPattern.Name == nameof(BulletCapsule)||
+					 spawnPattern.Name == nameof(ArmorCapsule)||
+					 spawnPattern.Name == nameof(HealthCapsule)||
+					 spawnPattern.Name == nameof(PowerUpCapsule):
 					for (int i = currentSpawnerIndex + 1;
 							availableSpawners - requiredSpawners > i;
 							i++) {
@@ -370,6 +394,7 @@ namespace ShootAR
 			#endregion
 
 			gameState.RoundWon = false;
+			gameState.RoundStarted = true;
 		}
 
 		/// <summary>

@@ -139,7 +139,10 @@ namespace ShootAR.TestTools
 				Object.Destroy(o.gameObject);
 			}
 
-			Spawnable.Pool<Capsule>.Empty();
+			Spawnable.Pool<BulletCapsule>.Empty();
+			Spawnable.Pool<ArmorCapsule>.Empty();
+			Spawnable.Pool<HealthCapsule>.Empty();
+			Spawnable.Pool<PowerUpCapsule>.Empty();
 			Spawnable.Pool<Bullet>.Empty();
 			Spawnable.Pool<EnemyBullet>.Empty();
 			Spawnable.Pool<Crasher>.Empty();

@@ -11,19 +11,20 @@ internal class SpawnerTests : TestBase
 	[UnityTest]
 	public IEnumerator SpawnerFetchesFromPool() {
 		Spawner spawner = Spawner.Create(
-			objectToSpawn: typeof(Capsule),
+			objectToSpawn: typeof(BulletCapsule),
 			spawnLimit: 1,
 			initialDelay: 0,
 			spawnRate: 1,
 			maxDistanceToSpawn: 50,
 			minDistanceToSpawn: 20
 		);
-		Spawnable.Pool<Capsule>.Populate(Capsule.Create(0, 0));
+		Spawnable.Pool<BulletCapsule>
+				.Populate(BulletCapsule.Create(0, Player.Create()));
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
 
-		Assert.Less(Spawnable.Pool<Capsule>.Count, Spawnable.GLOBAL_SPAWN_LIMIT,
+		Assert.Less(Spawnable.Pool<BulletCapsule>.Count, Spawnable.GLOBAL_SPAWN_LIMIT,
 				"Pool population is not diminishing.");
 	}
 

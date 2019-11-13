@@ -10,35 +10,51 @@ public class GameStateTests : TestBase
 	[UnityTest]
 	public IEnumerator UseLastShotToHitCapsuleAndTakeBullets() {
 		GameState gameState = GameState.Create(0);
+		Camera camera = new GameObject().AddComponent<Camera>();
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
-			camera: new GameObject().AddComponent<Camera>(),
+			camera: camera,
 			ammo: 1,
 			gameState: gameState);
-		Capsule capsule = Capsule.Create(
-			type: Capsule.CapsuleType.Bullet,
-			speed: 0,
-			player: player);
-		Spawnable.Pool<Bullet>.Populate(Bullet.Create(10));
+		PrefabContainer prefabs = PrefabContainer.Create(
+			bc: BulletCapsule.Create(0, player),
+			b: Bullet.Create(10),
+			cr: TestEnemy.Create(),	// Create an enemy to stop game manager
+									// from switching state to "round won".
+			d: null, eb: null, ac: null, hc: null, pc: null
+		);
+		GameManager.Create("Assets\\Tests\\GameStateTests-testpattern.xml",
+				player, gameState, prefabs);
 
-		// Create an enemy to stop game manager from switching state to "round won".
-		var enemy = TestTarget.Create();
-		enemy.transform.Translate(Vector3.right * 500f);
+		yield return new WaitForFixedUpdate();
+		player.Ammo = 1;
 
-		GameManager.Create(player, gameState);
-
-		yield return null;  // without this, player.Shoot() will return null.
-
+		yield return new WaitUntil(() => gameState.RoundStarted);
+		Spawner capsuleSpawner = null;
+		do {
+			var ss = Object.FindObjectsOfType<Spawner>();
+			foreach (var s in ss) {
+				if (s.ObjectToSpawn == typeof(BulletCapsule)) {
+					capsuleSpawner = s;
+					break;
+				}
+			}
+			yield return new WaitForFixedUpdate();
+		} while (capsuleSpawner is null);
+		yield return new WaitUntil(() => capsuleSpawner.SpawnCount > 0);
+		BulletCapsule capsule = Object.FindObjectOfType<BulletCapsule>();
 		capsule.transform.Translate(new Vector3(10f, 10f, 10f));
-		player.transform.LookAt(capsule.transform);
-		player.Shoot()
-			.gameObject.SetActive(true);
+		camera.transform.LookAt(capsule.transform);
 
+		Assert.NotZero(Spawnable.Pool<Bullet>.Count);
+		Assert.IsNotNull(player.Shoot());
 
-		yield return new WaitWhile(() => player.Ammo > 0);
+		yield return new WaitWhile(() => capsule.isActiveAndEnabled);
+		yield return new WaitForFixedUpdate();
 
+		Assert.NotZero(player.Ammo, "Player should have bullets at the end.");
 		Assert.False(gameState.GameOver,
-				"The game must not end, if restocked on bullets.");
+				"The game must not end if restocked on bullets.");
 	}
 
 	[UnityTest]
