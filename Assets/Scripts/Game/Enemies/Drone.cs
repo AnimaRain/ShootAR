@@ -6,7 +6,7 @@ namespace ShootAR.Enemies
 	[RequireComponent(typeof(CapsuleCollider))]
 	public class Drone : Pyoopyoo
 	{
-		protected const float	ShootDelay = 5f,
+		protected const float	SHOOT_DELAY = 5f,
 								DEFAULT_SPEED = 10F;
 		protected const int DEFAULT_POINTS = 20,
 							DEFAULT_DAMAGE = 1;
@@ -31,9 +31,9 @@ namespace ShootAR.Enemies
 
 		protected void FixedUpdate() {
 			if (!gameState.GameOver) {
-				if (lastBullet == null && Time.time > nextShot) {
+				if (Time.time > nextShot) {
 					Shoot();
-					nextShot = Time.time + ShootDelay;
+					nextShot = Time.time + SHOOT_DELAY;
 				}
 
 				//OrbitAround();

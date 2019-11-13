@@ -154,9 +154,7 @@ internal class SpawnerTests : TestBase
 	 * In order to maintain the performance as well as the playability of the
 	 * game in acceptable levels, there should be an upper limit of how many
 	 * <see cref="Spawnable"/>s of any kind can be spawned by the spawners.
-	 * </remarks>
-	 * <seealso cref="Enemy"/>
-	 * <seealso cref="Capsule"/> */
+	 * </remarks> */
 	[UnityTest]
 	public IEnumerator SpawnersHaveAGlobalSpawningLimit() {
 		int limit = 100;    // Should be used only for the following check

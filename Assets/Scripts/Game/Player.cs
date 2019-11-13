@@ -22,14 +22,11 @@ namespace ShootAR
 		private float nextDamage;
 
 		[SerializeField] private GameState gameState;
-		/// <summary>
-		/// The <see cref="ShootAR.Bullet"/> prefab that gets instantiated when
-		/// the player shoots.
-		/// </summary>
-		/// <seealso cref="Shoot"/>
 		private AudioSource audioSource;
+#pragma warning disable CS0649
 		[SerializeField] private AudioClip shotSfx;
 		[SerializeField] private UnityEngine.UI.Text bulletCount;
+#pragma warning restore CS0649
 
 		/// <summary>
 		/// Player's health.
@@ -56,10 +53,8 @@ namespace ShootAR
 
 		/// <summary>
 		/// The ammount of bullets the player has.
+		/// Setting this also sets the bullet count on the UI.
 		/// </summary>
-		/// <remarks>
-		/// Setting this, also sets the bullet count on the UI.
-		/// </remarks>
 		public int Ammo {
 			get { return ammo; }
 			set {
