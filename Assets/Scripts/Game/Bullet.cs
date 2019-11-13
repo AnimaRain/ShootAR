@@ -26,10 +26,6 @@ namespace ShootAR
 			o.GetComponent<SphereCollider>().isTrigger = true;
 			o.Speed = speed;
 
-			// When the bullet gets created, it starts moving. This is
-			// a solution that currently works. After Player.Shoot() gets called
-			// the new bullet must be set active. Mind that direct usage of
-			// Bullet.Create() is intended mostly for test purposes.
 			o.gameObject.SetActive(false);
 			return o;
 		}

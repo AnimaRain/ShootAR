@@ -16,12 +16,15 @@ namespace ShootAR
 			private set { objectToSpawn = value; }
 		}
 		/// <summary>
-		/// The time interval between each spawn.
+		/// The time interval between each spawn in seconds.
 		/// </summary>
 		public float SpawnRate { get; set; }
 		/// <summary>
-		/// The initial delay before spawning the first object.
+		/// The initial delay before spawning the first object in seconds.
 		/// </summary>
+		/// <remarks>
+		/// Mind the additional waiting time from <see cref="SpawnRate"/>.
+		/// </remarks>
 		public float InitialDelay { get; private set; }
 		[SerializeField] private float maxDistanceToSpawn, minDistanceToSpawn;
 		/// <summary>
@@ -53,10 +56,12 @@ namespace ShootAR
 		public int SpawnCount { get; private set; }
 		public bool IsSpawning { get; private set; }
 
-		[SerializeField] private GameState gameState;
-		[SerializeField] private AudioClip spawnSfx;
-		[SerializeField] private GameObject portal;
 		private AudioSource audioPlayer;
+		[SerializeField] private GameState gameState;
+#pragma warning disable CS0649
+		[SerializeField] private GameObject portal;
+		[SerializeField] private AudioClip spawnSfx;
+#pragma warning restore CS0649
 
 		private void Awake() {
 			//Initial value should not be 0 to refrain from enabling
@@ -79,11 +84,8 @@ namespace ShootAR
 
 			// Since Create() is not an actual constructor, when object o is
 			// created, o.gameState is null and the code in OnEnable() won't
-			// run, so the following lines were copied here as well.
-			if (gameState != null) {
-				gameState.OnGameOver += o.StopSpawning;
-				gameState.OnRoundWon += o.StopSpawning;
-			}
+			// run.
+			o.OnEnable();
 
 			return o;
 		}
@@ -114,9 +116,10 @@ namespace ShootAR
 		/// Spawn objects until the spawn-limit is reached.
 		/// </summary>
 		/// <remarks>
-		/// Automaticaly called through <see cref="StartSpawning"/>. Iteration will
-		/// stop when the limit defined by <see cref="SpawnLimit"/> is reached or
-		/// can be manually stopped, using <see cref="StopSpawning"/>.
+		/// Automaticaly called through <see cref="StartSpawning"/>. Iteration
+		/// will stop when the limit defined by <see cref="SpawnLimit"/> is
+		/// reached or can be manually stopped, using
+		/// <see cref="StopSpawning"/>.
 		///
 		/// The spawner changes its position and rotation before spawning an
 		/// object. The object is spawned at the same position and with the same
@@ -177,7 +180,7 @@ namespace ShootAR
 			}
 		}
 
-		private void InstantiateSpawnable<T>() where T : Spawnable{
+		private void InstantiateSpawnable<T>() where T : Spawnable {
 			var spawned = Spawnable.Pool<T>.RequestObject();
 
 			spawned.transform.position = transform.localPosition;
@@ -186,7 +189,7 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Automatically start a <see cref="Spawn"/> coroutine.
+		/// Start a <see cref="Spawn"/> coroutine.
 		/// </summary>
 		public void StartSpawning() {
 			if (IsSpawning)

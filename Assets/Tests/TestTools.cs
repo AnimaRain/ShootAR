@@ -80,32 +80,6 @@ namespace ShootAR.TestTools
 	}
 
 	/// <summary>
-	/// Target for testing purposes.
-	/// </summary>
-	internal class TestTarget : Enemy
-	{
-		public bool GotHit { get; private set; }
-
-		public new void OnTriggerEnter(Collider other) {
-			if (other.GetComponent<Bullet>() != null)
-				GotHit = true;
-		}
-
-		private new void Start() {
-			gameObject.AddComponent<SphereCollider>();
-		}
-
-		public static TestTarget Create() {
-			var o = new GameObject("TestTarget").AddComponent<TestTarget>();
-			return o;
-		}
-
-		public override void ResetState() {
-			throw new System.NotImplementedException();
-		}
-	}
-
-	/// <summary>
 	/// Bare bones <see cref="Spawnable"/> object for test purposes.
 	/// </summary>
 	internal class TestObject : Spawnable

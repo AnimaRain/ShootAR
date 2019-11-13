@@ -9,6 +9,7 @@ using UnityEngine.UI;
 namespace ShootAR
 {
 
+	[RequireComponent(typeof(AudioSource))]
 	public class GameManager : MonoBehaviour
 	{
 		private const int   CAPSULE_BONUS_POINTS = 50,
@@ -122,13 +123,11 @@ namespace ShootAR
 				.localEulerAngles = new Vector3(0, 0, cam.videoRotationAngle);
 			float scaleY = cam.videoVerticallyMirrored ? -1.0f : 1.0f;
 			float videoRatio = (float)cam.width / (float)cam.height;
-			backgroundTexture.rectTransform.localScale = new Vector3(scaleY, scaleY / videoRatio, 1);  //Through testing i found out that using these settings makes the most optimal outcome
+			backgroundTexture.rectTransform
+				// Through testing i found out that using these settings makes
+				// the most optimal outcome.
+				.localScale = new Vector3(scaleY, scaleY / videoRatio, 1);
 
-			/*
-#if UNITY_ANDROID
-            backgroundTexture.rectTransform.localScale = new Vector3(Screen.width, Screen.height, 0);    //Didnt try this, but got the inspiration from it
-#endif
-            */
 			fireButton?
 				.onClick.AddListener(() => {
 					if (gameState.GameOver) {
@@ -154,7 +153,6 @@ namespace ShootAR
 						player.Shoot();
 				});
 
-			audioPlayer = gameObject.AddComponent<AudioSource>();
 			ui.BulletCount.text = player.Ammo.ToString();
 
 			stashedSpawners = new Stack<Spawner>(2);
@@ -165,14 +163,15 @@ namespace ShootAR
 			gameState.Level = Configuration.StartingLevel - 1;
 			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
 													 * Inspector */
-			if (prefabs != null)
-				Spawnable.Pool<Bullet>.Populate(prefabs.Bullet, 10);
+			Spawnable.Pool<Bullet>.Populate(prefabs.Bullet, 10);
 			AdvanceLevel();
 
 			GC.Collect();
 		}
 
 		private void OnEnable() {
+			if (gameState is null) return;
+
 			gameState.OnGameOver += OnGameOver;
 			gameState.OnRoundWon += OnRoundWon;
 		}
@@ -361,9 +360,9 @@ namespace ShootAR
 				case XmlNodeType.EndElement
 				when spawnPattern.Name == nameof(Crasher) ||
 					 spawnPattern.Name == nameof(Drone) ||
-					 spawnPattern.Name == nameof(BulletCapsule)||
-					 spawnPattern.Name == nameof(ArmorCapsule)||
-					 spawnPattern.Name == nameof(HealthCapsule)||
+					 spawnPattern.Name == nameof(BulletCapsule) ||
+					 spawnPattern.Name == nameof(ArmorCapsule) ||
+					 spawnPattern.Name == nameof(HealthCapsule) ||
 					 spawnPattern.Name == nameof(PowerUpCapsule):
 					for (int i = currentSpawnerIndex + 1;
 							availableSpawners - requiredSpawners > i;
@@ -401,10 +400,6 @@ namespace ShootAR
 		/// Destroys all spawned objects. 
 		/// </summary>
 		private void ClearScene() {
-#if DEBUG
-			Debug.Log("Clearing scene...");
-#endif
-
 			// Be merciful. Player deserves some points for the unused capsules.
 			if (gameState.RoundWon) {
 				Capsule[] capsules = FindObjectsOfType<Capsule>();
@@ -426,7 +421,6 @@ namespace ShootAR
 		}
 
 		private void OnGameOver() {
-			Debug.Log("Player defeated");
 			if (ui != null) {
 				var survivedRounds = gameState.Level - Configuration.StartingLevel;
 				ui.MessageOnScreen.text =
@@ -438,7 +432,6 @@ namespace ShootAR
 		}
 
 		private void OnRoundWon() {
-			Debug.Log("Round won");
 			ui.MessageOnScreen.text = "Round Clear!";
 			audioPlayer?.PlayOneShot(victoryMusic, 0.7f);
 			ClearScene();
