@@ -17,6 +17,7 @@ public class GameStateTests : TestBase
 			ammo: 1,
 			gameState: gameState);
 		PrefabContainer prefabs = PrefabContainer.Create(
+			sp: Spawner.Create(),
 			bc: BulletCapsule.Create(0, player),
 			b: Bullet.Create(10),
 			cr: TestEnemy.Create(),	// Create an enemy to stop game manager
@@ -70,7 +71,7 @@ public class GameStateTests : TestBase
 			player, gameState,
 			PrefabContainer.Create(
 				cr: TestEnemy.Create(0, 0, 0, 10, 10, 10),
-				b: Bullet.Create(100f),
+				b: Bullet.Create(100f), sp: Spawner.Create(),
 				bc: null, ac: null, hc: null, pc: null, d: null, eb: null
 		));
 

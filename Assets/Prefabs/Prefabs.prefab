@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6131954131730116275
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6131954131730116273}
+  - component: {fileID: 6131954131730116272}
+  m_Layer: 0
+  m_Name: Prefabs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6131954131730116273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6131954131730116275}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6131954131730116272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6131954131730116275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79411a5d4a67d2f47ac7ab871b86bdbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletCapsule: {fileID: 3813811731143575544, guid: 6b05e536ffc42d84db3110576d05de02,
+    type: 3}
+  healthCapsule: {fileID: 3284526818214150486, guid: 14440aeeda904b8469dc2e22b5081192,
+    type: 3}
+  armorCapsule: {fileID: 4797635124318421861, guid: e9549100d1ba31643b92af32ca3629ee,
+    type: 3}
+  powerUpCapsule: {fileID: 2342708522947891475, guid: 307ae3fb9f21fcb4c852791843118e23,
+    type: 3}
+  crasher: {fileID: 114290244681714904, guid: 571ea75721d2aa04fae67e4d0b6bdf91, type: 3}
+  drone: {fileID: 114602954936751344, guid: b61d74442990e8349b2ba008d9253c9c, type: 3}
+  bullet: {fileID: 114966587524179450, guid: 95057ef19f604694e91f6e666846db2f, type: 3}
+  enemyBullet: {fileID: 114055429372661458, guid: 29203ff5a97e7984db5f0e8ce8b82a8b,
+    type: 3}
+  spawner: {fileID: 114038760084097706, guid: c1b1f9b8ce0032a4d8e093df957f39ba, type: 3}

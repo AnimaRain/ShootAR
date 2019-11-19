@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4349620848899708}
   - component: {fileID: 114038760084097706}
   m_Layer: 0
-  m_Name: CapsuleSpawner
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,10 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e24eda8e0c60943906695a99d4823c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToSpawn: {fileID: 114786631525062386, guid: 16fc9f9a7572d884da8cbe81c7d11097,
-    type: 3}
   maxDistanceToSpawn: 20
   minDistanceToSpawn: 15
-  gameState: {fileID: 0}
-  spawnSfx: {fileID: 0}
-  portal: {fileID: 0}
+  portal: {fileID: 1754596758580394, guid: 3092a99139f0f6a49a4713eee03b2702, type: 3}
+  spawnSfx: {fileID: 8300000, guid: b3fcad6884630204eaad03c22907bd0d, type: 3}

@@ -21,6 +21,7 @@ namespace ShootAR
 		[SerializeField] private Drone drone;
 		[SerializeField] private Bullet bullet;
 		[SerializeField] private EnemyBullet enemyBullet;
+		[SerializeField] private Spawner spawner;
 
 		public Crasher Crasher { get => crasher; }
 		public Drone Drone { get => drone; }
@@ -30,12 +31,13 @@ namespace ShootAR
 		public HealthCapsule HealthCapsule { get => healthCapsule; }
 		public ArmorCapsule ArmorCapsule { get => armorCapsule; }
 		public PowerUpCapsule PowerUpCapsule { get => powerUpCapsule; }
+		public Spawner Spawner { get => spawner; }
 
 #if DEBUG
 		public static PrefabContainer Create(
 				BulletCapsule bc, ArmorCapsule ac, HealthCapsule hc,
 				PowerUpCapsule pc, Crasher cr, Drone d, Bullet b,
-				EnemyBullet eb) {
+				EnemyBullet eb, Spawner sp) {
 			PrefabContainer o = new GameObject("Prefabs")
 					.AddComponent<PrefabContainer>();
 			o.bulletCapsule = bc;
@@ -46,6 +48,7 @@ namespace ShootAR
 			o.drone = d;
 			o.bullet = b;
 			o.enemyBullet = eb;
+			o.spawner = sp;
 
 			return o;
 		}

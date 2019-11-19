@@ -54,10 +54,10 @@ namespace ShootAR
 		/// Resets every time StartSpawning is called.
 		/// </remarks>
 		public int SpawnCount { get; private set; }
-		public bool IsSpawning { get; private set; }
+		public bool IsSpawning { get; private set; } = false;
 
 		private AudioSource audioPlayer;
-		[SerializeField] private GameState gameState;
+		private static GameState gameState;
 #pragma warning disable CS0649
 		[SerializeField] private GameObject portal;
 		[SerializeField] private AudioClip spawnSfx;
@@ -70,9 +70,11 @@ namespace ShootAR
 		}
 
 		public static Spawner Create(
-			System.Type objectToSpawn, int spawnLimit, float initialDelay,
-			float spawnRate, float maxDistanceToSpawn, float minDistanceToSpawn,
-			GameState gameState = null) {
+				System.Type objectToSpawn = null, int spawnLimit = default,
+				float initialDelay = default, float spawnRate = default,
+				float maxDistanceToSpawn = default,
+				float minDistanceToSpawn = default,
+				GameState gameState = null) {
 			var o = new GameObject(nameof(Spawner)).AddComponent<Spawner>();
 
 			o.ObjectToSpawn = objectToSpawn;
@@ -80,7 +82,7 @@ namespace ShootAR
 			o.SpawnRate = spawnRate;
 			o.MaxDistanceToSpawn = maxDistanceToSpawn;
 			o.MinDistanceToSpawn = minDistanceToSpawn;
-			o.gameState = gameState;
+			Spawner.gameState = gameState;
 
 			// Since Create() is not an actual constructor, when object o is
 			// created, o.gameState is null and the code in OnEnable() won't
@@ -96,6 +98,9 @@ namespace ShootAR
 				audioPlayer.clip = spawnSfx;
 				audioPlayer.volume = 0.2f;
 			}
+
+			if (gameState is null)
+				gameState = FindObjectOfType<GameState>();
 		}
 
 		private void OnEnable() {

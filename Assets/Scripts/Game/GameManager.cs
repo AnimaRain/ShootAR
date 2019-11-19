@@ -16,7 +16,7 @@ namespace ShootAR
 							ROUND_AMMO_REWARD = 6;
 #if DEBUG
 #pragma warning disable IDE1006 // Suppress naming rule violation
-		private string SPAWN_PATTERN_FILE_PATH;
+		private string SPAWN_PATTERN_FILE_PATH = "spawnpatterns.xml";
 #pragma warning restore IDE1006
 #else
 		private const string SPAWN_PATTERN_FILE_PATH = "spawnpatterns.xml";
@@ -339,21 +339,15 @@ namespace ShootAR
 				when spawnPattern.Name == "pattern":
 					if (newSpawnerRequired) {
 						spawnerGroup.Add(
-							Spawner.Create(
-								type, limit, rate, delay,
-								maxDistance, minDistance
-							)
+							Instantiate(prefabs.Spawner)
 						);
-						spawnerGroup[currentSpawnerIndex].StartSpawning();
-
 						newSpawnerRequired = false;
 					}
-					else
-						spawnerGroup[currentSpawnerIndex]
-							.StartSpawning(
-								type, limit, rate, delay,
-								maxDistance, minDistance
-							);
+					spawnerGroup[currentSpawnerIndex]
+						.StartSpawning(
+							type, limit, rate, delay,
+							maxDistance, minDistance
+						);
 					break;
 
 				// When done with a type of Spawnable, stash leftover spawners.
