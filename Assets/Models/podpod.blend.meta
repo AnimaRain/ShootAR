@@ -1,120 +1,340 @@
 fileFormatVersion: 2
 guid: 8231fcdd46b4911468c93b2b2609698a
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Armature
-    100002: Armature_001
-    100004: Armature_002
-    100006: Armature_003
-    100008: Bone
-    100010: Bone_0
-    100012: Bone_001
-    100014: Bone_002
-    100016: Bone_003
-    100018: Bone_004
-    100020: Bone_005
-    100022: Bone_006
-    100024: Bone_007
-    100026: Bone_008
-    100028: Bone_1
-    100030: Bone_10
-    100032: Bone_11
-    100034: Bone_12
-    100036: Bone_13
-    100038: Bone_14
-    100040: Bone_15
-    100042: Bone_16
-    100044: Bone_17
-    100046: Bone_18
-    100048: Bone_19
-    100050: Bone_2
-    100052: Bone_20
-    100054: Bone_21
-    100056: Bone_22
-    100058: Bone_23
-    100060: Bone_24
-    100062: Bone_3
-    100064: Bone_4
-    100066: Bone_5
-    100068: Bone_6
-    100070: Bone_7
-    100072: Bone_8
-    100074: Bone_9
-    100076: Cube
-    100078: Cylinder
-    100080: Cylinder_001
-    100082: Cylinder_002
-    100084: Cylinder_003
-    100086: //RootNode
-    400000: Armature
-    400002: Armature_001
-    400004: Armature_002
-    400006: Armature_003
-    400008: Bone
-    400010: Bone_0
-    400012: Bone_001
-    400014: Bone_002
-    400016: Bone_003
-    400018: Bone_004
-    400020: Bone_005
-    400022: Bone_006
-    400024: Bone_007
-    400026: Bone_008
-    400028: Bone_1
-    400030: Bone_10
-    400032: Bone_11
-    400034: Bone_12
-    400036: Bone_13
-    400038: Bone_14
-    400040: Bone_15
-    400042: Bone_16
-    400044: Bone_17
-    400046: Bone_18
-    400048: Bone_19
-    400050: Bone_2
-    400052: Bone_20
-    400054: Bone_21
-    400056: Bone_22
-    400058: Bone_23
-    400060: Bone_24
-    400062: Bone_3
-    400064: Bone_4
-    400066: Bone_5
-    400068: Bone_6
-    400070: Bone_7
-    400072: Bone_8
-    400074: Bone_9
-    400076: Cube
-    400078: Cylinder
-    400080: Cylinder_001
-    400082: Cylinder_002
-    400084: Cylinder_003
-    400086: //RootNode
-    2300000: Cube
-    2300002: Cylinder
-    2300004: Cylinder_001
-    2300006: Cylinder_002
-    2300008: Cylinder_003
-    3300000: Cube
-    3300002: Cylinder
-    3300004: Cylinder_001
-    3300006: Cylinder_002
-    3300008: Cylinder_003
-    4300000: Cylinder
-    4300002: Cube
-    4300004: Cylinder_001
-    4300006: Cylinder_002
-    4300008: Cylinder_003
-    7400000: Default Take
-    9500000: //RootNode
-    2186277476908879412: ImportLogs
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Armature
+  - first:
+      1: 100002
+    second: Armature_001
+  - first:
+      1: 100004
+    second: Armature_002
+  - first:
+      1: 100006
+    second: Armature_003
+  - first:
+      1: 100008
+    second: Bone
+  - first:
+      1: 100010
+    second: Bone_0
+  - first:
+      1: 100012
+    second: Bone_001
+  - first:
+      1: 100014
+    second: Bone_002
+  - first:
+      1: 100016
+    second: Bone_003
+  - first:
+      1: 100018
+    second: Bone_004
+  - first:
+      1: 100020
+    second: Bone_005
+  - first:
+      1: 100022
+    second: Bone_006
+  - first:
+      1: 100024
+    second: Bone_007
+  - first:
+      1: 100026
+    second: Bone_008
+  - first:
+      1: 100028
+    second: Bone_1
+  - first:
+      1: 100030
+    second: Bone_10
+  - first:
+      1: 100032
+    second: Bone_11
+  - first:
+      1: 100034
+    second: Bone_12
+  - first:
+      1: 100036
+    second: Bone_13
+  - first:
+      1: 100038
+    second: Bone_14
+  - first:
+      1: 100040
+    second: Bone_15
+  - first:
+      1: 100042
+    second: Bone_16
+  - first:
+      1: 100044
+    second: Bone_17
+  - first:
+      1: 100046
+    second: Bone_18
+  - first:
+      1: 100048
+    second: Bone_19
+  - first:
+      1: 100050
+    second: Bone_2
+  - first:
+      1: 100052
+    second: Bone_20
+  - first:
+      1: 100054
+    second: Bone_21
+  - first:
+      1: 100056
+    second: Bone_22
+  - first:
+      1: 100058
+    second: Bone_23
+  - first:
+      1: 100060
+    second: Bone_24
+  - first:
+      1: 100062
+    second: Bone_3
+  - first:
+      1: 100064
+    second: Bone_4
+  - first:
+      1: 100066
+    second: Bone_5
+  - first:
+      1: 100068
+    second: Bone_6
+  - first:
+      1: 100070
+    second: Bone_7
+  - first:
+      1: 100072
+    second: Bone_8
+  - first:
+      1: 100074
+    second: Bone_9
+  - first:
+      1: 100076
+    second: Cube
+  - first:
+      1: 100078
+    second: Cylinder
+  - first:
+      1: 100080
+    second: Cylinder_001
+  - first:
+      1: 100082
+    second: Cylinder_002
+  - first:
+      1: 100084
+    second: Cylinder_003
+  - first:
+      1: 100086
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Armature
+  - first:
+      4: 400002
+    second: Armature_001
+  - first:
+      4: 400004
+    second: Armature_002
+  - first:
+      4: 400006
+    second: Armature_003
+  - first:
+      4: 400008
+    second: Bone
+  - first:
+      4: 400010
+    second: Bone_0
+  - first:
+      4: 400012
+    second: Bone_001
+  - first:
+      4: 400014
+    second: Bone_002
+  - first:
+      4: 400016
+    second: Bone_003
+  - first:
+      4: 400018
+    second: Bone_004
+  - first:
+      4: 400020
+    second: Bone_005
+  - first:
+      4: 400022
+    second: Bone_006
+  - first:
+      4: 400024
+    second: Bone_007
+  - first:
+      4: 400026
+    second: Bone_008
+  - first:
+      4: 400028
+    second: Bone_1
+  - first:
+      4: 400030
+    second: Bone_10
+  - first:
+      4: 400032
+    second: Bone_11
+  - first:
+      4: 400034
+    second: Bone_12
+  - first:
+      4: 400036
+    second: Bone_13
+  - first:
+      4: 400038
+    second: Bone_14
+  - first:
+      4: 400040
+    second: Bone_15
+  - first:
+      4: 400042
+    second: Bone_16
+  - first:
+      4: 400044
+    second: Bone_17
+  - first:
+      4: 400046
+    second: Bone_18
+  - first:
+      4: 400048
+    second: Bone_19
+  - first:
+      4: 400050
+    second: Bone_2
+  - first:
+      4: 400052
+    second: Bone_20
+  - first:
+      4: 400054
+    second: Bone_21
+  - first:
+      4: 400056
+    second: Bone_22
+  - first:
+      4: 400058
+    second: Bone_23
+  - first:
+      4: 400060
+    second: Bone_24
+  - first:
+      4: 400062
+    second: Bone_3
+  - first:
+      4: 400064
+    second: Bone_4
+  - first:
+      4: 400066
+    second: Bone_5
+  - first:
+      4: 400068
+    second: Bone_6
+  - first:
+      4: 400070
+    second: Bone_7
+  - first:
+      4: 400072
+    second: Bone_8
+  - first:
+      4: 400074
+    second: Bone_9
+  - first:
+      4: 400076
+    second: Cube
+  - first:
+      4: 400078
+    second: Cylinder
+  - first:
+      4: 400080
+    second: Cylinder_001
+  - first:
+      4: 400082
+    second: Cylinder_002
+  - first:
+      4: 400084
+    second: Cylinder_003
+  - first:
+      4: 400086
+    second: //RootNode
+  - first:
+      23: 2300000
+    second: Cube
+  - first:
+      23: 2300002
+    second: Cylinder
+  - first:
+      23: 2300004
+    second: Cylinder_001
+  - first:
+      23: 2300006
+    second: Cylinder_002
+  - first:
+      23: 2300008
+    second: Cylinder_003
+  - first:
+      33: 3300000
+    second: Cube
+  - first:
+      33: 3300002
+    second: Cylinder
+  - first:
+      33: 3300004
+    second: Cylinder_001
+  - first:
+      33: 3300006
+    second: Cylinder_002
+  - first:
+      33: 3300008
+    second: Cylinder_003
+  - first:
+      43: 4300000
+    second: Cylinder
+  - first:
+      43: 4300002
+    second: Cube
+  - first:
+      43: 4300004
+    second: Cylinder_001
+  - first:
+      43: 4300006
+    second: Cylinder_002
+  - first:
+      43: 4300008
+    second: Cylinder_003
+  - first:
+      74: 7400000
+    second: Default Take
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      41386430: 2186277476908879412
+    second: ImportLogs
+  - first:
+      74: -623603649343465320
+    second: Scene
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material
-    second: {fileID: 2100000, guid: 936221681d7604d4cb65b5789a0bba4e, type: 2}
+    second: {fileID: 2100000, guid: f1d9d238f23eb9548af0652949d7476f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: No Name
+    second: {fileID: 2100000, guid: 59ea255d81068e8c988fc79a44dd9745, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -153,6 +373,8 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -160,27 +382,32 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -190,6 +417,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
