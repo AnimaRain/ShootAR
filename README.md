@@ -42,9 +42,7 @@ If you want to built it yourself, you can follow the [instructions below](#build
 "[Contributing](docs/contributing.md)".*
 
 ### Required software
-In order to build the project yourself, you will need to have [Unity](https://unity3d.com/) installed.
-(If you meet the legal requirements, the [personal](https://store.unity.com/download?ref=personal) plan will do just fine.)
-(*Know that the Unity editor runs only under Windows and Mac.*)
+In order to build the project yourself, you need to have [Unity](https://unity3d.com/) installed.
 
 ### Downloading the source files
 Download the latest released source files from [here](https://github.com/AnimaRain/ShootAR). If you prefer a previous
