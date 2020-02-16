@@ -94,6 +94,14 @@ namespace ShootAR
 				}
 			}
 #endif
+
+			spawnPatternFilePath = Path.Combine(
+					Application.persistentDataPath, SPAWN_PATTERN_FILE);
+			Debug.Log($"File: {SPAWN_PATTERN_FILE}\nFile path: {spawnPatternFilePath}\nStreaming Assets: {Application.streamingAssetsPath}\nPersistent Data: {Application.persistentDataPath}");
+			if (!File.Exists(spawnPatternFilePath)) {
+				//TODO: Use LocalFiles and fix from where the patterns are read.
+			}
+#endif
 			/* Do not use elif here. While testing
 			 * using Unity Remote 5, it does not use
 			 * the camera on the phone and it has to
@@ -245,7 +253,7 @@ namespace ShootAR
 
 			while (!doneParsingForCurrentLevel) {
 				if (!(spawnPattern?.Read() ?? false)) {
-					spawnPattern = XmlReader.Create(SPAWN_PATTERN_FILE_PATH);
+					spawnPattern = XmlReader.Create(spawnPatternFilePath);
 					spawnPattern.MoveToContent();
 				}
 
