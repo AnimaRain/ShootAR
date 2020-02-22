@@ -7,9 +7,10 @@
 	
 	Each level node groups the patterns that will be used for that level.
 	
-	The Spawnable types are: "Crasher", "Drone", "Capsule"
+	The Spawnable types are: "Crasher", "Drone", "PowerUpCapsule",
+	"BulletCapsule", "HealthCapsule", "ArmorCapsule".
 	
-	For each "pattern" a spawner will be created using those settings.
+	For each pattern a spawner will be created using those settings.
 	To create more than one spawner of the same type with the same settings
 	without creating an identical pattern, use the "repeat" attribute:
 	repeat="#" where # the number of times to go through this pattern. If # is
@@ -26,7 +27,7 @@
 
 <spawnerconfiguration>
 	<level>
-		<Crasher>
+		<spawnable type="Crasher">
 			<pattern>
 				<limit>12</limit>
 				<rate>3</rate>
@@ -34,8 +35,8 @@
 				<maxDistance>50</maxDistance>
 				<minDistance>30</minDistance>
 			</pattern>
-		</Crasher>
-		<Drone>
+		</spawnable>
+		<spawnable type="Drone">
 			<pattern>
 				<limit>9</limit>
 				<rate>4</rate>
@@ -43,8 +44,8 @@
 				<maxDistance>60</maxDistance>
 				<minDistance>40</minDistance>
 			</pattern>
-		</Drone>
-		<Capsule>
+		</spawnable>
+		<spawnable type="Capsule">
 			<pattern>
 				<limit>3</limit>
 				<rate>15</rate>
@@ -52,10 +53,10 @@
 				<maxDistance>20</maxDistance>
 				<minDistance>15</minDistance>
 			</pattern>
-		</Capsule>
+		</spawnable>
 	</level>
 	<level>
-		<Crasher>
+		<spawnable type="Crasher">
 			<pattern repeat="2">
 				<limit>13</limit>
 				<rate>3</rate>
@@ -63,8 +64,8 @@
 				<maxDistance>50</maxDistance>
 				<minDistance>30</minDistance>
 			</pattern>
-		</Crasher>
-		<Capsule>
+		</spawnable>
+		<spawnable type="Capsule">
 			<pattern>
 				<limit>2</limit>
 				<rate>15</rate>
@@ -72,10 +73,10 @@
 				<maxDistance>30</maxDistance>
 				<minDistance>15</minDistance>
 			</pattern>
-		</Capsule>
+		</spawnable>
 	</level>
 	<level>
-		<Drone>
+		<spawnable type="Drone">
 			<pattern repeat="3">
 				<limit>9</limit>
 				<rate>4</rate>
@@ -83,6 +84,6 @@
 				<maxDistance>60</maxDistance>
 				<minDistance>40</minDistance>
 			</pattern>
-		</Drone>
+		</spawnable>
 	</level>
 </spawnerconfiguration>

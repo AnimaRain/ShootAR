@@ -35,10 +35,8 @@ namespace ShootAR
 		[SerializeField] private Player player;
 		[SerializeField] private PrefabContainer prefabs;
 		private Stack<Spawner> stashedSpawners;
-		private XmlReader spawnPattern;
 
 		public static GameManager Create(
-			string spawnPattern,
 			Player player, GameState gameState,
 			PrefabContainer prefabs,
 			ScoreManager scoreManager = null,
@@ -48,7 +46,6 @@ namespace ShootAR
 		) {
 			var o = new GameObject(nameof(GameManager)).AddComponent<GameManager>();
 
-			o.SPAWN_PATTERN_FILE_PATH = spawnPattern;
 			o.player = player;
 			o.gameState = gameState;
 			o.prefabs = prefabs;
@@ -241,157 +238,14 @@ namespace ShootAR
 #endif
 
 			#region Spawn Pattern
-			Type type = default;
-			int limit = default, currentSpawnerIndex = -1,
-				ammoEnemyDifference = player.Ammo,
-				availableSpawners = 0, requiredSpawners = 0;
-			float   rate = default, delay = default,
-					maxDistance = default, minDistance = default;
-			List<Spawner> spawnerGroup = null;
-			bool newSpawnerRequired = false, addLimitToSum = false,
-				 doneParsingForCurrentLevel = false;
-
-			while (!doneParsingForCurrentLevel) {
-				if (!(spawnPattern?.Read() ?? false)) {
-					spawnPattern = XmlReader.Create(spawnPatternFilePath);
-					spawnPattern.MoveToContent();
-				}
-
-				switch (spawnPattern.NodeType) {
-				case XmlNodeType.Element:
-					switch (spawnPattern.Name) {
-					// Find type of Spawnable and get the related spawner group.
-					case nameof(Crasher):
-						addLimitToSum = true;
-						type = typeof(Crasher);
-						if (Spawnable.Pool<Crasher>.Count == 0)
-							Spawnable.Pool<Crasher>.Populate(prefabs.Crasher);
-						goto case nameof(Spawnable);
-					case nameof(Drone):
-						addLimitToSum = true;
-						type = typeof(Drone);
-						if (Spawnable.Pool<Drone>.Count == 0) {
-							Spawnable.Pool<Drone>.Populate(prefabs.Drone);
-							Spawnable.Pool<EnemyBullet>
-								.Populate(prefabs.EnemyBullet);
-						}
-						goto case nameof(Spawnable);
-					case nameof(BulletCapsule):
-						type = typeof(BulletCapsule);
-						if (Spawnable.Pool<BulletCapsule>.Count == 0)
-							Spawnable.Pool<BulletCapsule>
-								.Populate(prefabs.BulletCapsule);
-						goto case nameof(Spawnable);
-					case nameof(HealthCapsule):
-						type = typeof(HealthCapsule);
-						if (Spawnable.Pool<HealthCapsule>.Count == 0)
-							Spawnable.Pool<HealthCapsule>
-								.Populate(prefabs.HealthCapsule as HealthCapsule);
-						goto case nameof(Spawnable);
-					case nameof(ArmorCapsule):
-						type = typeof(ArmorCapsule);
-						if (Spawnable.Pool<ArmorCapsule>.Count == 0)
-							Spawnable.Pool<ArmorCapsule>
-								.Populate(prefabs.ArmorCapsule as ArmorCapsule);
-						goto case nameof(Spawnable);
-					case nameof(PowerUpCapsule):
-						type = typeof(PowerUpCapsule);
-						if (Spawnable.Pool<PowerUpCapsule>.Count == 0)
-							Spawnable.Pool<PowerUpCapsule>
-								.Populate(prefabs.PowerUpCapsule as PowerUpCapsule);
-						goto case nameof(Spawnable);
-					case nameof(Spawnable):
-						if (!spawnerGroups.ContainsKey(type))
-							spawnerGroups.Add(type, new List<Spawner>());
-						spawnerGroup = spawnerGroups[type];
-						availableSpawners = spawnerGroup.Count;
-						break;
-
-
-					/* Count how many spawners of a type will be required.
-					 * If there are not enough spawners in the group, take
-					 * one from the stashed pile or mark that a new one should
-					 * be created. */
-					case "pattern":
-						if (availableSpawners - ++currentSpawnerIndex <= 0)
-							if (stashedSpawners.Count > 0)
-								spawnerGroup.Add(stashedSpawners.Pop());
-							else
-								newSpawnerRequired = true;
-						requiredSpawners++;
-						break;
-
-					// Get spawner configuration data.
-					case nameof(limit):
-						limit = spawnPattern.ReadElementContentAsInt();
-						if (addLimitToSum) ammoEnemyDifference -= limit;
-						addLimitToSum = false;
-						break;
-					case nameof(rate):
-						rate = spawnPattern.ReadElementContentAsFloat();
-						break;
-					case nameof(delay):
-						delay = spawnPattern.ReadElementContentAsFloat();
-						break;
-					case nameof(maxDistance):
-						maxDistance = spawnPattern.ReadElementContentAsFloat();
-						break;
-					case nameof(minDistance):
-						minDistance = spawnPattern.ReadElementContentAsFloat();
-						break;
-					}
-					break;
-
-				// Configure spawner using the retrieved data.
-				case XmlNodeType.EndElement
-				when spawnPattern.Name == "pattern":
-					if (newSpawnerRequired) {
-						spawnerGroup.Add(
-							Instantiate(prefabs.Spawner)
-						);
-						newSpawnerRequired = false;
-					}
-					spawnerGroup[currentSpawnerIndex]
-						.StartSpawning(
-							type, limit, rate, delay,
-							maxDistance, minDistance
-						);
-					break;
-
-				// When done with a type of Spawnable, stash leftover spawners.
-				case XmlNodeType.EndElement
-				when spawnPattern.Name == nameof(Crasher) ||
-					 spawnPattern.Name == nameof(Drone) ||
-					 spawnPattern.Name == nameof(BulletCapsule) ||
-					 spawnPattern.Name == nameof(ArmorCapsule) ||
-					 spawnPattern.Name == nameof(HealthCapsule) ||
-					 spawnPattern.Name == nameof(PowerUpCapsule):
-					for (int i = currentSpawnerIndex + 1;
-							availableSpawners - requiredSpawners > i;
-							i++) {
-						stashedSpawners.Push(spawnerGroup[i]);
-						spawnerGroup.RemoveAt(i);
-					}
-					currentSpawnerIndex = -1;
-					break;
-
-				case XmlNodeType.EndElement
-				when spawnPattern.Name == "level":
-
-					/* Player should always have enough ammo to play the next
-					 * round. If they already have more than enough, they get
-					 * points. */
-					if (ammoEnemyDifference > 0)
-						scoreManager.AddScore(ammoEnemyDifference * 10);
-					else if (ammoEnemyDifference < 0)
-						player.Ammo += -ammoEnemyDifference;
-
-					doneParsingForCurrentLevel = true;
-					break;
-				}
-			}
-			//TODO: Stash entire group of spawners when that type is not used
-			// in a round.
+			//TODO: Fix this
+			/* Player should always have enough ammo to play the next
+			 * round. If they already have more than enough, they get
+			 * points. */
+			if (ammoEnemyDifference > 0)
+				scoreManager.AddScore(ammoEnemyDifference * 10);
+			else if (ammoEnemyDifference < 0)
+				player.Ammo += -ammoEnemyDifference;
 			#endregion
 
 			gameState.RoundWon = false;

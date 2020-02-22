@@ -47,6 +47,7 @@ namespace ShootAR
 			/// <paramref name="referenceObject"/>.
 			/// </summary>
 			/// <param name="referenceObject"></param>
+			/// <param name="lot">how many objects to add to the pool</param>
 			public static void Populate(T referenceObject, int lot = GLOBAL_SPAWN_LIMIT) {
 				if (objectStack.Count > 0)
 					throw new UnityException("Trying to populate an already populated pool.");
@@ -56,6 +57,39 @@ namespace ShootAR
 						spawnedObject.gameObject.SetActive(false);
 						objectStack.Push(spawnedObject);
 					}
+			}
+
+			/// <summary>
+			/// Fill the appropriate pool with copies of the object loaded from Resources.
+			/// Which file is loaded is determined by the type of the pool.
+			/// </summary>
+			/// <param name="lot">how many objects to add to the pool</param>
+			public static void Populate(int lot = GLOBAL_SPAWN_LIMIT) {
+				string prefab = "";
+				switch (typeof(T).ToString()) {
+				case nameof(Enemies.Crasher):
+					prefab = "Crasher";
+					break;
+				case nameof(Enemies.Drone):
+					prefab = "Drone";
+					break;
+				case nameof(ArmorCapsule):
+					prefab = "ArmorCapsule";
+					break;
+				case nameof(HealthCapsule):
+					prefab = "HealthCapsule";
+					break;
+				case nameof(PowerUpCapsule):
+					prefab = "PowerUpCapsule";
+					break;
+				case nameof(BulletCapsule):
+					prefab = "BulletCapsule";
+					break;
+				}
+
+				Populate(
+					Resources.Load<T>(prefab)
+				);
 			}
 
 			/// <summary>

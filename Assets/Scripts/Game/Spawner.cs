@@ -1,17 +1,23 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Xml;
+using System;
+using System.Collections.Generic;
+using ShootAR.Enemies;
 
 namespace ShootAR
 {
 
 	public class Spawner : MonoBehaviour
 	{
-		[SerializeField] private System.Type objectToSpawn;
+		private static XmlReader xmlPattern;
+
+		[SerializeField] private Type objectToSpawn;
 		/// <summary>
 		/// Reference to the type of <see cref="Spawnable"/> prefab to copy
 		/// while spawnning.
 		/// </summary>
-		public System.Type ObjectToSpawn {
+		public Type ObjectToSpawn {
 			get { return objectToSpawn; }
 			private set { objectToSpawn = value; }
 		}
@@ -70,7 +76,7 @@ namespace ShootAR
 		}
 
 		public static Spawner Create(
-				System.Type objectToSpawn = null, int spawnLimit = default,
+				Type objectToSpawn = null, int spawnLimit = default,
 				float initialDelay = default, float spawnRate = default,
 				float maxDistanceToSpawn = default,
 				float minDistanceToSpawn = default,
@@ -143,9 +149,9 @@ namespace ShootAR
 				if (!IsSpawning) break;
 				if (SpawnCount >= Spawnable.GLOBAL_SPAWN_LIMIT) continue;
 
-				float r = Random.Range(minDistanceToSpawn, maxDistanceToSpawn);
-				float theta = Random.Range(0f, Mathf.PI);
-				float fi = Random.Range(0f, 2 * Mathf.PI);
+				float r = UnityEngine.Random.Range(minDistanceToSpawn, maxDistanceToSpawn);
+				float theta = UnityEngine.Random.Range(0f, Mathf.PI);
+				float fi = UnityEngine.Random.Range(0f, 2 * Mathf.PI);
 				float x = r * Mathf.Sin(theta) * Mathf.Cos(fi);
 				float y = r * Mathf.Sin(theta) * Mathf.Sin(fi);
 				float z = r * Mathf.Cos(theta);
@@ -230,7 +236,7 @@ namespace ShootAR
 		/// <seealso cref="SpawnDelay"/>
 		/// <seealso cref="MaxDistanceToSpawn"/>
 		/// <seealso cref="MinDistanceToSpawn"/>
-		public void StartSpawning(System.Type type, int limit, float rate,
+		public void StartSpawning(Type type, int limit, float rate,
 					float delay, float maxDistance, float minDistance) {
 			ObjectToSpawn = type;
 			SpawnLimit = limit;
@@ -249,6 +255,242 @@ namespace ShootAR
 
 			IsSpawning = false;
 			StopCoroutine(Spawn());
+		}
+
+		public struct SpawnConfig
+		{
+			public readonly Type type;
+			public readonly int limit;
+			public readonly float rate, delay, maxDistance, minDistance;
+
+			public SpawnConfig(
+					Type type, int limit, float rate, float delay,
+					float minDistance, float maxDistance) {
+				this.type = type;
+				this.limit = limit;
+				this.rate = rate;
+				this.delay = delay;
+				this.maxDistance = maxDistance;
+				this.minDistance = minDistance;
+			}
+		}
+
+		public static Stack<SpawnConfig>[] ParseSpawnPattern(string spawnPatternFilePath) {
+			Type type = default;
+			int limit = default, multiplier;
+			float rate = default, delay = default,
+				  maxDistance = default, minDistance = default;
+
+			bool doneParsingForCurrentLevel = false;
+
+			var patterns = new Stack<SpawnConfig>();
+			var groupsByType = new Stack<Stack<SpawnConfig>>();
+
+			while (!doneParsingForCurrentLevel) {
+				if (!(xmlPattern?.Read() ?? false)) {
+					//TODO: Should we guard in case Resources.UnloadUnusedAssets
+					//		dereferences spawnPatternFilePath?
+					xmlPattern = XmlReader.Create(spawnPatternFilePath);
+					xmlPattern.MoveToContent();
+				}
+
+				switch (xmlPattern.NodeType) {
+				case XmlNodeType.Element:
+					switch (xmlPattern.Name) {
+					case "spawnable":
+						if (!xmlPattern.HasAttributes) {
+							throw new UnityException(
+								"Spawnable type not specified in pattern.");
+						}
+
+						switch (xmlPattern.GetAttribute("type")) {
+						case nameof(Enemies.Crasher):
+							type = typeof(Enemies.Crasher);
+							break;
+						case nameof(Enemies.Drone):
+							type = typeof(Enemies.Drone);
+							break;
+						case nameof(BulletCapsule):
+							type = typeof(BulletCapsule);
+							break;
+						case nameof(HealthCapsule):
+							type = typeof(HealthCapsule);
+							break;
+						case nameof(ArmorCapsule):
+							type = typeof(ArmorCapsule);
+							break;
+						case nameof(PowerUpCapsule):
+							type = typeof(PowerUpCapsule);
+							break;
+						}
+						break;
+
+					case "pattern":
+						if (xmlPattern.HasAttributes)
+							multiplier = int.Parse(xmlPattern.GetAttribute("repeat"));
+						else
+							multiplier = 1;
+						break;
+
+					// Get spawner configuration data.
+					case nameof(limit):
+						limit = xmlPattern.ReadElementContentAsInt();
+						break;
+					case nameof(rate):
+						rate = xmlPattern.ReadElementContentAsFloat();
+						break;
+					case nameof(delay):
+						delay = xmlPattern.ReadElementContentAsFloat();
+						break;
+					case nameof(maxDistance):
+						maxDistance = xmlPattern.ReadElementContentAsFloat();
+						break;
+					case nameof(minDistance):
+						minDistance = xmlPattern.ReadElementContentAsFloat();
+						break;
+					}
+					break;
+
+				case XmlNodeType.EndElement
+				when xmlPattern.Name == "pattern":
+					patterns.Push(
+						new SpawnConfig(
+							type, limit, rate, delay,
+							minDistance, maxDistance
+						)
+					);
+					break;
+
+				case XmlNodeType.EndElement
+				when xmlPattern.Name == nameof(Spawnable):
+					groupsByType.Push(new Stack<SpawnConfig>(patterns));
+					patterns.Clear();
+					break;
+
+				case XmlNodeType.EndElement
+				when xmlPattern.Name == "level":
+					doneParsingForCurrentLevel = true;
+					break;
+				}
+			}
+			return groupsByType.ToArray();
+		}
+
+		public static void SpawnerFactory(
+				ICollection<Stack<SpawnConfig>> spawnPatterns,
+				ref Dictionary<Type, List<Spawner>> spawners,
+				ref Stack<Spawner> stashedSpawners) {
+
+			/* A list to keep track of which types of spawners
+			 * are not in the pattern and are not going to be
+			 * used at all this turn. */
+			Type[] types = new Type[spawners.Count];
+			spawners.Keys.CopyTo(types, 0);
+			List<Type> remainingSpawners = new List<Type>(types);
+
+			while (spawnPatterns.Count > 0) {
+				Stack<SpawnConfig> pattern = ((Stack<Stack<SpawnConfig>>)spawnPatterns).Pop();
+				Type type = pattern.Peek().type;
+				remainingSpawners.Remove(type);
+
+				bool recursed = false;
+
+				int spawnersRequired = pattern.Count;
+				int spawnersAvailable = spawners[type].Count;
+
+				// If there are not enough spawners available take from stash
+				if (spawnersRequired > spawnersAvailable) {
+					// How many spawners will be taken from stash?
+					int spawnersReused;
+					if (spawnersRequired <= spawnersAvailable + stashedSpawners.Count)
+						spawnersReused = spawnersRequired - spawnersAvailable;
+					else
+						spawnersReused = stashedSpawners.Count;
+
+					for (int i = 0; i < spawnersReused; i++) {
+						spawners[type].Add(stashedSpawners.Pop());
+						spawnersRequired--;
+					}
+
+					/* If there are still not enough spawners, continue to the
+					 * rest of the patterns hoping that more spawners will be
+					 * stashed in the meantime. */
+					if (spawnersRequired > 0) {
+						SpawnerFactory(spawnPatterns, ref spawners, ref stashedSpawners);
+						recursed = true;
+
+						// Take spawners from stash
+						for (
+							int i = stashedSpawners.Count;
+							i != 0 && spawnersRequired > 0;
+							i--
+						) {
+							spawners[type].Add(stashedSpawners.Pop());
+							spawnersRequired--;
+						}
+
+						// If there are still not enough spawners, create new
+						while (spawnersRequired-- > 0) {
+							spawners[type].Add(Instantiate(
+								Resources.Load<Spawner>("Prefabs/Spawner")));
+						}
+					}
+				}
+				else if (spawnersRequired < spawnersAvailable) {
+					// Stash leftover spawners.
+
+					int firstLeftover = spawnersRequired + 1,
+						leftoversCount = spawnersAvailable - spawnersRequired;
+
+					for (int i = firstLeftover; i < leftoversCount; i++)
+						stashedSpawners.Push(spawners[type][i]);
+
+					spawners[type].RemoveRange(firstLeftover, leftoversCount);
+				}
+
+				// Configure spawner using the retrieved data.
+				foreach (Spawner spawner in spawners[type]) {
+					spawner.Configure(pattern.Pop());
+				}
+
+				// Populating pools
+				if (type == typeof(Crasher) && Spawnable.Pool<Crasher>.Count == 0) {
+					Spawnable.Pool<Crasher>.Populate();
+				}
+				else if (type == typeof(Drone) && Spawnable.Pool<Drone>.Count == 0) {
+					Spawnable.Pool<Drone>.Populate();
+
+					if (Spawnable.Pool<EnemyBullet>.Count == 0)
+						Spawnable.Pool<EnemyBullet>.Populate();
+				}
+				else if (type == typeof(ArmorCapsule) && Spawnable.Pool<ArmorCapsule>.Count == 0) {
+					Spawnable.Pool<ArmorCapsule>.Populate();
+				}
+				else if (type == typeof(BulletCapsule) && Spawnable.Pool<BulletCapsule>.Count == 0) {
+					Spawnable.Pool<BulletCapsule>.Populate();
+				}
+				else if (type == typeof(HealthCapsule) && Spawnable.Pool<HealthCapsule>.Count == 0) {
+					Spawnable.Pool<HealthCapsule>.Populate();
+				}
+				else if (type == typeof(PowerUpCapsule) && Spawnable.Pool<PowerUpCapsule>.Count == 0) {
+					Spawnable.Pool<PowerUpCapsule>.Populate();
+				}
+
+				/* If a recursion happened then the rest patterns have already
+				 * been parsed, meaning that there is no need to continue the
+				 * loop. */
+				if (recursed) return;
+			}
+
+			/* Stash entire group of spawners when that type is not used
+			 * this round. */
+			foreach (var type in remainingSpawners) {
+				if (spawners.ContainsKey(type)) {
+					for (int i = 0; i < spawners[type].Count; i++)
+						stashedSpawners.Push(spawners[type][i]);
+					spawners.Remove(type);
+				}
+			}
 		}
 	}
 }
