@@ -98,6 +98,42 @@ namespace ShootAR
 			return o;
 		}
 
+		public struct SpawnConfig
+		{
+			public readonly Type type;
+			public readonly int limit;
+			public readonly float rate, delay, maxDistance, minDistance;
+
+			public SpawnConfig(
+					Type type, int limit, float rate, float delay,
+					float minDistance, float maxDistance) {
+				this.type = type;
+				this.limit = limit;
+				this.rate = rate;
+				this.delay = delay;
+				this.maxDistance = maxDistance;
+				this.minDistance = minDistance;
+			}
+		}
+
+		public void Configure(
+			Type type, int limit,
+			float rate, float delay,
+			float minDistance, float maxDistance
+		) {
+			ObjectToSpawn = type;
+			SpawnLimit = limit;
+			SpawnRate = rate;
+			InitialDelay = delay;
+			MinDistanceToSpawn = minDistance;
+			MaxDistanceToSpawn = maxDistance;
+		}
+
+		public void Configure(SpawnConfig config) =>
+			Configure(
+				config.type, config.limit, config.rate,
+				config.delay, config.minDistance, config.maxDistance
+			);
 		private void Start() {
 			if (spawnSfx != null) {
 				audioPlayer = gameObject.AddComponent<AudioSource>();
@@ -237,13 +273,14 @@ namespace ShootAR
 		/// <seealso cref="MaxDistanceToSpawn"/>
 		/// <seealso cref="MinDistanceToSpawn"/>
 		public void StartSpawning(Type type, int limit, float rate,
-					float delay, float maxDistance, float minDistance) {
-			ObjectToSpawn = type;
-			SpawnLimit = limit;
-			SpawnRate = rate;
-			InitialDelay = delay;
-			MaxDistanceToSpawn = maxDistance;
-			MinDistanceToSpawn = minDistance;
+					float delay, float minDistance, float maxDistance) {
+			Configure(type, limit, rate,
+					delay, minDistance, maxDistance);
+			StartSpawning();
+		}
+
+		public void StartSpawning(SpawnConfig config) {
+			Configure(config);
 			StartSpawning();
 		}
 
@@ -257,23 +294,6 @@ namespace ShootAR
 			StopCoroutine(Spawn());
 		}
 
-		public struct SpawnConfig
-		{
-			public readonly Type type;
-			public readonly int limit;
-			public readonly float rate, delay, maxDistance, minDistance;
-
-			public SpawnConfig(
-					Type type, int limit, float rate, float delay,
-					float minDistance, float maxDistance) {
-				this.type = type;
-				this.limit = limit;
-				this.rate = rate;
-				this.delay = delay;
-				this.maxDistance = maxDistance;
-				this.minDistance = minDistance;
-			}
-		}
 
 		public static Stack<SpawnConfig>[] ParseSpawnPattern(string spawnPatternFilePath) {
 			Type type = default;

@@ -30,7 +30,7 @@ public class ObjectPoolTests : TestBase
 
 		spawner.StartSpawning();
 		yield return new UnityEngine.WaitWhile(() => spawner.IsSpawning);
-		spawner.StartSpawning(typeof(Crasher), 1, 0, 0, 10, 0);
+		spawner.StartSpawning(typeof(Crasher), 1, 0, 0, 0, 10);
 		yield return new UnityEngine.WaitWhile(() => spawner.IsSpawning);
 
 		int expectedValue = limit + 1;
