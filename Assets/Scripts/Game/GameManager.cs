@@ -237,16 +237,24 @@ namespace ShootAR
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
 
-			#region Spawn Pattern
-			//TODO: Fix this
 			/* Player should always have enough ammo to play the next
 			 * round. If they already have more than enough, they get
 			 * points. */
-			if (ammoEnemyDifference > 0)
-				scoreManager.AddScore(ammoEnemyDifference * 10);
-			else if (ammoEnemyDifference < 0)
-				player.Ammo += -ammoEnemyDifference;
-			#endregion
+			foreach (var group in spawnerGroups) {
+				if (group.Key == typeof(Enemy)) {
+					int totalEnemies = 0;
+
+					group.Value.ForEach(spawner => {
+						totalEnemies += spawner.SpawnLimit;
+					});
+
+					int difference = player.Ammo - totalEnemies;
+					if (difference > 0)
+						scoreManager.AddScore(difference * 10);
+					else if (difference < 0)
+						player.Ammo += -difference;
+				}
+			}
 
 			gameState.RoundWon = false;
 			gameState.RoundStarted = true;
