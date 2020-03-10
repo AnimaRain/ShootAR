@@ -24,8 +24,8 @@ public class GameStateTests : TestBase
 									// from switching state to "round won".
 			d: null, eb: null, ac: null, hc: null, pc: null
 		);
-		GameManager.Create("Assets\\Tests\\GameStateTests-testpattern.xml",
-				player, gameState, prefabs);
+		GameManager.Create(player, gameState, prefabs,
+				"Assets/Tests/GameStateTests-testpattern.xml");
 
 		yield return new WaitForFixedUpdate();
 		player.Ammo = 1;
@@ -67,13 +67,15 @@ public class GameStateTests : TestBase
 			camera: camera,
 			ammo: 1,
 			gameState: gameState);
-		GameManager.Create("Assets\\Tests\\GameStateTests-testpattern0.xml",
+		GameManager.Create(
 			player, gameState,
 			PrefabContainer.Create(
 				cr: TestEnemy.Create(0, 0, 0, 10, 10, 10),
 				b: Bullet.Create(100f), sp: Spawner.Create(),
 				bc: null, ac: null, hc: null, pc: null, d: null, eb: null
-		));
+			),
+			"Assets/Tests/GameStateTests-testpattern0.xml"
+		);
 
 		yield return new WaitForFixedUpdate();
 		yield return new WaitUntil(() => Object.FindObjectOfType<Spawner>()

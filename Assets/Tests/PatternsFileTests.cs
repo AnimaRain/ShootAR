@@ -7,13 +7,20 @@ public class PatternsFileTests
 {
 	[Test]
 	public void CopyFileToPermDataPath() {
-		const string PATTERN_FILE_NAME = "spawnpatterns";
-		const string PATTERN_FILE = PATTERN_FILE_NAME + "-test.xml";
-		string targetFile = Path.Combine(Application.persistentDataPath, PATTERN_FILE);
+		const string patternFileBasename = "spawnpatterns";
+		const string patternFile = patternFileBasename + "-test.xml";
+		string targetFile = Path.Combine(Application.persistentDataPath, patternFile);
 
-		LocalFiles.CopyToPersistentData(PATTERN_FILE_NAME, PATTERN_FILE);
+		LocalFiles.CopyResourceToPersistentData(patternFileBasename, patternFile);
 
 		Assert.That(File.Exists(targetFile));
-		File.Delete(PATTERN_FILE);
+		File.Delete(patternFile);
+	}
+
+	[Test]
+	public void ExtractPattern() {
+		var patterns = Spawner.ParseSpawnPattern("Assets/Resources/spawnpatterns.xml");
+
+		Assert.NotZero(patterns.Length, "No patterns extracted.");
 	}
 }

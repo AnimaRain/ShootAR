@@ -1,7 +1,7 @@
 ﻿using ShootAR.Enemies;
 using System;
 using System.Collections.Generic;
-using System.Xml;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,14 +14,10 @@ namespace ShootAR
 	{
 		private const int   CAPSULE_BONUS_POINTS = 50,
 							ROUND_AMMO_REWARD = 6;
-#if DEBUG
-#pragma warning disable IDE1006 // Suppress naming rule violation
-		private string SPAWN_PATTERN_FILE_PATH = "spawnpatterns.xml";
-#pragma warning restore IDE1006
-#else
-		private const string SPAWN_PATTERN_FILE_PATH = "spawnpatterns.xml";
-#endif
+		private const string SPAWN_PATTERN_FILE_NAME = "spawnpatterns",
+							 SPAWN_PATTERN_FILE = SPAWN_PATTERN_FILE_NAME + ".xml";
 
+		private string spawnPatternUri;
 		[SerializeField] private AudioClip victoryMusic;
 		private Dictionary<Type, List<Spawner>> spawnerGroups;
 		[SerializeField] private ScoreManager scoreManager;
@@ -39,6 +35,7 @@ namespace ShootAR
 		public static GameManager Create(
 			Player player, GameState gameState,
 			PrefabContainer prefabs,
+			string spawnPatternUri,
 			ScoreManager scoreManager = null,
 			AudioClip victoryMusic = null, AudioSource sfx = null,
 			Button fireButton = null, RawImage background = null,
@@ -49,6 +46,7 @@ namespace ShootAR
 			o.player = player;
 			o.gameState = gameState;
 			o.prefabs = prefabs;
+			o.spawnPatternUri = spawnPatternUri;
 			o.scoreManager = scoreManager;
 			o.victoryMusic = victoryMusic;
 			o.audioPlayer = sfx;
@@ -72,6 +70,7 @@ namespace ShootAR
 
 		private void Awake() {
 #if UNITY_ANDROID
+#if !UNITY_EDITOR
 			if (!SystemInfo.supportsGyroscope) {
 				exitTap = true;
 				const string error = "This device does not have Gyroscope";
@@ -92,11 +91,11 @@ namespace ShootAR
 			}
 #endif
 
-			spawnPatternFilePath = Path.Combine(
+			spawnPatternUri = Path.Combine(
 					Application.persistentDataPath, SPAWN_PATTERN_FILE);
-			Debug.Log($"File: {SPAWN_PATTERN_FILE}\nFile path: {spawnPatternFilePath}\nStreaming Assets: {Application.streamingAssetsPath}\nPersistent Data: {Application.persistentDataPath}");
-			if (!File.Exists(spawnPatternFilePath)) {
-				//TODO: Use LocalFiles and fix from where the patterns are read.
+			if (!File.Exists(spawnPatternUri)) {
+				LocalFiles.CopyResourceToPersistentData(
+						SPAWN_PATTERN_FILE_NAME, SPAWN_PATTERN_FILE);
 			}
 #endif
 			/* Do not use elif here. While testing
@@ -236,6 +235,13 @@ namespace ShootAR
 #if DEBUG
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
+
+					// Configuring spawners
+			Stack<Spawner.SpawnConfig>[] patterns = Spawner.ParseSpawnPattern(
+				Application.persistentDataPath + SPAWN_PATTERN_FILE
+			);
+
+			Spawner.SpawnerFactory(patterns, ref spawnerGroups, ref stashedSpawners);
 
 			/* Player should always have enough ammo to play the next
 			 * round. If they already have more than enough, they get
