@@ -1,4 +1,4 @@
-﻿using ShootAR.Enemies;
+using ShootAR.Enemies;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -213,7 +213,7 @@ namespace ShootAR
 
 		private void OnDestroy() {
 			/* cam.Stop() is required to stop the camera so it can be
-			 * restarted when the scene loads again; else, after the 
+			 * restarted when the scene loads again; else, after the
 			 * scene reloads, the feedback will be blank. */
 			cam.Stop();
 			gameState.GameOver = true;
@@ -236,7 +236,7 @@ namespace ShootAR
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
 
-					// Configuring spawners
+			// Configuring spawners
 			Stack<Spawner.SpawnConfig>[] patterns = Spawner.ParseSpawnPattern(
 				Application.persistentDataPath + SPAWN_PATTERN_FILE
 			);
@@ -267,7 +267,7 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Destroys all spawned objects. 
+		/// Destroys all spawned objects.
 		/// </summary>
 		private void ClearScene() {
 			// Be merciful. Player deserves some points for the unused capsules.

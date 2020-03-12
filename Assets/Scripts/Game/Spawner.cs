@@ -134,6 +134,7 @@ namespace ShootAR
 				config.type, config.limit, config.rate,
 				config.delay, config.minDistance, config.maxDistance
 			);
+
 		private void Start() {
 			if (spawnSfx != null) {
 				audioPlayer = gameObject.AddComponent<AudioSource>();
@@ -206,10 +207,10 @@ namespace ShootAR
 				/* Make checks for each and every type of Spawnable, because
 				 * a class inheriting from MonoBehaviour cannot be a generic
 				 * class. */
-				if (objectToSpawn == typeof(Enemies.Crasher))
-					InstantiateSpawnable<Enemies.Crasher>();
-				else if (objectToSpawn == typeof(Enemies.Drone))
-					InstantiateSpawnable<Enemies.Drone>();
+				if (objectToSpawn == typeof(Crasher))
+					InstantiateSpawnable<Crasher>();
+				else if (objectToSpawn == typeof(Drone))
+					InstantiateSpawnable<Drone>();
 				else if (objectToSpawn == typeof(BulletCapsule))
 					InstantiateSpawnable<BulletCapsule>();
 				else if (objectToSpawn == typeof(ArmorCapsule))
@@ -324,11 +325,11 @@ namespace ShootAR
 						}
 
 						switch (xmlPattern.GetAttribute("type")) {
-						case nameof(Enemies.Crasher):
-							type = typeof(Enemies.Crasher);
+						case nameof(Crasher):
+							type = typeof(Crasher);
 							break;
-						case nameof(Enemies.Drone):
-							type = typeof(Enemies.Drone);
+						case nameof(Drone):
+							type = typeof(Drone);
 							break;
 						case nameof(BulletCapsule):
 							type = typeof(BulletCapsule);

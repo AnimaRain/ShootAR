@@ -23,4 +23,6 @@ public class PatternsFileTests
 
 		Assert.NotZero(patterns.Length, "No patterns extracted.");
 	}
+
+	//TODO: Write tests catching failures when patterns' file contains errors.
 }
