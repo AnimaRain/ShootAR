@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ShootAR
@@ -67,11 +67,9 @@ namespace ShootAR
 			public static void Populate(int lot = GLOBAL_SPAWN_LIMIT) {
 				string prefab = "";
 				switch (typeof(T).ToString()) {
-				case nameof(Enemies.Crasher):
-					prefab = "Crasher";
+				case nameof(Crasher):
 					break;
-				case nameof(Enemies.Drone):
-					prefab = "Drone";
+				case nameof(Drone):
 					break;
 				case nameof(ArmorCapsule):
 					prefab = "ArmorCapsule";
