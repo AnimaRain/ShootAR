@@ -737,3 +737,7 @@ MigrationBackup/
 !/*.meta
 
 apk/
+
+# local script to set up working environment
+/openv
+
