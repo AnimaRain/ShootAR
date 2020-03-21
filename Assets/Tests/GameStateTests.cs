@@ -16,15 +16,13 @@ public class GameStateTests : TestBase
 			camera: camera,
 			ammo: 1,
 			gameState: gameState);
-		PrefabContainer prefabs = PrefabContainer.Create(
-			sp: Spawner.Create(),
-			bc: BulletCapsule.Create(0, player),
-			b: Bullet.Create(10),
-			cr: TestEnemy.Create(),	// Create an enemy to stop game manager
-									// from switching state to "round won".
-			d: null, eb: null, ac: null, hc: null, pc: null
-		);
-		GameManager.Create(player, gameState, prefabs,
+		var spawner = Spawner.Create();
+		var bulletCapsule = BulletCapsule.Create(0, player);
+		var bullet = Bullet.Create(10);
+		var enemy = TestEnemy.Create(); // Create an enemy to stop game manager
+										  // from switching state to "round won".
+
+		GameManager.Create(player, gameState,
 				"Assets/Tests/GameStateTests-testpattern.xml");
 
 		yield return new WaitForFixedUpdate();
@@ -69,20 +67,16 @@ public class GameStateTests : TestBase
 			gameState: gameState);
 		GameManager.Create(
 			player, gameState,
-			PrefabContainer.Create(
-				cr: TestEnemy.Create(0, 0, 0, 10, 10, 10),
-				b: Bullet.Create(100f), sp: Spawner.Create(),
-				bc: null, ac: null, hc: null, pc: null, d: null, eb: null
-			),
 			"Assets/Tests/GameStateTests-testpattern0.xml"
 		);
+			var enemy = TestEnemy.Create(0, 0, 0, 10, 10, 10);
+			var bullet = Bullet.Create(100f);
+			var spawner = Spawner.Create();
 
 		yield return new WaitForFixedUpdate();
 		yield return new WaitUntil(() => Object.FindObjectOfType<Spawner>()
 				.SpawnCount > 0);
 
-		TestEnemy enemy = Object
-				.FindObjectOfType<ShootAR.Enemies.Crasher>() as TestEnemy;
 		camera.transform.LookAt(enemy.transform);
 		player.Shoot();
 

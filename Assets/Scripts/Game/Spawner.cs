@@ -453,7 +453,7 @@ namespace ShootAR
 						// If there are still not enough spawners, create new
 						while (spawnersRequired-- > 0) {
 							spawners[type].Add(Instantiate(
-								Resources.Load<Spawner>("Prefabs/Spawner")));
+								Resources.Load<Spawner>(Prefabs.SPAWNER)));
 						}
 					}
 				}

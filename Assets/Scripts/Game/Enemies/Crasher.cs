@@ -5,16 +5,19 @@ namespace ShootAR.Enemies
 	[RequireComponent(typeof(SphereCollider))]
 	public class Crasher : Boopboop
 	{
-		private const float DEFAULT_SPEED = 5F;
-		private const int	DEFAULT_POINTS = 10,
-							DEFAULT_DAMAGE = 1;
-
-		private static Crasher prefab;
+		private static float? prefabSpeed = null;
+		private static int? prefabPoints = null,
+		                    prefabDamage = null;
 
 		protected override void Start() {
 			base.Start();
-			if (prefab is null)
-				prefab = FindObjectOfType<PrefabContainer>()?.Crasher;
+			Crasher prefab = Resources.Load<Crasher>(Prefabs.CRASHER);
+			if (prefabSpeed is null)
+				prefabSpeed = prefab.Speed;
+			if (prefabPoints is null)
+				prefabPoints = prefab.PointsValue;
+			if (prefabDamage is null)
+				prefabDamage = prefab.Damage;
 		}
 
 		protected override void OnEnable() {
@@ -23,9 +26,9 @@ namespace ShootAR.Enemies
 		}
 
 		public override void ResetState() {
-			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
-			PointsValue = prefab is null ? DEFAULT_POINTS: prefab.PointsValue;
-			Damage = prefab is null ? DEFAULT_DAMAGE : prefab.Damage;
+			Speed = (float)prefabSpeed;
+			PointsValue = (int)prefabPoints;
+			Damage = (int)prefabDamage;
 		}
 
 		public override void Destroy() {

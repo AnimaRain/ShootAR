@@ -6,27 +6,33 @@ namespace ShootAR.Enemies
 	[RequireComponent(typeof(CapsuleCollider))]
 	public class Drone : Pyoopyoo
 	{
-		protected const float	SHOOT_DELAY = 5f,
-								DEFAULT_SPEED = 10F;
-		protected const int DEFAULT_POINTS = 20,
-							DEFAULT_DAMAGE = 1;
+		protected const float SHOOT_DELAY = 5f;
+
 		/// <summary>
 		/// The point in time that the next shot is allowed.
 		/// </summary>
 		protected float nextShot;
 
-		private static Drone prefab;
+		protected static float? prefabSpeed = null;
+		protected static int? prefabPoints = null,
+							 prefabDamage = null;
 
 		public override void ResetState() {
-			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
-			PointsValue = prefab is null ? DEFAULT_POINTS: prefab.PointsValue;
-			Damage = prefab is null ? DEFAULT_DAMAGE : prefab.Damage;
+			Speed = (float)prefabSpeed;
+			PointsValue = (int)prefabPoints;
+			Damage = (int)prefabDamage;
 		}
 
 		protected override void Start() {
 			base.Start();
-			if (prefab is null)
-				prefab = FindObjectOfType<PrefabContainer>()?.Drone;
+
+			Drone prefab = Resources.Load<Drone>(Prefabs.DRONE);
+			if (prefabSpeed is null)
+				prefabSpeed = prefab.Speed;
+			if (prefabPoints is null)
+				prefabPoints = prefab.PointsValue;
+			if (prefabDamage is null)
+				prefabDamage = prefab.Damage;
 		}
 
 		protected void FixedUpdate() {
@@ -36,7 +42,7 @@ namespace ShootAR.Enemies
 					nextShot = Time.time + SHOOT_DELAY;
 				}
 
-				//OrbitAround();
+				//TODO: OrbitAround();
 			}
 		}
 

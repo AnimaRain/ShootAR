@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using ShootAR.Enemies;
 
 namespace ShootAR
 {
@@ -68,20 +69,25 @@ namespace ShootAR
 				string prefab = "";
 				switch (typeof(T).ToString()) {
 				case nameof(Crasher):
+					prefab = Prefabs.CRASHER;
 					break;
 				case nameof(Drone):
+					prefab = Prefabs.DRONE;
 					break;
 				case nameof(ArmorCapsule):
-					prefab = "ArmorCapsule";
+					prefab = Prefabs.ARMOR_CAPSULE;
 					break;
 				case nameof(HealthCapsule):
-					prefab = "HealthCapsule";
+					prefab = Prefabs.HEALTH_CAPSULE;
 					break;
 				case nameof(PowerUpCapsule):
-					prefab = "PowerUpCapsule";
+					prefab = Prefabs.POWER_UP_CAPSULE;
 					break;
 				case nameof(BulletCapsule):
-					prefab = "BulletCapsule";
+					prefab = Prefabs.BULLET_CAPSULE;
+					break;
+					case nameof(EnemyBullet):
+					prefab = Prefabs.ENEMY_BULLET;
 					break;
 				}
 

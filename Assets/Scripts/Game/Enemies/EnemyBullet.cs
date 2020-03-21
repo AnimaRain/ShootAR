@@ -7,12 +7,15 @@ namespace ShootAR.Enemies
 		private const float DEFAULT_SPEED = 5F;
 		private const int DEFAULT_POINTS = 5;
 
-		private static EnemyBullet prefab;
+		private static float? prefabSpeed = null;
+		private static int? prefabPointValue = null;
 
 		protected override void Start() {
 			base.Start();
-			if (prefab == null)
-				prefab = FindObjectOfType<PrefabContainer>()?.EnemyBullet;
+			if (prefabSpeed == null)
+				prefabSpeed = Resources.Load<EnemyBullet>(Prefabs.ENEMY_BULLET).Speed;
+			if (prefabPointValue == null)
+				prefabPointValue = Resources.Load<EnemyBullet>(Prefabs.ENEMY_BULLET).PointsValue;
 		}
 
 		protected override void OnEnable() {
@@ -21,8 +24,8 @@ namespace ShootAR.Enemies
 		}
 
 		public override void ResetState() {
-			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
-			PointsValue = prefab is null ? DEFAULT_POINTS: prefab.PointsValue;
+			Speed = (float)prefabSpeed;
+			PointsValue = (int)prefabPointValue;
 		}
 
 		public override void Attack(Player target) {

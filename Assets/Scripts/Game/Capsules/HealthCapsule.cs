@@ -23,15 +23,15 @@ namespace ShootAR
 			ReturnToPool<HealthCapsule>();
 		}
 
-		private static HealthCapsule prefab;
+		private static float? prefabSpeed;
 		protected override void Start() {
-			if (prefab is null)
-				prefab = FindObjectOfType<PrefabContainer>()?.HealthCapsule;
+			if (prefabSpeed is null)
+				prefabSpeed = Resources.Load<HealthCapsule>(Prefabs.HEALTH_CAPSULE).Speed;
 			base.Start();
 		}
 
 		public override void ResetState() {
-			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
+			Speed = (float)prefabSpeed;
 		}
 	}
 }

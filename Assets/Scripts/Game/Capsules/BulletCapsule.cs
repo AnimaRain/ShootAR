@@ -23,15 +23,15 @@ namespace ShootAR
 			ReturnToPool<BulletCapsule>();
 		}
 
-		private static BulletCapsule prefab;
+		private static float? prefabSpeed = null;
 		protected override void Start() {
-			if (prefab is null)
-				prefab = FindObjectOfType<PrefabContainer>()?.BulletCapsule;
+			if (prefabSpeed is null)
+				prefabSpeed = Resources.Load<BulletCapsule>(Prefabs.BULLET_CAPSULE).Speed;
 			base.Start();
 		}
 
 		public override void ResetState() {
-			Speed = prefab is null ? DEFAULT_SPEED : prefab.Speed;
+			Speed = (float)prefabSpeed;
 		}
 	}
 }

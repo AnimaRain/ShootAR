@@ -29,12 +29,10 @@ namespace ShootAR
 		private WebCamTexture cam;
 		[SerializeField] private RawImage backgroundTexture;
 		[SerializeField] private Player player;
-		[SerializeField] private PrefabContainer prefabs;
 		private Stack<Spawner> stashedSpawners;
 
 		public static GameManager Create(
 			Player player, GameState gameState,
-			PrefabContainer prefabs,
 			string spawnPatternUri,
 			ScoreManager scoreManager = null,
 			AudioClip victoryMusic = null, AudioSource sfx = null,
@@ -45,7 +43,6 @@ namespace ShootAR
 
 			o.player = player;
 			o.gameState = gameState;
-			o.prefabs = prefabs;
 			o.spawnPatternUri = spawnPatternUri;
 			o.scoreManager = scoreManager;
 			o.victoryMusic = victoryMusic;
@@ -113,8 +110,6 @@ namespace ShootAR
 				throw new UnityException("Player object not found");
 			if (gameState == null)
 				throw new UnityException("GameState object not found");
-			if (prefabs is null)
-				throw new UnityException("Collection of prefabs not found");
 			if (cam == null) {
 				const string error = "This device does not have a rear camera";
 				ui.MessageOnScreen.text = error;
@@ -167,7 +162,7 @@ namespace ShootAR
 			gameState.Level = Configuration.StartingLevel - 1;
 			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
 													 * Inspector */
-			Spawnable.Pool<Bullet>.Populate(prefabs.Bullet, 10);
+			Spawnable.Pool<Bullet>.Populate(10);
 			AdvanceLevel();
 
 			GC.Collect();
