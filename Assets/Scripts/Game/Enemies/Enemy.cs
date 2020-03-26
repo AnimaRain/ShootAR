@@ -32,7 +32,7 @@ namespace ShootAR.Enemies
 		protected AudioSource sfx;
 		[SerializeField] protected static ScoreManager score;
 
-		protected void Awake() {
+		protected virtual void Awake() {
 			if (score == null) score = FindObjectOfType<ScoreManager>();
 		}
 

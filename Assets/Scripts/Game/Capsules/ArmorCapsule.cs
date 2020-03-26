@@ -12,10 +12,9 @@ namespace ShootAR
 		}
 
 		private static float? prefabSpeed = null;
-		protected override void Start() {
+		protected void Awake() {
 			if (prefabSpeed is null)
 				prefabSpeed = Resources.Load<ArmorCapsule>(Prefabs.ARMOR_CAPSULE).Speed;
-			base.Start();
 		}
 
 		protected override void GivePowerUp() {

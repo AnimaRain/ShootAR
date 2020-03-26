@@ -23,8 +23,8 @@ namespace ShootAR.Enemies
 			Damage = (int)prefabDamage;
 		}
 
-		protected override void Start() {
-			base.Start();
+		protected override void Awake() {
+			base.Awake();
 
 			Drone prefab = Resources.Load<Drone>(Prefabs.DRONE);
 			if (prefabSpeed is null)

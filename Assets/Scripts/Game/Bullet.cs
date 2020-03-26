@@ -29,10 +29,12 @@ namespace ShootAR
 			return o;
 		}
 
-		protected override void Start() {
-			base.Start();
+		protected void Awake() {
 			if (bulletPrefabSpeed is null)
 				bulletPrefabSpeed = Resources.Load<Bullet>(Prefabs.BULLET).Speed;
+		}
+		protected override void Start() {
+			base.Start();
 
 			transform.rotation =
 					Camera.main?.transform.rotation

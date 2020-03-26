@@ -24,10 +24,9 @@ namespace ShootAR
 		}
 
 		private static float? prefabSpeed;
-		protected override void Start() {
+		protected void Awake() {
 			if (prefabSpeed is null)
 				prefabSpeed = Resources.Load<HealthCapsule>(Prefabs.HEALTH_CAPSULE).Speed;
-			base.Start();
 		}
 
 		public override void ResetState() {

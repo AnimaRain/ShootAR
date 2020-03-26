@@ -9,8 +9,8 @@ namespace ShootAR.Enemies
 		private static int? prefabPoints = null,
 		                    prefabDamage = null;
 
-		protected override void Start() {
-			base.Start();
+		protected override void Awake() {
+			base.Awake();
 			Crasher prefab = Resources.Load<Crasher>(Prefabs.CRASHER);
 			if (prefabSpeed is null)
 				prefabSpeed = prefab.Speed;

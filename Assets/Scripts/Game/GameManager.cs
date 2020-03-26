@@ -233,7 +233,7 @@ namespace ShootAR
 
 			// Configuring spawners
 			Stack<Spawner.SpawnConfig>[] patterns = Spawner.ParseSpawnPattern(
-				Application.persistentDataPath + SPAWN_PATTERN_FILE
+				Path.Combine(Application.persistentDataPath, SPAWN_PATTERN_FILE)
 			);
 
 			Spawner.SpawnerFactory(patterns, ref spawnerGroups, ref stashedSpawners);

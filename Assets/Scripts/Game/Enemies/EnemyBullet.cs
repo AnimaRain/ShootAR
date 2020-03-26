@@ -10,8 +10,8 @@ namespace ShootAR.Enemies
 		private static float? prefabSpeed = null;
 		private static int? prefabPointValue = null;
 
-		protected override void Start() {
-			base.Start();
+		protected override void Awake() {
+			base.Awake();
 			if (prefabSpeed == null)
 				prefabSpeed = Resources.Load<EnemyBullet>(Prefabs.ENEMY_BULLET).Speed;
 			if (prefabPointValue == null)
