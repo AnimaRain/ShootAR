@@ -67,32 +67,26 @@ namespace ShootAR
 			/// <param name="lot">how many objects to add to the pool</param>
 			public static void Populate(int lot = GLOBAL_SPAWN_LIMIT) {
 				string prefab = "";
-				switch (typeof(T).ToString()) {
-				case nameof(Crasher):
+				if (typeof(T) == typeof(Crasher))
 					prefab = Prefabs.CRASHER;
-					break;
-				case nameof(Drone):
+				else if(typeof(T) == typeof(Drone))
 					prefab = Prefabs.DRONE;
-					break;
-				case nameof(ArmorCapsule):
+				else if(typeof(T) == typeof(ArmorCapsule))
 					prefab = Prefabs.ARMOR_CAPSULE;
-					break;
-				case nameof(HealthCapsule):
+				else if(typeof(T) == typeof(HealthCapsule))
 					prefab = Prefabs.HEALTH_CAPSULE;
-					break;
-				case nameof(PowerUpCapsule):
+				else if(typeof(T) == typeof(PowerUpCapsule))
 					prefab = Prefabs.POWER_UP_CAPSULE;
-					break;
-				case nameof(BulletCapsule):
+				else if(typeof(T) == typeof(BulletCapsule))
 					prefab = Prefabs.BULLET_CAPSULE;
-					break;
-					case nameof(EnemyBullet):
+				else if(typeof(T) == typeof(EnemyBullet))
 					prefab = Prefabs.ENEMY_BULLET;
-					break;
-				}
+				else if(typeof(T) == typeof(Bullet))
+					prefab = Prefabs.BULLET;
 
 				Populate(
-					Resources.Load<T>(prefab)
+					Resources.Load<T>(prefab),
+					lot
 				);
 			}
 

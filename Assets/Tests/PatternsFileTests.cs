@@ -21,8 +21,14 @@ public class PatternsFileTests
 	public void ExtractPattern() {
 		var patterns = Spawner.ParseSpawnPattern("Assets/Resources/spawnpatterns.xml");
 
-		Assert.NotZero(patterns.Length, "No patterns extracted.");
+		Assert.IsNotEmpty(patterns, "No patterns extracted.");
 	}
 
 	//TODO: Write tests catching failures when patterns' file contains errors.
+
+	//TODO: Test case of XML file containing duplicate nodes of a spawnable type.
+
+	//TODO: Test case of XML file containing the "repeat" attribute.
+
+	//TODO: Test case of XML file containing a spawnable type that is not valid.
 }

@@ -298,14 +298,18 @@ namespace ShootAR
 
 		public static Stack<SpawnConfig>[] ParseSpawnPattern(string spawnPatternFilePath) {
 			Type type = default;
-			int limit = default, multiplier;
+			int limit = default, multiplier = -1;
 			float rate = default, delay = default,
 				  maxDistance = default, minDistance = default;
 
 			bool doneParsingForCurrentLevel = false;
 
 			var patterns = new Stack<SpawnConfig>();
-			var groupsByType = new Stack<Stack<SpawnConfig>>();
+			var groupsByType = new Dictionary<Type, Stack<SpawnConfig>>();
+			/* Using Dictionary instead of Stack in order to accomodate for
+			 * when the XML file contains multiple instances of a <spawnable>
+			 * node with the same type instead of multiple <patterns> under
+			 * the same <spawnable> node. */
 
 			while (!doneParsingForCurrentLevel) {
 				if (!(xmlPattern?.Read() ?? false)) {
@@ -343,13 +347,19 @@ namespace ShootAR
 						case nameof(PowerUpCapsule):
 							type = typeof(PowerUpCapsule);
 							break;
+						default:
+							throw new UnityException(
+								$"Error in {spawnPatternFilePath}:\n" +
+								$"{xmlPattern.GetAttribute("type")} is not a" +
+								" valid type of spawnable."
+							);
 						}
 						break;
 
 					case "pattern":
 						if (xmlPattern.HasAttributes)
 							multiplier = int.Parse(xmlPattern.GetAttribute("repeat"));
-						else
+						if (multiplier <= 1)
 							multiplier = 1;
 						break;
 
@@ -374,17 +384,20 @@ namespace ShootAR
 
 				case XmlNodeType.EndElement
 				when xmlPattern.Name == "pattern":
-					patterns.Push(
-						new SpawnConfig(
-							type, limit, rate, delay,
-							minDistance, maxDistance
-						)
+					SpawnConfig pattern = new SpawnConfig(
+						type, limit, rate, delay,
+						minDistance, maxDistance
 					);
+					do patterns.Push(pattern); while (--multiplier > 0);
 					break;
 
 				case XmlNodeType.EndElement
-				when xmlPattern.Name == nameof(Spawnable):
-					groupsByType.Push(new Stack<SpawnConfig>(patterns));
+				when xmlPattern.Name == "spawnable":
+					if (groupsByType.ContainsKey(type))
+						foreach (var p in patterns)
+							groupsByType[type].Push(p);
+					else
+						groupsByType.Add(type, new Stack<SpawnConfig>(patterns));
 					patterns.Clear();
 					break;
 
@@ -394,11 +407,14 @@ namespace ShootAR
 					break;
 				}
 			}
-			return groupsByType.ToArray();
+
+			Stack<SpawnConfig>[] extractedPatterns = new Stack<SpawnConfig>[groupsByType.Count];
+			groupsByType.Values.CopyTo(extractedPatterns, 0);
+			return extractedPatterns;
 		}
 
 		public static void SpawnerFactory(
-				ICollection<Stack<SpawnConfig>> spawnPatterns,
+				ICollection<Stack<SpawnConfig>> spawnPatternsContainer,
 				ref Dictionary<Type, List<Spawner>> spawners,
 				ref Stack<Spawner> stashedSpawners) {
 
@@ -409,12 +425,18 @@ namespace ShootAR
 			spawners.Keys.CopyTo(types, 0);
 			List<Type> remainingSpawners = new List<Type>(types);
 
+			Stack<Stack<SpawnConfig>> spawnPatterns =
+				new Stack<Stack<SpawnConfig>>(spawnPatternsContainer);
+
 			while (spawnPatterns.Count > 0) {
-				Stack<SpawnConfig> pattern = ((Stack<Stack<SpawnConfig>>)spawnPatterns).Pop();
+				Stack<SpawnConfig> pattern = spawnPatterns.Pop();
 				Type type = pattern.Peek().type;
 				remainingSpawners.Remove(type);
 
 				bool recursed = false;
+
+				if (!spawners.ContainsKey(type))
+					spawners.Add(type, new List<Spawner>(0));
 
 				int spawnersRequired = pattern.Count;
 				int spawnersAvailable = spawners[type].Count;
@@ -437,7 +459,9 @@ namespace ShootAR
 					 * rest of the patterns hoping that more spawners will be
 					 * stashed in the meantime. */
 					if (spawnersRequired > 0) {
-						SpawnerFactory(spawnPatterns, ref spawners, ref stashedSpawners);
+						SpawnerFactory(spawnPatterns.ToArray(),
+							ref spawners, ref stashedSpawners);
+
 						recursed = true;
 
 						// Take spawners from stash
