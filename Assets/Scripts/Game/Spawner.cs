@@ -414,26 +414,27 @@ namespace ShootAR
 		}
 
 		public static void SpawnerFactory(
-				ICollection<Stack<SpawnConfig>> spawnPatternsContainer,
+				Stack<SpawnConfig>[] spawnPatterns, int index,
 				ref Dictionary<Type, List<Spawner>> spawners,
 				ref Stack<Spawner> stashedSpawners) {
 
 			/* A list to keep track of which types of spawners
-			 * are not in the pattern and are not going to be
-			 * used at all this turn. */
-			Type[] types = new Type[spawners.Count];
-			spawners.Keys.CopyTo(types, 0);
-			List<Type> remainingSpawners = new List<Type>(types);
+			 * are in the pattern and should not be stashed away. */
+			List<Type> requiredSpawnerTypes = new List<Type>();
 
-			Stack<Stack<SpawnConfig>> spawnPatterns =
-				new Stack<Stack<SpawnConfig>>(spawnPatternsContainer);
+			bool recursed = false;
 
-			while (spawnPatterns.Count > 0) {
-				Stack<SpawnConfig> pattern = spawnPatterns.Pop();
+			for (int id = index; id < spawnPatterns.Length; id++) {
+				Stack<SpawnConfig> pattern = spawnPatterns[id];
 				Type type = pattern.Peek().type;
-				remainingSpawners.Remove(type);
+				if (!requiredSpawnerTypes.Contains(type))
+					requiredSpawnerTypes.Add(type);
 
-				bool recursed = false;
+				/* Skip indices that we don't care about.
+				 * But even if we don't care about those skipped patterns, the
+				 * type still needs to be tracked first so that the spawners
+				 * that are actually needed don't end up stashed away. */
+				if (id < index) continue;
 
 				if (!spawners.ContainsKey(type))
 					spawners.Add(type, new List<Spawner>(0));
@@ -458,9 +459,10 @@ namespace ShootAR
 					/* If there are still not enough spawners, continue to the
 					 * rest of the patterns hoping that more spawners will be
 					 * stashed in the meantime. */
-					if (spawnersRequired > 0) {
-						SpawnerFactory(spawnPatterns.ToArray(),
-							ref spawners, ref stashedSpawners);
+					int recursionIndex = index + id + 1;
+					if (spawnersRequired > 0 && recursionIndex < spawnPatterns.Length) {
+						SpawnerFactory(spawnPatterns, recursionIndex,
+									   ref spawners, ref stashedSpawners);
 
 						recursed = true;
 
@@ -473,12 +475,14 @@ namespace ShootAR
 							spawners[type].Add(stashedSpawners.Pop());
 							spawnersRequired--;
 						}
+					}
 
-						// If there are still not enough spawners, create new
-						while (spawnersRequired-- > 0) {
-							spawners[type].Add(Instantiate(
-								Resources.Load<Spawner>(Prefabs.SPAWNER)));
-						}
+					// If there are still not enough spawners, create new
+					while (spawnersRequired > 0) {
+						spawners[type].Add(Instantiate(
+							Resources.Load<Spawner>(Prefabs.SPAWNER)));
+
+						spawnersRequired--;
 					}
 				}
 				else if (spawnersRequired < spawnersAvailable) {
@@ -529,8 +533,8 @@ namespace ShootAR
 
 			/* Stash entire group of spawners when that type is not used
 			 * this round. */
-			foreach (var type in remainingSpawners) {
-				if (spawners.ContainsKey(type)) {
+			foreach (var type in requiredSpawnerTypes) {
+				if (!spawners.ContainsKey(type)) {
 					for (int i = 0; i < spawners[type].Count; i++)
 						stashedSpawners.Push(spawners[type][i]);
 					spawners.Remove(type);

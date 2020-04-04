@@ -236,7 +236,7 @@ namespace ShootAR
 				Path.Combine(Application.persistentDataPath, SPAWN_PATTERN_FILE)
 			);
 
-			Spawner.SpawnerFactory(patterns, ref spawnerGroups, ref stashedSpawners);
+			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
 
 			/* Player should always have enough ammo to play the next
 			 * round. If they already have more than enough, they get
