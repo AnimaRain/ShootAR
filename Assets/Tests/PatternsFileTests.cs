@@ -34,7 +34,7 @@ public class PatternsFileTests : TestBase
 
 	[Test]
 	public void ExtractPattern() {
-		var patterns = Spawner.ParseSpawnPattern("Assets/Resources/spawnpatterns.xml");
+		var patterns = ParseSpawnPattern("Assets/Resources/spawnpatterns.xml");
 
 		Assert.IsNotEmpty(patterns, "No patterns extracted.");
 	}
@@ -79,22 +79,6 @@ public class PatternsFileTests : TestBase
 
 		Assert.That(ex.Message, Is.EqualTo(error));
 	}
-
-	// var spawners = new Dictionary<Type, List<Spawner>>();
-	// var stashedSpawners = new Stack<Spawner>();
-
-	// SpawnerFactory(
-	// 	new Stack<SpawnConfig>[] {
-	// 		new Stack<SpawnConfig>(
-	// 			new SpawnConfig[1] {
-	// 				new SpawnConfig(typeof(Capsule), 1, 0f, 0f, 0f, 0f)
-	// 			}
-	// 		)
-	// 	},
-	// 	0,
-	// 	ref spawners,
-	// 	ref stashedSpawners
-	// );
 
 	//TODO: Test if stashing remaining spawners works correctly.
 

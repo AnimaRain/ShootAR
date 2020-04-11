@@ -65,7 +65,7 @@
 				<minDistance>30</minDistance>
 			</pattern>
 		</spawnable>
-		<spawnable type="Capsule">
+		<spawnable type="BulletCapsule">
 			<pattern>
 				<limit>2</limit>
 				<rate>15</rate>

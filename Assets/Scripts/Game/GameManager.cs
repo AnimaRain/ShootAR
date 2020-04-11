@@ -48,8 +48,10 @@ namespace ShootAR
 			o.victoryMusic = victoryMusic;
 			o.audioPlayer = sfx;
 			o.fireButton = fireButton;
-			o.backgroundTexture = background ?? new GameObject("Background")
-														.AddComponent<RawImage>();
+			o.backgroundTexture =
+				background
+				??
+				new GameObject("Background").AddComponent<RawImage>();
 			o.ui = ui ??
 				UIManager.Create(
 					uiCanvas: new GameObject("UI"),
@@ -88,11 +90,13 @@ namespace ShootAR
 			}
 #endif
 
-			spawnPatternUri = Path.Combine(
-					Application.persistentDataPath, SPAWN_PATTERN_FILE);
-			if (!File.Exists(spawnPatternUri)) {
-				LocalFiles.CopyResourceToPersistentData(
-						SPAWN_PATTERN_FILE_NAME, SPAWN_PATTERN_FILE);
+			if (spawnPatternUri is null || spawnPatternUri == "") {
+				spawnPatternUri = Path.Combine(
+						Application.persistentDataPath, SPAWN_PATTERN_FILE);
+				if (!File.Exists(spawnPatternUri)) {
+					LocalFiles.CopyResourceToPersistentData(
+							SPAWN_PATTERN_FILE_NAME, SPAWN_PATTERN_FILE);
+				}
 			}
 #endif
 			/* Do not use elif here. While testing
@@ -176,7 +180,7 @@ namespace ShootAR
 		}
 
 		private void FixedUpdate() {
-			if (!gameState.GameOver) {
+			if (gameState.RoundStarted && !gameState.GameOver) {
 				// Round Won
 				bool spawnersStoped = true;
 				foreach (var type in spawnerGroups.Keys) {
@@ -232,9 +236,8 @@ namespace ShootAR
 #endif
 
 			// Configuring spawners
-			Stack<Spawner.SpawnConfig>[] patterns = Spawner.ParseSpawnPattern(
-				Path.Combine(Application.persistentDataPath, SPAWN_PATTERN_FILE)
-			);
+			Stack<Spawner.SpawnConfig>[] patterns
+				= Spawner.ParseSpawnPattern(spawnPatternUri);
 
 			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
 
@@ -242,7 +245,7 @@ namespace ShootAR
 			 * round. If they already have more than enough, they get
 			 * points. */
 			foreach (var group in spawnerGroups) {
-				if (group.Key == typeof(Enemy)) {
+				if (group.Key.IsSubclassOf(typeof(Enemy))) {
 					int totalEnemies = 0;
 
 					group.Value.ForEach(spawner => {
