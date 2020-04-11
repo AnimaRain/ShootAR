@@ -4,6 +4,7 @@ using ShootAR.TestTools;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
+using System.IO;
 
 public class GameStateTests : TestBase
 {
@@ -22,8 +23,36 @@ public class GameStateTests : TestBase
 		var enemy = TestEnemy.Create(); // Create an enemy to stop game manager
 										  // from switching state to "round won".
 
-		GameManager.Create(player, gameState,
-				"Assets/Tests/GameStateTests-testpattern.xml");
+		string[] data = new string[] {
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+			"",
+			"<spawnerconfiguration>",
+			"\t<level>",
+			"\t\t<spawnable type=\"Crasher\">",
+			"\t\t\t<pattern>",
+			"\t\t\t\t<limit>3</limit>",
+			"\t\t\t\t<rate>0</rate>",
+			"\t\t\t\t<delay>0</delay>",
+			"\t\t\t\t<maxDistance>30</maxDistance>",
+			"\t\t\t\t<minDistance>15</minDistance>",
+			"\t\t\t</pattern>",
+			"\t\t</spawnable>",
+			"\t\t<spawnable type=\"BulletCapsule\">",
+			"\t\t\t<pattern>",
+			"\t\t\t\t<limit>1</limit>",
+			"\t\t\t\t<rate>0</rate>",
+			"\t\t\t\t<delay>0</delay>",
+			"\t\t\t\t<maxDistance>20</maxDistance>",
+			"\t\t\t\t<minDistance>10</minDistance>",
+			"\t\t\t</pattern>",
+			"\t\t</spawnable>",
+			"\t</level>",
+			"</spawnerconfiguration>"
+		};
+		string file = "patternstestfile.xml";
+		File.WriteAllLines(file, data);
+
+		GameManager.Create(player, gameState, file);
 
 		yield return new WaitForFixedUpdate();
 		player.Ammo = 1;
@@ -54,6 +83,8 @@ public class GameStateTests : TestBase
 		Assert.NotZero(player.Ammo, "Player should have bullets at the end.");
 		Assert.False(gameState.GameOver,
 				"The game must not end if restocked on bullets.");
+
+		File.Delete(file);
 	}
 
 	[UnityTest]
@@ -65,13 +96,31 @@ public class GameStateTests : TestBase
 			camera: camera,
 			ammo: 1,
 			gameState: gameState);
-		GameManager.Create(
-			player, gameState,
-			"Assets/Tests/GameStateTests-testpattern0.xml"
-		);
 			var enemy = TestEnemy.Create(0, 0, 0, 10, 10, 10);
 			var bullet = Bullet.Create(100f);
 			var spawner = Spawner.Create();
+
+		string[] data = new string[] {
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+			"",
+			"<spawnerconfiguration>",
+			"\t<level>",
+			"\t\t<spawnable type=\"Crasher\">",
+			"\t\t\t<pattern>",
+			"\t\t\t\t<limit>1</limit>",
+			"\t\t\t\t<rate>0</rate>",
+			"\t\t\t\t<delay>0</delay>",
+			"\t\t\t\t<maxDistance>30</maxDistance>",
+			"\t\t\t\t<minDistance>15</minDistance>",
+			"\t\t\t</pattern>",
+			"\t\t</spawnable>",
+			"\t</level>",
+			"</spawnerconfiguration>"
+		};
+		string file = "patternstestfile.xml";
+		File.WriteAllLines(file, data);
+
+		GameManager.Create(player, gameState, file);
 
 		yield return new WaitForFixedUpdate();
 		yield return new WaitUntil(() => Object.FindObjectOfType<Spawner>()
@@ -87,5 +136,7 @@ public class GameStateTests : TestBase
 			"The game must not end if the last enemy dies by the last bullet.");
 		Assert.True(gameState.RoundWon,
 			"The round should be won when the last enemy dies by the last bullet.");
+
+		File.Delete(file);
 	}
 }
