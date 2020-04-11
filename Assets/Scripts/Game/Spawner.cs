@@ -296,7 +296,7 @@ namespace ShootAR
 		}
 
 
-		public static Stack<SpawnConfig>[] ParseSpawnPattern(string spawnPatternFilePath) {
+		public static Stack<SpawnConfig>[] ParseSpawnPattern(string spawnPatternFilePath, int level = 1) {
 			Type type = default;
 			int limit = default, multiplier = -1;
 			float rate = default, delay = default,
@@ -313,10 +313,16 @@ namespace ShootAR
 
 			while (!doneParsingForCurrentLevel) {
 				if (!(xmlPattern?.Read() ?? false)) {
-					//TODO: Should we guard in case Resources.UnloadUnusedAssets
-					//		dereferences spawnPatternFilePath?
 					xmlPattern = XmlReader.Create(spawnPatternFilePath);
 					xmlPattern.MoveToContent();
+				}
+
+				// skip to wanted level
+				if (level > 1) {
+					xmlPattern.ReadToDescendant("level");
+					for (int i = 1; i < level; i++) {
+						xmlPattern.Skip();
+					}
 				}
 
 				switch (xmlPattern.NodeType) {
@@ -407,6 +413,8 @@ namespace ShootAR
 					break;
 				}
 			}
+
+			xmlPattern.Close();
 
 			Stack<SpawnConfig>[] extractedPatterns = new Stack<SpawnConfig>[groupsByType.Count];
 			groupsByType.Values.CopyTo(extractedPatterns, 0);

@@ -1,13 +1,25 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
+﻿using System.IO;
 using NUnit.Framework;
 using UnityEngine;
 using ShootAR;
+using ShootAR.TestTools;
 using static ShootAR.Spawner;
 
-public class PatternsFileTests
+public class PatternsFileTests : TestBase
 {
+	private const string PATTERN_FILE = "patternstestfile.xml";
+
+	[TearDown]
+	public void DeletePatternFile() {
+		if (File.Exists(PATTERN_FILE))
+			File.Delete(PATTERN_FILE);
+
+		Assert.That(
+			!File.Exists(PATTERN_FILE),
+			"The file should be deleted when the test ends."
+		);
+	}
+
 	[Test]
 	public void CopyFileToPermDataPath() {
 		const string patternFileBasename = "spawnpatterns";
@@ -56,20 +68,16 @@ public class PatternsFileTests
 			"</spawnerconfiguration>"
 		};
 
-		string file = "patternstestfile.xml";
-		File.WriteAllLines(file, data);
+		File.WriteAllLines(PATTERN_FILE, data);
 
-		var error = $"Error in {file}:\n" +
+		var error = $"Error in {PATTERN_FILE}:\n" +
 					$"{invalidSpawnable} is not a valid type of spawnable.";
 
 		UnityException ex = Assert.Throws<UnityException>(() =>
-			ParseSpawnPattern(file)
+			ParseSpawnPattern(PATTERN_FILE)
 		);
 
 		Assert.That(ex.Message, Is.EqualTo(error));
-
-		File.Delete(file);
-		Assert.That(!File.Exists(file), "The file should be deleted when the test ends.");
 	}
 
 	// var spawners = new Dictionary<Type, List<Spawner>>();
