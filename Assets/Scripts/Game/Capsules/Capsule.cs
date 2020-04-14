@@ -32,7 +32,7 @@ namespace ShootAR
 
 		protected override void Start() {
 			base.Start();
-			if (player is null)
+			if (player == null)
 				player = FindObjectOfType<Player>();
 
 			rotation = Random.rotation.eulerAngles;

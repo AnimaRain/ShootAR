@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using ShootAR;
+using ShootAR.Enemies;
 using ShootAR.TestTools;
 using System.Collections;
 using UnityEngine;
@@ -17,11 +18,6 @@ public class GameStateTests : TestBase
 			camera: camera,
 			ammo: 1,
 			gameState: gameState);
-		var spawner = Spawner.Create();
-		var bulletCapsule = BulletCapsule.Create(0, player);
-		var bullet = Bullet.Create(10);
-		var enemy = TestEnemy.Create(); // Create an enemy to stop game manager
-										  // from switching state to "round won".
 
 		string[] data = new string[] {
 			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
@@ -30,11 +26,11 @@ public class GameStateTests : TestBase
 			"\t<level>",
 			"\t\t<spawnable type=\"Crasher\">",
 			"\t\t\t<pattern>",
-			"\t\t\t\t<limit>3</limit>",
+			"\t\t\t\t<limit>1</limit>",
 			"\t\t\t\t<rate>0</rate>",
 			"\t\t\t\t<delay>0</delay>",
-			"\t\t\t\t<maxDistance>30</maxDistance>",
-			"\t\t\t\t<minDistance>15</minDistance>",
+			"\t\t\t\t<maxDistance>5000</maxDistance>",
+			"\t\t\t\t<minDistance>5000</minDistance>",
 			"\t\t\t</pattern>",
 			"\t\t</spawnable>",
 			"\t\t<spawnable type=\"BulletCapsule\">",
@@ -71,6 +67,7 @@ public class GameStateTests : TestBase
 		} while (capsuleSpawner is null);
 		yield return new WaitUntil(() => capsuleSpawner.SpawnCount > 0);
 		BulletCapsule capsule = Object.FindObjectOfType<BulletCapsule>();
+		capsule.Speed = 0f;
 		capsule.transform.Translate(new Vector3(10f, 10f, 10f));
 		camera.transform.LookAt(capsule.transform);
 
@@ -96,9 +93,6 @@ public class GameStateTests : TestBase
 			camera: camera,
 			ammo: 1,
 			gameState: gameState);
-			var enemy = TestEnemy.Create(0, 0, 0, 10, 10, 10);
-			var bullet = Bullet.Create(100f);
-			var spawner = Spawner.Create();
 
 		string[] data = new string[] {
 			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
@@ -126,6 +120,7 @@ public class GameStateTests : TestBase
 		yield return new WaitUntil(() => Object.FindObjectOfType<Spawner>()
 				.SpawnCount > 0);
 
+		var enemy = Object.FindObjectOfType<Crasher>();
 		camera.transform.LookAt(enemy.transform);
 		player.Shoot();
 

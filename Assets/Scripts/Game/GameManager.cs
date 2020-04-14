@@ -241,23 +241,24 @@ namespace ShootAR
 
 			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
 
-			/* Player should always have enough ammo to play the next
-			 * round. If they already have more than enough, they get
-			 * points. */
 			foreach (var group in spawnerGroups) {
-				if (group.Key.IsSubclassOf(typeof(Enemy))) {
+				group.Value.ForEach(spawner => {
+					spawner.StartSpawning();
+
+					/* Player should always have enough ammo to play the next
+					 * round. If they already have more than enough, they get
+					 * points. */
 					int totalEnemies = 0;
-
-					group.Value.ForEach(spawner => {
+					if (group.Key.IsSubclassOf(typeof(Enemy))) {
 						totalEnemies += spawner.SpawnLimit;
-					});
 
-					int difference = player.Ammo - totalEnemies;
-					if (difference > 0)
-						scoreManager.AddScore(difference * 10);
-					else if (difference < 0)
-						player.Ammo += -difference;
-				}
+						int difference = player.Ammo - totalEnemies;
+						if (difference > 0)
+							scoreManager.AddScore(difference * 10);
+						else if (difference < 0)
+							player.Ammo += -difference;
+					}
+				});
 			}
 
 			gameState.RoundWon = false;

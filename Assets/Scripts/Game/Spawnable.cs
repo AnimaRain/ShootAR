@@ -15,7 +15,7 @@ namespace ShootAR
 		/// </summary>
 		public float Speed {
 			get { return speed; }
-			protected set { speed = value; }
+			set { speed = value; }
 		}
 
 		/// <summary>
