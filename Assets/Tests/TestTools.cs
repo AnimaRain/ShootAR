@@ -1,6 +1,7 @@
 ﻿using ShootAR.Enemies;
 using UnityEngine;
 using NUnit.Framework;
+using System.IO;
 
 namespace ShootAR.TestTools
 {
@@ -122,6 +123,29 @@ namespace ShootAR.TestTools
 			Spawnable.Pool<Crasher>.Empty();
 			Spawnable.Pool<Drone>.Empty();
 			Spawnable.Pool<TestEnemy>.Empty();
+		}
+	}
+
+	public class PatternsTestBase : TestBase
+	{
+		protected const string PATTERN_FILE = "patternstestfile.xml";
+		///<summary>pattern file's full path</summary>
+		protected string file;
+
+		[SetUp]
+		public void FileSetUp() {
+			file = Path.Combine(Application.persistentDataPath, PATTERN_FILE);
+		}
+
+		[TearDown]
+		public void DeletePatternFile() {
+			if (File.Exists(file))
+				File.Delete(file);
+
+			Assert.That(
+				!File.Exists(file),
+				"The file should be deleted when the test ends."
+			);
 		}
 	}
 }

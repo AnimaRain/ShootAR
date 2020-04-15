@@ -5,21 +5,8 @@ using ShootAR;
 using ShootAR.TestTools;
 using static ShootAR.Spawner;
 
-public class PatternsFileTests : TestBase
+public class PatternsFileTests : PatternsTestBase
 {
-	private const string PATTERN_FILE = "patternstestfile.xml";
-
-	[TearDown]
-	public void DeletePatternFile() {
-		if (File.Exists(PATTERN_FILE))
-			File.Delete(PATTERN_FILE);
-
-		Assert.That(
-			!File.Exists(PATTERN_FILE),
-			"The file should be deleted when the test ends."
-		);
-	}
-
 	[Test]
 	public void CopyFileToPermDataPath() {
 		const string patternFileBasename = "spawnpatterns";
@@ -34,7 +21,25 @@ public class PatternsFileTests : TestBase
 
 	[Test]
 	public void ExtractPattern() {
-		var patterns = ParseSpawnPattern("Assets/Resources/spawnpatterns.xml");
+		string [] data = new string[] {
+			"<spawnerconfiguration>",
+			"\t<level>",
+			"\t\t<spawnable type=\"Crasher\">",
+			"\t\t\t<pattern>",
+			"\t\t\t\t<limit>3</limit>",
+			"\t\t\t\t<rate>0</rate>",
+			"\t\t\t\t<delay>0</delay>",
+			"\t\t\t\t<maxDistance>0</maxDistance>",
+			"\t\t\t\t<minDistance>0</minDistance>",
+			"\t\t\t</pattern>",
+			"\t\t</spawnable>",
+			"\t</level>",
+			"</spawnerconfiguration>"
+		};
+
+		File.WriteAllLines(file, data);
+
+		var patterns = ParseSpawnPattern(file);
 
 		Assert.IsNotEmpty(patterns, "No patterns extracted.");
 	}
@@ -68,13 +73,13 @@ public class PatternsFileTests : TestBase
 			"</spawnerconfiguration>"
 		};
 
-		File.WriteAllLines(PATTERN_FILE, data);
+		File.WriteAllLines(file, data);
 
-		var error = $"Error in {PATTERN_FILE}:\n" +
+		var error = $"Error in {file}:\n" +
 					$"{invalidSpawnable} is not a valid type of spawnable.";
 
 		UnityException ex = Assert.Throws<UnityException>(() =>
-			ParseSpawnPattern(PATTERN_FILE)
+			ParseSpawnPattern(file)
 		);
 
 		Assert.That(ex.Message, Is.EqualTo(error));

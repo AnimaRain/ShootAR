@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System.IO;
 
-public class GameStateTests : TestBase
+public class GameStateTests : PatternsTestBase
 {
 	[UnityTest]
 	public IEnumerator UseLastShotToHitCapsuleAndTakeBullets() {
@@ -45,7 +45,7 @@ public class GameStateTests : TestBase
 			"\t</level>",
 			"</spawnerconfiguration>"
 		};
-		string file = "patternstestfile.xml";
+
 		File.WriteAllLines(file, data);
 
 		GameManager.Create(player, gameState, file);
@@ -80,8 +80,6 @@ public class GameStateTests : TestBase
 		Assert.NotZero(player.Ammo, "Player should have bullets at the end.");
 		Assert.False(gameState.GameOver,
 				"The game must not end if restocked on bullets.");
-
-		File.Delete(file);
 	}
 
 	[UnityTest]
@@ -111,7 +109,7 @@ public class GameStateTests : TestBase
 			"\t</level>",
 			"</spawnerconfiguration>"
 		};
-		string file = "patternstestfile.xml";
+
 		File.WriteAllLines(file, data);
 
 		GameManager.Create(player, gameState, file);
@@ -131,7 +129,5 @@ public class GameStateTests : TestBase
 			"The game must not end if the last enemy dies by the last bullet.");
 		Assert.True(gameState.RoundWon,
 			"The round should be won when the last enemy dies by the last bullet.");
-
-		File.Delete(file);
 	}
 }
