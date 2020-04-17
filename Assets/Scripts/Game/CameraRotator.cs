@@ -35,7 +35,7 @@ public class CameraRotator : MonoBehaviour
 		transform.localRotation = Input.gyro.attitude * calibrationRotation;
 #endif
 
-#if UNITY_EDITOR_WIN //Camera Control on PC
+#if UNITY_EDITOR //Camera Control on PC
 		if (Input.GetButton("Fire2")) {
 			mouseY += 5 * Input.GetAxis("Mouse Y");
 			mouseX += 5 * Input.GetAxis("Mouse X");
