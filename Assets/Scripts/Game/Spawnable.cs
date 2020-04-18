@@ -69,19 +69,19 @@ namespace ShootAR
 				string prefab = "";
 				if (typeof(T) == typeof(Crasher))
 					prefab = Prefabs.CRASHER;
-				else if(typeof(T) == typeof(Drone))
+				else if (typeof(T) == typeof(Drone))
 					prefab = Prefabs.DRONE;
-				else if(typeof(T) == typeof(ArmorCapsule))
+				else if (typeof(T) == typeof(ArmorCapsule))
 					prefab = Prefabs.ARMOR_CAPSULE;
-				else if(typeof(T) == typeof(HealthCapsule))
+				else if (typeof(T) == typeof(HealthCapsule))
 					prefab = Prefabs.HEALTH_CAPSULE;
-				else if(typeof(T) == typeof(PowerUpCapsule))
+				else if (typeof(T) == typeof(PowerUpCapsule))
 					prefab = Prefabs.POWER_UP_CAPSULE;
-				else if(typeof(T) == typeof(BulletCapsule))
+				else if (typeof(T) == typeof(BulletCapsule))
 					prefab = Prefabs.BULLET_CAPSULE;
-				else if(typeof(T) == typeof(EnemyBullet))
+				else if (typeof(T) == typeof(EnemyBullet))
 					prefab = Prefabs.ENEMY_BULLET;
-				else if(typeof(T) == typeof(Bullet))
+				else if (typeof(T) == typeof(Bullet))
 					prefab = Prefabs.BULLET;
 
 				Populate(
