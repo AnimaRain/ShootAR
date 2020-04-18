@@ -69,6 +69,15 @@ namespace ShootAR
 		[SerializeField] private AudioClip spawnSfx;
 #pragma warning restore CS0649
 
+		/// <summary>
+		/// Reference to the coroutine spawning objects.
+		/// Needed for referencing the coroutine when it
+		/// should be manually stoped.
+		/// </summary>
+		/// <seealso cref="StartSpawning"/>
+		/// <seealso cref="StopSpawning"/>
+		private Coroutine lastSpawnCall;
+
 		private void Awake() {
 			//Initial value should not be 0 to refrain from enabling
 			//"Game Over" state when the game has just started.
@@ -246,7 +255,7 @@ namespace ShootAR
 
 			SpawnCount = 0;
 			IsSpawning = true;
-			StartCoroutine(Spawn());
+			lastSpawnCall = StartCoroutine(Spawn());
 		}
 
 		/// <summary>
@@ -292,7 +301,7 @@ namespace ShootAR
 #endif
 
 			IsSpawning = false;
-			StopCoroutine(Spawn());
+			StopCoroutine(lastSpawnCall);
 		}
 
 
