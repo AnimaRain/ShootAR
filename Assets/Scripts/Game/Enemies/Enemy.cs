@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 namespace ShootAR.Enemies
 {
@@ -25,6 +26,10 @@ namespace ShootAR.Enemies
 		/// <summary>
 		/// Count of currently active enemies.
 		/// </summary>
+
+		public bool CanMove { get; set; } = true;
+		public bool IsMoving { get; protected set; } = false;
+
 		public static int ActiveCount { get; protected set; }
 
 		[SerializeField] protected AudioClip attackSfx;
@@ -62,13 +67,39 @@ namespace ShootAR.Enemies
 			ActiveCount--;
 		}
 
+		private Coroutine lastMoveAction;
+
 		/// <summary>
-		/// Enemy moves towards a point using the physics engine.
+		/// Move to a point.
 		/// </summary>
 		public void MoveTo(Vector3 point) {
-			transform.LookAt(point);
-			transform.forward = -transform.position;
-			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
+			if (!CanMove) return;
+			if (IsMoving) StopCoroutine(lastMoveAction); // Stop previous move action
+
+			IEnumerator LerpTo() {
+				Vector3 start = transform.position;
+				float startTime = Time.time;
+				float distance = Vector3.Distance(start, point);
+				float moveRatio;
+
+				do {
+					if (distance == 0f) break;
+
+					moveRatio = (Time.time - startTime) * Speed / distance;
+					if (moveRatio == 0f) {
+						yield return new WaitForEndOfFrame();
+						continue;
+					}
+
+					transform.position = Vector3.Slerp(start, point, moveRatio);
+					yield return new WaitForEndOfFrame();
+				} while (CanMove && Speed > 0 && transform.position != point);
+
+				IsMoving = false;
+			};
+
+			IsMoving = true;
+			lastMoveAction = StartCoroutine(LerpTo());
 		}
 
 		/// <summary>

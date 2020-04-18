@@ -3,13 +3,18 @@ using ShootAR;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.TestTools.Utils;
+using ShootAR.TestTools;
 
-internal class MovementBehaviourTests
+internal class MovementBehaviourTests : TestBase
 {
-	internal class EndPoint : MonoBehaviour
+	internal class MovementTestPoint : MonoBehaviour
 	{
-		public bool testObjectPassedThePoint;
+		public bool reached;
 		public Vector3 recordedPosition;
+
+		public static MovementTestPoint Create()
+			=> new GameObject("Movement Test Point").AddComponent<MovementTestPoint>();
 
 		private void Start() {
 			var collider = gameObject.AddComponent<SphereCollider>();
@@ -19,14 +24,29 @@ internal class MovementBehaviourTests
 
 		private void LateUpdate() {
 			Debug.DrawLine(transform.position, Vector3.zero,
-				testObjectPassedThePoint ? Color.green : Color.red);
+				reached ? Color.green : Color.red);
 		}
 
 		private void OnTriggerEnter(Collider other) {
-			testObjectPassedThePoint = true;
+			reached = true;
 			recordedPosition = other.transform.position;
 			Debug.Log($"Object passed the trigger at {recordedPosition}");
 		}
+	}
+
+	[UnityTest]
+	public IEnumerator MoveFromPointAToPointB() {
+		TestEnemy hamster = TestEnemy.Create(2f);
+		hamster.gameObject.SetActive(true);
+
+		MovementTestPoint testPoint = MovementTestPoint.Create();
+		testPoint.transform.position = new Vector3(10f, 10f, 10f);
+
+		hamster.MoveTo(testPoint.transform.position);
+		yield return new WaitWhile(() => hamster.IsMoving);
+
+		Assert.That(testPoint.reached,
+			"Test object must move to the designated test point.");
 	}
 
 	// TODO: Fix this test
@@ -44,16 +64,16 @@ internal class MovementBehaviourTests
 		var oCollider = orbiter.gameObject.AddComponent<SphereCollider>();
 		oCollider.radius = 1f;
 
-		EndPoint endPoint = Object.Instantiate(
-			new GameObject("End Point").AddComponent<EndPoint>(),
+		MovementTestPoint endPoint = Object.Instantiate(
+			new GameObject("End Point").AddComponent<MovementTestPoint>(),
 			-startingPoint, Quaternion.LookRotation(startingPoint));
 
 		//Act
-		yield return new WaitUntil(() => endPoint.testObjectPassedThePoint);
+		yield return new WaitUntil(() => endPoint.reached);
 
 		//Assert
 		Assert.That(
-			UnityEngine.TestTools.Utils.Vector3EqualityComparer.Instance.Equals(
+			Vector3EqualityComparer.Instance.Equals(
 			endPoint.transform.position, endPoint.recordedPosition),
 			"Points (5, 5, 5) and (-5,-5,-5) are both part of the orbit path.");
 	}

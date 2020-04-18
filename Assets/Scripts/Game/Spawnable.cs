@@ -9,13 +9,18 @@ namespace ShootAR
 	{
 		public const int GLOBAL_SPAWN_LIMIT = 50;
 
-		[SerializeField] private float speed;
+		[SerializeField, Range(0f, Mathf.Infinity)] private float speed;
 		/// <summary>
 		/// The speed at which this object is moving.
 		/// </summary>
 		public float Speed {
 			get { return speed; }
-			set { speed = value; }
+			set {
+				if (value < 0)
+					throw new UnityException("Speed can not be a negative number.");
+
+				speed = value;
+			}
 		}
 
 		/// <summary>

@@ -20,11 +20,6 @@ namespace ShootAR.Enemies
 				prefabDamage = prefab.Damage;
 		}
 
-		protected override void OnEnable() {
-			base.OnEnable();
-			MoveTo(Vector3.zero);
-		}
-
 		public override void ResetState() {
 			Speed = (float)prefabSpeed;
 			PointsValue = (int)prefabPoints;
