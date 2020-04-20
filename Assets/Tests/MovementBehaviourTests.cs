@@ -49,33 +49,17 @@ internal class MovementBehaviourTests : TestBase
 			"Test object must move to the designated test point.");
 	}
 
-	// TODO: Fix this test
 	[UnityTest]
-	[Ignore("Needs to be fixed.")]
-	public IEnumerator OrbitCalculationValid() {
-		//Arrange
+	public IEnumerator OrbitAroundZero() {
 		Vector3 startingPoint = new Vector3(5f, 5f, 5f);
 
-		OrbitTester orbiter = Object.Instantiate(
-			new GameObject("TestObject").AddComponent<OrbitTester>());
-		orbiter.transform.Translate(startingPoint);
-		/*FIXME: Fix this line
-		 * orbiter.Speed = 100f; */
-		var oCollider = orbiter.gameObject.AddComponent<SphereCollider>();
-		oCollider.radius = 1f;
+		OrbitTester orbiter = OrbitTester.Create(new Orbit(startingPoint, Vector3.zero), 2f);
+		orbiter.gameObject.SetActive(true);
 
-		MovementTestPoint endPoint = Object.Instantiate(
-			new GameObject("End Point").AddComponent<MovementTestPoint>(),
-			-startingPoint, Quaternion.LookRotation(startingPoint));
+		MovementTestPoint endPoint = MovementTestPoint.Create();
+		endPoint.transform.position = -startingPoint;
 
-		//Act
 		yield return new WaitUntil(() => endPoint.reached);
-
-		//Assert
-		Assert.That(
-			Vector3EqualityComparer.Instance.Equals(
-			endPoint.transform.position, endPoint.recordedPosition),
-			"Points (5, 5, 5) and (-5,-5,-5) are both part of the orbit path.");
 	}
 
 	// UNDONE: Write the following test

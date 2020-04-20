@@ -13,7 +13,7 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Create a circular orbit around centerPoint with the radius of the vector point's magnitude.
+		/// Create a circular orbit around <see cref="centerPoint"/> with the radius of <see cref="point"/>'s magnitude.
 		/// </summary>
 		/// <param name="point">a point on the orbit</param>
 		/// <param name="centerPoint">the center of the orbit</param>

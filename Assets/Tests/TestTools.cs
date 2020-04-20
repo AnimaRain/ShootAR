@@ -80,6 +80,41 @@ namespace ShootAR.TestTools
 		}
 	}
 
+	internal class OrbitTester : TestEnemy
+	{
+		public Orbit Orbit { get; set; }
+
+		public static OrbitTester Create(
+				Orbit orbit,
+				float speed = default,
+				int damage = default,
+				int pointsValue = default) {
+			var o = new GameObject(nameof(OrbitTester)).AddComponent<OrbitTester>();
+
+			o.Orbit = orbit;
+			o.Speed = speed;
+			o.Damage = damage;
+			o.PointsValue = pointsValue;
+			o.transform.position = orbit.direction + orbit.centerPoint;
+			o.gameObject.SetActive(false);
+			return o;
+		}
+
+		private void Update() {
+			OrbitAround(Orbit);
+			Debug.DrawRay(Orbit.centerPoint, Orbit.perpendicularAxis, Color.blue);
+			Debug.DrawLine(Orbit.direction, Orbit.centerPoint);
+			Debug.DrawLine(transform.position, Orbit.direction);
+			Debug.DrawLine(transform.position, Orbit.perpendicularAxis, Color.magenta);
+		}
+
+		public new void Destroy() {
+			ReturnToPool<OrbitTester>();
+			ActiveCount--;
+		}
+	}
+
+
 	/// <summary>
 	/// Bare bones <see cref="Spawnable"/> object for test purposes.
 	/// </summary>
