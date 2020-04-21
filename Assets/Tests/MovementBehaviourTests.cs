@@ -16,9 +16,15 @@ internal class MovementBehaviourTests : TestBase
 		public static MovementTestPoint Create()
 			=> new GameObject("Movement Test Point").AddComponent<MovementTestPoint>();
 
+		public static MovementTestPoint Create(Vector3 position) {
+			var o = Create();
+			o.transform.position = position;
+			return o;
+		}
+
 		private void Start() {
 			var collider = gameObject.AddComponent<SphereCollider>();
-			collider.radius = 1f;
+			collider.radius = 0.1f;
 			collider.isTrigger = true;
 		}
 
@@ -39,8 +45,7 @@ internal class MovementBehaviourTests : TestBase
 		TestEnemy hamster = TestEnemy.Create(2f);
 		hamster.gameObject.SetActive(true);
 
-		MovementTestPoint testPoint = MovementTestPoint.Create();
-		testPoint.transform.position = new Vector3(10f, 10f, 10f);
+		MovementTestPoint testPoint = MovementTestPoint.Create(new Vector3(10f, 10f, 10f));
 
 		hamster.MoveTo(testPoint.transform.position);
 		yield return new WaitWhile(() => hamster.IsMoving);
@@ -50,6 +55,110 @@ internal class MovementBehaviourTests : TestBase
 	}
 
 	[UnityTest]
+	public IEnumerator MoveToPointBSkippingA() {
+		MovementTestPoint pointA = MovementTestPoint.Create(new Vector3(5f, 5f, 5f));
+		MovementTestPoint pointB = MovementTestPoint.Create(2 * pointA.transform.position);
+
+		TestEnemy hamster = TestEnemy.Create(5f);
+		hamster.gameObject.SetActive(true);
+
+		hamster.MoveTo(pointA.transform.position);
+		hamster.MoveTo(pointB.transform.position);
+		yield return new WaitWhile(() => hamster.IsMoving);
+
+		Assert.True(pointA.reached, "Object did not pass through point A");
+		Assert.True(pointB.reached, "Object did not reach the end.");
+	}
+
+	[UnityTest]
+	public IEnumerator MoveToBTurningBeforeA() {
+		MovementTestPoint pointA = MovementTestPoint.Create(new Vector3(5f, 0f, 5f));
+		MovementTestPoint pointB = MovementTestPoint.Create(new Vector3(10f, 10f, 10f));
+
+		TestEnemy hamster = TestEnemy.Create(5f);
+		hamster.gameObject.SetActive(true);
+
+		hamster.MoveTo(pointA.transform.position);
+		yield return new WaitUntil(
+			() => hamster.transform.position.magnitude > pointA.transform.position.magnitude / 2);
+		hamster.MoveTo(pointB.transform.position);
+		yield return new WaitWhile(() => hamster.IsMoving);
+
+		Assert.True(pointB.reached, "Object did not reach the end.");
+		Assert.False(pointA.reached, "Object must not pass through point A");
+	}
+
+	[UnityTest]
+	public IEnumerator BumpOnOtherEnemy() {
+		TestEnemy hamster = TestEnemy.Create(5f);
+		hamster.gameObject.SetActive(true);
+
+		TestEnemy.Create(0f, 0, 0, 0f, 0f, 5f); // enemy blocking the path
+		MovementTestPoint endPoint = MovementTestPoint.Create(new Vector3(0f, 0f, 10f));
+
+		hamster.MoveTo(endPoint.transform.position);
+		yield return new WaitWhile(() => hamster.IsMoving);
+
+		Assert.True(endPoint.reached);
+	}
+
+	[UnityTest]
+	public IEnumerator BumpOnPlayer() {
+		TestEnemy hamster = TestEnemy.Create(5f,0,0,-5f);
+		hamster.gameObject.SetActive(true);
+
+		Player.Create();
+
+		MovementTestPoint endPoint = MovementTestPoint.Create(-hamster.transform.position);
+
+		hamster.MoveTo(endPoint.transform.position);
+		yield return new WaitWhile(() => hamster.IsMoving);
+
+		Assert.True(endPoint.reached);
+	}
+
+	[UnityTest]
+	public IEnumerator EveryoneMovesToTheSameSpot() {
+		TestEnemy[] hamsters = new TestEnemy[15];
+		hamsters[0] = TestEnemy.Create(3f, 0, 0, -4f, 0f, 5f);
+		hamsters[1] = TestEnemy.Create(3f, 0, 0, -2f, 0f, 5f);
+		hamsters[2] = TestEnemy.Create(3f, 0, 0, 0f, 0f, 5f);
+		hamsters[3] = TestEnemy.Create(3f, 0, 0, 2f, 0f, 5f);
+		hamsters[4] = TestEnemy.Create(3f, 0, 0, 4f, 0f, 5f);
+		hamsters[5] = TestEnemy.Create(3f, 0, 0, -4f, 2f, 5f);
+		hamsters[6] = TestEnemy.Create(3f, 0, 0, -2f, 2f, 5f);
+		hamsters[7] = TestEnemy.Create(3f, 0, 0, 0f, 2f, 5f);
+		hamsters[8] = TestEnemy.Create(3f, 0, 0, 2f, 2f, 5f);
+		hamsters[9] = TestEnemy.Create(3f, 0, 0, 4f, 2f, 5f);
+		hamsters[10] = TestEnemy.Create(3f, 0, 0, -4f, 4f, 5f);
+		hamsters[11] = TestEnemy.Create(3f, 0, 0, -2f, 4f, 5f);
+		hamsters[12] = TestEnemy.Create(3f, 0, 0, 0f, 4f, 5f);
+		hamsters[13] = TestEnemy.Create(3f, 0, 0, 2f, 4f, 5f);
+		hamsters[14] = TestEnemy.Create(3f, 0, 0, 4f, 4f, 5f);
+
+		MovementTestPoint gatheringPoint = MovementTestPoint.Create();
+
+		foreach (var hamster in hamsters)
+		{
+			hamster.gameObject.SetActive(true);
+			hamster.MoveTo(gatheringPoint.transform.position);
+		}
+
+		yield return new WaitForSecondsRealtime(3f);
+
+		bool allMovementStoped;
+		do {
+			allMovementStoped = false;
+			foreach (var hamster in hamsters)
+				if (hamster.IsMoving) {
+					allMovementStoped = true;
+					break;
+				}
+			yield return new WaitForFixedUpdate();
+		} while (allMovementStoped && gatheringPoint.reached);
+	}
+
+	[UnityTest, Ignore("Needs fixing")]
 	public IEnumerator OrbitAroundZero() {
 		Vector3 startingPoint = new Vector3(5f, 5f, 5f);
 
