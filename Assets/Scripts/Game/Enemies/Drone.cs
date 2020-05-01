@@ -36,19 +36,24 @@ namespace ShootAR.Enemies
 		}
 
 		protected void FixedUpdate() {
-			if (!gameState.GameOver) {
+			//TODO: Shoot();
+
+			/* if (!gameState.GameOver) {
 				if (Time.time > nextShot) {
 					Shoot();
 					nextShot = Time.time + SHOOT_DELAY;
 				}
 
-				//TODO: OrbitAround();
-			}
+			} */
+
+			//TODO: OrbitAround();
 		}
 
 		public override void Destroy() {
 			base.Destroy();
 			ReturnToPool<Drone>();
 		}
+
+		public override void Attack() => throw new System.NotImplementedException();
 	}
 }

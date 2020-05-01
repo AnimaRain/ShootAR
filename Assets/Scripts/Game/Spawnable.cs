@@ -24,15 +24,6 @@ namespace ShootAR
 		}
 
 		/// <summary>
-		/// Reference to the object holding the game state.
-		/// </summary>
-		protected static GameState gameState;
-
-		protected virtual void Start() {
-			if (gameState is null)
-				gameState = FindObjectOfType<GameState>();
-		}
-		/// <summary>
 		/// Contains object pools that hold already instantiated objects ready
 		/// to be used when requested.
 		/// </summary>
@@ -139,11 +130,6 @@ namespace ShootAR
 		/// Reset object to the default values.
 		/// </summary>
 		public abstract void ResetState();
-
-		protected virtual void OnTriggerEnter(Collider other) {
-			if (other.GetComponent<Bullet>())
-				Destroy();
-		}
 
 		public abstract void Destroy();
 	}

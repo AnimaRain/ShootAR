@@ -30,8 +30,7 @@ namespace ShootAR
 			gameObject.SetActive(false);
 		}
 
-		protected override void Start() {
-			base.Start();
+		protected void Start() {
 			if (player == null)
 				player = FindObjectOfType<Player>();
 

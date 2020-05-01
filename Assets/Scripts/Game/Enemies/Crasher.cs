@@ -30,5 +30,14 @@ namespace ShootAR.Enemies
 			base.Destroy();
 			ReturnToPool<Crasher>();
 		}
+
+		public override void Attack() {
+			MoveTo(Vector3.zero);
+		}
+
+		protected override void Harm(Player target) {
+			sfx.Play();
+			target.GetDamaged(Damage);
+		}
 	}
 }

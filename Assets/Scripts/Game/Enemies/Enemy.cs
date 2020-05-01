@@ -41,7 +41,7 @@ namespace ShootAR.Enemies
 			if (score == null) score = FindObjectOfType<ScoreManager>();
 		}
 
-		protected override void Start() {
+		protected void Start() {
 			sfx = GetComponent<AudioSource>();
 			/* If the AudioSource component on all enemy prefabs are distinctively
 			 * configured, either through scripts or the inspector, and you are
@@ -111,5 +111,10 @@ namespace ShootAR.Enemies
 			transform.RotateAround(
 				orbit.direction, orbit.perpendicularAxis, Speed * Time.deltaTime);
 		}
+
+		/// <summary>
+		/// Command enemy to attack.
+		/// </summary>
+		public abstract void Attack();
 	}
 }

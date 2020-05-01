@@ -28,8 +28,13 @@ namespace ShootAR.Enemies
 			PointsValue = (int)prefabPointValue;
 		}
 
-		public override void Attack(Player target) {
-			base.Attack(target);
+		public override void Attack(){
+			MoveTo(Vector3.zero);
+		}
+
+		protected override void Harm(Player target) {
+			sfx.Play();
+			target.GetDamaged(Damage);
 			Destroy();
 		}
 
