@@ -20,4 +20,23 @@ public class EnemyAttackTests : TestBase {
 
 		Assert.Less(player.Health, 3);
 	}
+
+	[UnityTest]
+	public IEnumerator DroneAttacksPlayer() {
+		Player player = Player.Create(health: 3);
+		Drone drone = Object.Instantiate<Drone>(
+			Resources.Load<Drone>("Prefabs/Enemies/Drone"),
+			new Vector3(10f, 10f, 5f), new Quaternion()
+		);
+
+		Spawnable.Pool<EnemyBullet>.Populate(
+			Resources.Load<EnemyBullet>("Prefabs/Enemies/EnemyBullet"),
+			lot: 2
+		);
+
+		drone.Attack();
+		yield return new WaitUntil(() => player.Health != 3);
+
+		Assert.Less(player.Health, 3);
+	}
 }

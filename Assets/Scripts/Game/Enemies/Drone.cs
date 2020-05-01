@@ -54,7 +54,7 @@ namespace ShootAR.Enemies
 			ReturnToPool<Drone>();
 		}
 
-		public override void Attack() => throw new System.NotImplementedException();
+		public override void Attack() => Shoot();
 
 		protected override void Shoot() {
 			EnemyBullet bullet = Pool<EnemyBullet>.RequestObject();
@@ -63,8 +63,9 @@ namespace ShootAR.Enemies
 			bullet.transform.position = bulletSpawnPoint.position;
 			bullet.transform.rotation = bulletSpawnPoint.rotation;
 			bullet.Damage = Damage;
+			bullet.gameObject.SetActive(true);
 
-			sfx.Play();
+			if (sfx?.clip != null) sfx.Play();
 		}
 	}
 }
