@@ -12,10 +12,16 @@ namespace ShootAR.Enemies
 
 		protected override void Awake() {
 			base.Awake();
-			if (prefabSpeed == null)
-				prefabSpeed = Resources.Load<EnemyBullet>(Prefabs.ENEMY_BULLET).Speed;
-			if (prefabPointValue == null)
-				prefabPointValue = Resources.Load<EnemyBullet>(Prefabs.ENEMY_BULLET).PointsValue;
+
+			EnemyBullet prefab;
+			if (prefabSpeed == null || prefabPointValue == null) {
+				prefab = Resources.Load<EnemyBullet>(Prefabs.ENEMY_BULLET);
+
+				if (prefabSpeed == null)
+					prefabSpeed = prefab.Speed;
+				if (prefabPointValue == null)
+					prefabPointValue = prefab.PointsValue;
+			}
 		}
 
 		protected override void OnEnable() {

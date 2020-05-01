@@ -55,5 +55,16 @@ namespace ShootAR.Enemies
 		}
 
 		public override void Attack() => throw new System.NotImplementedException();
+
+		protected override void Shoot() {
+			EnemyBullet bullet = Pool<EnemyBullet>.RequestObject();
+			if (bullet is null) return;
+
+			bullet.transform.position = bulletSpawnPoint.position;
+			bullet.transform.rotation = bulletSpawnPoint.rotation;
+			bullet.Damage = Damage;
+
+			sfx.Play();
+		}
 	}
 }
