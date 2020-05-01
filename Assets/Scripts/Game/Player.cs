@@ -2,7 +2,7 @@
 
 namespace ShootAR
 {
-	[RequireComponent(typeof(AudioSource))]
+	[RequireComponent(typeof(AudioSource), typeof(CapsuleCollider))]
 	public class Player : MonoBehaviour
 	{
 		//Set here how much health the player is allowed to have.
@@ -81,6 +81,11 @@ namespace ShootAR
 			o.Ammo = ammo;
 			o.gameState = gameState;
 			if (camera != null) camera.tag = "MainCamera";
+
+			CapsuleCollider collider = o.GetComponent<CapsuleCollider>();
+			collider.radius = 0.5f;
+			collider.height = 1.9f;
+			collider.isTrigger = true;
 
 			return o;
 		}

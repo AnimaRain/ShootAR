@@ -8,7 +8,7 @@ using ShootAR.Enemies;
 
 public class EnemyAttackTests : TestBase {
 	[UnityTest]
-	private IEnumerator CrasherAttacksPlayer() {
+	public IEnumerator CrasherAttacksPlayer() {
 		Player player = Player.Create(health: 3);
 		Crasher crasher = Object.Instantiate<Crasher>(
 			Resources.Load<Crasher>("Prefabs/Enemies/Crasher"),
