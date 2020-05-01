@@ -26,13 +26,15 @@ namespace ShootAR.Enemies
 		protected override void Awake() {
 			base.Awake();
 
-			Drone prefab = Resources.Load<Drone>(Prefabs.DRONE);
-			if (prefabSpeed is null)
-				prefabSpeed = prefab.Speed;
-			if (prefabPoints is null)
-				prefabPoints = prefab.PointsValue;
-			if (prefabDamage is null)
-				prefabDamage = prefab.Damage;
+			if (prefabSpeed is null || prefabPoints is null || prefabDamage is null) {
+				Drone prefab = Resources.Load<Drone>(Prefabs.DRONE);
+				if (prefabSpeed is null)
+					prefabSpeed = prefab.Speed;
+				if (prefabPoints is null)
+					prefabPoints = prefab.PointsValue;
+				if (prefabDamage is null)
+					prefabDamage = prefab.Damage;
+			}
 		}
 
 		protected void FixedUpdate() {
