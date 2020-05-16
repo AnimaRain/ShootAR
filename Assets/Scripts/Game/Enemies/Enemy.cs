@@ -30,6 +30,10 @@ namespace ShootAR.Enemies
 		public bool CanMove { get; set; } = true;
 		public bool IsMoving { get; protected set; } = false;
 
+		/// <summary>Is attacking and moving AI enabled?</summary>
+		/// <remarks>Mostly useful in testing.</remarks>
+		public bool AiEnabled { get; protected set; } = true;
+
 		public static int ActiveCount { get; protected set; }
 
 		[SerializeField] protected AudioClip attackSfx;
@@ -74,7 +78,7 @@ namespace ShootAR.Enemies
 		/// </summary>
 		public void MoveTo(Vector3 point) {
 			if (!CanMove) return;
-			if (IsMoving) StopCoroutine(lastMoveAction); // Stop previous move action
+			if (IsMoving) StopMoving();
 
 			IEnumerator LerpTo() {
 				Vector3 start = transform.position;
@@ -100,6 +104,11 @@ namespace ShootAR.Enemies
 
 			IsMoving = true;
 			lastMoveAction = StartCoroutine(LerpTo());
+		}
+
+		public void StopMoving() {
+			StopCoroutine(lastMoveAction);
+			IsMoving = false;
 		}
 
 		/// <summary>

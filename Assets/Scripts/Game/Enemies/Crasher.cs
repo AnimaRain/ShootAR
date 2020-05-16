@@ -40,6 +40,19 @@ namespace ShootAR.Enemies
 		protected override void Harm(Player target) {
 			sfx.Play();
 			target.GetDamaged(Damage);
+
+			if (Camera.main != null)
+				transform.position =
+					target.transform.position - Camera.main.transform.forward * 50f;
+
+			StopMoving();
+		}
+
+		protected void FixedUpdate() {
+			if (!IsMoving && AiEnabled) {
+				transform.LookAt(Vector3.zero, Vector3.up);
+				MoveTo(Vector3.zero);
+			}
 		}
 	}
 }
