@@ -45,7 +45,7 @@ namespace ShootAR.Enemies
 			if (score == null) score = FindObjectOfType<ScoreManager>();
 		}
 
-		protected void Start() {
+		protected virtual void Start() {
 			sfx = GetComponent<AudioSource>();
 			/* If the AudioSource component on all enemy prefabs are distinctively
 			 * configured, either through scripts or the inspector, and you are
@@ -107,6 +107,8 @@ namespace ShootAR.Enemies
 		}
 
 		public void StopMoving() {
+			if (lastMoveAction == null) return;
+
 			StopCoroutine(lastMoveAction);
 			IsMoving = false;
 		}
