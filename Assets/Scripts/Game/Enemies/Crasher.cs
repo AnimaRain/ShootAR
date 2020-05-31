@@ -34,6 +34,7 @@ namespace ShootAR.Enemies
 		}
 
 		public override void Attack() {
+			transform.LookAt(Vector3.zero, Vector3.up);
 			MoveTo(Vector3.zero);
 		}
 
@@ -41,17 +42,28 @@ namespace ShootAR.Enemies
 			sfx.Play();
 			target.GetDamaged(Damage);
 
-			if (Camera.main != null)
+			if (Camera.main != null) {
+				Vector3 cameraForward = Camera.main.transform.forward;
 				transform.position =
-					target.transform.position - Camera.main.transform.forward * 50f;
+					target.transform.position - cameraForward * 50f;
+
+				transform.Translate(
+					x: Random.Range(-25f, 25f) * cameraForward.x,
+					y: Random.Range(-25f, 25f) * cameraForward.y,
+					z: Random.Range(-25f, 25f) * cameraForward.z
+				);
+			}
 
 			StopMoving();
 		}
 
 		protected void FixedUpdate() {
-			if (!IsMoving && AiEnabled) {
-				transform.LookAt(Vector3.zero, Vector3.up);
-				MoveTo(Vector3.zero);
+			if (AiEnabled) {
+				if (!IsMoving) {
+					Attack();
+				} else {
+					transform.LookAt(Vector3.zero, Vector3.up);
+				}
 			}
 		}
 	}
