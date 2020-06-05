@@ -30,6 +30,7 @@ namespace ShootAR.Enemies
 		}
 
 		public override void ResetState() {
+			base.ResetState();
 			Speed = (float)prefabSpeed;
 			PointsValue = (int)prefabPointValue;
 		}

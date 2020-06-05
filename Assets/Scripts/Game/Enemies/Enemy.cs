@@ -27,7 +27,11 @@ namespace ShootAR.Enemies
 		/// Count of currently active enemies.
 		/// </summary>
 
+		/// <summary>
+		/// Dictates if this enemy can or not move due to gameplay status-effects.
+		/// </summary>
 		public bool CanMove { get; set; } = true;
+
 		public bool IsMoving { get; protected set; } = false;
 
 		/// <summary>Is attacking and moving AI enabled?</summary>
@@ -127,5 +131,10 @@ namespace ShootAR.Enemies
 		/// Command enemy to attack.
 		/// </summary>
 		public abstract void Attack();
+
+		public override void ResetState() {
+			StopMoving();
+			CanMove = true;
+		}
 	}
 }

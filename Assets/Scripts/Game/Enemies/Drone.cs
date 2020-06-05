@@ -25,6 +25,7 @@ namespace ShootAR.Enemies
 							 prefabDamage = null;
 
 		public override void ResetState() {
+			base.ResetState();
 			Speed = (float)prefabSpeed;
 			PointsValue = (int)prefabPoints;
 			Damage = (int)prefabDamage;

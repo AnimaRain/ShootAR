@@ -38,7 +38,10 @@ namespace ShootAR.TestTools
 			GetComponent<Rigidbody>().useGravity = false;
 		}
 
-		public new void ResetState() { }
+		public new void ResetState() {
+			StopMoving();
+			CanMove = true;
+		}
 
 		public new void Destroy() {
 			ReturnToPool<TestEnemy>();

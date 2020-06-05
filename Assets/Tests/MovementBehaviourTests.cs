@@ -101,12 +101,17 @@ internal class MovementBehaviourTests : TestBase
 		e.AiEnabled = false;
 		e.gameObject.SetActive(true);
 
+		Vector3 initialPosition = e.transform.position;
+
 		MovementTestPoint endPoint = MovementTestPoint.Create(new Vector3(0f, 0f, 10f));
 
 		hamster.MoveTo(endPoint.transform.position);
 		yield return new WaitWhile(() => hamster.IsMoving);
 
 		Assert.True(endPoint.reached);
+
+		// Also assert that the other enemy was not bounced:
+		Assert.That(Equals(initialPosition, e.transform.position));
 	}
 
 	[UnityTest]
