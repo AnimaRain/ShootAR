@@ -32,7 +32,7 @@ namespace ShootAR.Enemies
 
 		/// <summary>Is attacking and moving AI enabled?</summary>
 		/// <remarks>Mostly useful in testing.</remarks>
-		public bool AiEnabled { get; protected set; } = true;
+		public bool AiEnabled { get; set; } = true;
 
 		public static int ActiveCount { get; protected set; }
 

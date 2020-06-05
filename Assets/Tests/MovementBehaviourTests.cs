@@ -43,6 +43,7 @@ internal class MovementBehaviourTests : TestBase
 	[UnityTest]
 	public IEnumerator MoveFromPointAToPointB() {
 		TestEnemy hamster = TestEnemy.Create(2f);
+		hamster.AiEnabled = false;
 		hamster.gameObject.SetActive(true);
 
 		MovementTestPoint testPoint = MovementTestPoint.Create(new Vector3(10f, 10f, 10f));
@@ -60,6 +61,7 @@ internal class MovementBehaviourTests : TestBase
 		MovementTestPoint pointB = MovementTestPoint.Create(2 * pointA.transform.position);
 
 		TestEnemy hamster = TestEnemy.Create(5f);
+		hamster.AiEnabled = false;
 		hamster.gameObject.SetActive(true);
 
 		hamster.MoveTo(pointA.transform.position);
@@ -76,6 +78,7 @@ internal class MovementBehaviourTests : TestBase
 		MovementTestPoint pointB = MovementTestPoint.Create(new Vector3(10f, 10f, 10f));
 
 		TestEnemy hamster = TestEnemy.Create(5f);
+		hamster.AiEnabled = false;
 		hamster.gameObject.SetActive(true);
 
 		hamster.MoveTo(pointA.transform.position);
@@ -89,11 +92,15 @@ internal class MovementBehaviourTests : TestBase
 	}
 
 	[UnityTest]
-	public IEnumerator BumpOnOtherEnemy() {
+	public IEnumerator IgnoreBumpOnOtherEnemy() {
 		TestEnemy hamster = TestEnemy.Create(5f);
+		hamster.AiEnabled = false;
 		hamster.gameObject.SetActive(true);
 
-		TestEnemy.Create(0f, 0, 0, 0f, 0f, 5f); // enemy blocking the path
+		TestEnemy e = TestEnemy.Create(0f, 0, 0, 0f, 0f, 5f); // enemy blocking the path
+		e.AiEnabled = false;
+		e.gameObject.SetActive(true);
+
 		MovementTestPoint endPoint = MovementTestPoint.Create(new Vector3(0f, 0f, 10f));
 
 		hamster.MoveTo(endPoint.transform.position);
@@ -103,8 +110,9 @@ internal class MovementBehaviourTests : TestBase
 	}
 
 	[UnityTest]
-	public IEnumerator BumpOnPlayer() {
+	public IEnumerator MoveAroundPlayer() {
 		TestEnemy hamster = TestEnemy.Create(5f,0,0,-5f);
+		hamster.AiEnabled = false;
 		hamster.gameObject.SetActive(true);
 
 		Player.Create();
@@ -138,9 +146,9 @@ internal class MovementBehaviourTests : TestBase
 
 		MovementTestPoint gatheringPoint = MovementTestPoint.Create();
 
-		foreach (var hamster in hamsters)
-		{
+		foreach (var hamster in hamsters) {
 			hamster.gameObject.SetActive(true);
+			hamster.AiEnabled = false;
 			hamster.MoveTo(gatheringPoint.transform.position);
 		}
 

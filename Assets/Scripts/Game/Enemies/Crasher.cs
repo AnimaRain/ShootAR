@@ -39,9 +39,12 @@ namespace ShootAR.Enemies
 		}
 
 		protected override void Harm(Player target) {
-			sfx.Play();
+			sfx?.Play();
+			StopMoving();
 			target.GetDamaged(Damage);
 
+			/* When the enemy's model passes through the player, it looks ugly,
+			 * so the enemy is teleported to a random spot behind the player. */
 			if (Camera.main != null) {
 				Vector3 cameraForward = Camera.main.transform.forward;
 				transform.position =

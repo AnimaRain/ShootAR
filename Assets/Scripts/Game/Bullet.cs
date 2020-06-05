@@ -55,9 +55,12 @@ namespace ShootAR
 		}
 
 		protected void OnTriggerEnter(Collider other) {
-			if (other.GetComponent<Enemies.Enemy>()
-					|| other.GetComponent<Capsule>())
+			Spawnable o;
+			if ((o = other.GetComponent<Enemies.Enemy>()) != null
+			|| (o = other.GetComponent<Capsule>()) != null) {
+				o.Destroy();
 				Destroy();
+			}
 		}
 
 		public override void ResetState() {
