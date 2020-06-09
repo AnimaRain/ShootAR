@@ -297,6 +297,13 @@ namespace ShootAR
 					$"Rounds Survived : {survivedRounds}";
 			}
 
+			// Stop all spawners from spawning
+			foreach (List<Spawner> spawners in spawnerGroups.Values) {
+				spawners.ForEach(spawner => {
+					spawner.StopSpawning();
+				});
+			}
+
 			ClearScene();
 		}
 
