@@ -71,7 +71,7 @@ public class GameStateTests : PatternsTestBase
 		capsule.transform.Translate(new Vector3(10f, 10f, 10f));
 		camera.transform.LookAt(capsule.transform);
 
-		Assert.NotZero(Spawnable.Pool<Bullet>.Count);
+		Assert.NotZero(Spawnable.Pool<Bullet>.Instance.Count);
 		Assert.IsNotNull(player.Shoot());
 
 		yield return new WaitWhile(() => capsule.isActiveAndEnabled);

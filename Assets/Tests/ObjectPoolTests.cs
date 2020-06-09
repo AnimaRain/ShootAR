@@ -9,12 +9,12 @@ public class ObjectPoolTests : TestBase
 	[Test]
 	public void NoAvailableObjectToFetch() {
 		const int limit = 3;
-		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create(0), limit);
+		Spawnable.Pool<Crasher>.Instance.Populate(TestEnemy.Create(0), limit);
 
 		for (int i = 0; i < limit; i++)
-			Spawnable.Pool<Crasher>.RequestObject();
+			Spawnable.Pool<Crasher>.Instance.RequestObject();
 
-		Assert.IsNull(Spawnable.Pool<Crasher>.RequestObject(),
+		Assert.IsNull(Spawnable.Pool<Crasher>.Instance.RequestObject(),
 				"A null reference should have been returned.");
 	}
 
@@ -26,7 +26,7 @@ public class ObjectPoolTests : TestBase
 		var objectToSpawn = TestEnemy.Create(0);
 		Spawner spawner = Spawner.Create(
 				typeof(Crasher), limit, 0, 0, 10, 0);
-		Spawnable.Pool<Crasher>.Populate(objectToSpawn, limit);
+		Spawnable.Pool<Crasher>.Instance.Populate(objectToSpawn, limit);
 
 		spawner.StartSpawning();
 		yield return new UnityEngine.WaitWhile(() => spawner.IsSpawning);
@@ -45,15 +45,14 @@ public class ObjectPoolTests : TestBase
 
 	[Test]
 	public void ObjectReturnsToPool() {
-		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create(0), 1);
-		TestEnemy testObject = Spawnable
-				.Pool<Crasher>.RequestObject() as TestEnemy;
+		Spawnable.Pool<Crasher>.Instance.Populate(TestEnemy.Create(0), 1);
+		TestEnemy testObject = Spawnable.Pool<Crasher>.Instance.RequestObject() as TestEnemy;
 
 		testObject.ReturnToPool<Crasher>();
 
-		Assert.AreEqual(1, Spawnable.Pool<Crasher>.Count,
+		Assert.AreEqual(1, Spawnable.Pool<Crasher>.Instance.Count,
 				"No object available in the pool.");
-		Assert.IsNotNull(Spawnable.Pool<Crasher>.RequestObject(),
+		Assert.IsNotNull(Spawnable.Pool<Crasher>.Instance.RequestObject(),
 				"No object available to return.");
 	}
 }

@@ -99,7 +99,7 @@ namespace ShootAR
 		/// </returns>
 		public Bullet Shoot() {
 			if (CanShoot && Ammo > 0 && Time.time >= nextFire) {
-				Bullet bullet = Spawnable.Pool<Bullet>.RequestObject();
+				Bullet bullet = Spawnable.Pool<Bullet>.Instance.RequestObject();
 				if (bullet is null) return null;
 
 				Ammo--;

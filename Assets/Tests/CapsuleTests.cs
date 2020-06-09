@@ -44,9 +44,9 @@ public class CapsuleTests : ShootAR.TestTools.TestBase
 		bullet.gameObject.SetActive(true);
 
 		yield return new WaitUntil(
-			() => Spawnable.Pool<BulletCapsule>.Count > 0
+			() => Spawnable.Pool<BulletCapsule>.Instance.Count > 0
 		);
 
-		Assert.AreSame(capsule, Spawnable.Pool<BulletCapsule>.RequestObject());
+		Assert.AreSame(capsule, Spawnable.Pool<BulletCapsule>.Instance.RequestObject());
 	}
 }

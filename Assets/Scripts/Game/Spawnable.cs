@@ -30,14 +30,32 @@ namespace ShootAR
 		/// <typeparam name="T">
 		/// The type of object to match to a pool
 		/// </typeparam>
-		public static class Pool<T> where T : Spawnable
+		public class Pool<T> where T : Spawnable
 		{
-			internal static Stack<T> objectStack = new Stack<T>(GLOBAL_SPAWN_LIMIT);
+
+			private static Pool<T> instance;
+			public static Pool<T> Instance {
+				get {
+					if (instance == null) instance = new Pool<T>();
+
+					/* after reloading scene, instance is not null but
+					 * references to objects in stack are. */
+					else if (instance.objectStack.Count > 0
+							&& instance.objectStack.Peek() == null)
+						instance.Empty();
+
+					return instance;
+				}
+			}
+
+			internal Stack<T> objectStack = new Stack<T>(GLOBAL_SPAWN_LIMIT);
+
+			private Pool() { }
 
 			/// <summary>
 			/// The number of objects available in the pool
 			/// </summary>
-			public static int Count { get => objectStack.Count; }
+			public int Count { get => objectStack.Count; }
 
 			/// <summary>
 			/// Fill the appropriate pool with copies of
@@ -45,7 +63,7 @@ namespace ShootAR
 			/// </summary>
 			/// <param name="referenceObject"></param>
 			/// <param name="lot">how many objects to add to the pool</param>
-			public static void Populate(T referenceObject, int lot = GLOBAL_SPAWN_LIMIT) {
+			public void Populate(T referenceObject, int lot = GLOBAL_SPAWN_LIMIT) {
 				if (objectStack.Count > 0)
 					throw new UnityException("Trying to populate an already populated pool.");
 				else
@@ -61,7 +79,7 @@ namespace ShootAR
 			/// Which file is loaded is determined by the type of the pool.
 			/// </summary>
 			/// <param name="lot">how many objects to add to the pool</param>
-			public static void Populate(int lot = GLOBAL_SPAWN_LIMIT) {
+			public void Populate(int lot = GLOBAL_SPAWN_LIMIT) {
 				string prefab = "";
 				if (typeof(T) == typeof(Crasher))
 					prefab = Prefabs.CRASHER;
@@ -99,7 +117,7 @@ namespace ShootAR
 			/// <returns>
 			/// reference to an available object of type <typeparamref name="T"/>
 			/// </returns>
-			public static T RequestObject() {
+			public T RequestObject() {
 				if (objectStack.Count == 0) return null;
 
 				return objectStack.Pop();
@@ -108,7 +126,7 @@ namespace ShootAR
 			/// <summary>
 			/// Dereference all objects contained in the pool.
 			/// </summary>
-			public static void Empty() {
+			public void Empty() {
 				objectStack.Clear();
 			}
 		}
@@ -122,7 +140,7 @@ namespace ShootAR
 		/// </typeparam>
 		public void ReturnToPool<T>() where T : Spawnable {
 			gameObject.SetActive(false);
-			Pool<T>.objectStack.Push((T)this);
+			Pool<T>.Instance.objectStack.Push((T)this);
 			ResetState();
 		}
 

@@ -238,7 +238,7 @@ namespace ShootAR
 		}
 
 		private void InstantiateSpawnable<T>() where T : Spawnable {
-			var spawned = Spawnable.Pool<T>.RequestObject();
+			var spawned = Spawnable.Pool<T>.Instance.RequestObject();
 
 			spawned.transform.position = transform.localPosition;
 			spawned.transform.rotation = transform.localRotation;
@@ -520,26 +520,26 @@ namespace ShootAR
 				}
 
 				// Populating pools
-				if (type == typeof(Crasher) && Spawnable.Pool<Crasher>.Count == 0) {
-					Spawnable.Pool<Crasher>.Populate();
+				if (type == typeof(Crasher) && Spawnable.Pool<Crasher>.Instance.Count == 0) {
+					Spawnable.Pool<Crasher>.Instance.Populate();
 				}
-				else if (type == typeof(Drone) && Spawnable.Pool<Drone>.Count == 0) {
-					Spawnable.Pool<Drone>.Populate();
+				else if (type == typeof(Drone) && Spawnable.Pool<Drone>.Instance.Count == 0) {
+					Spawnable.Pool<Drone>.Instance.Populate();
 
-					if (Spawnable.Pool<EnemyBullet>.Count == 0)
-						Spawnable.Pool<EnemyBullet>.Populate();
+					if (Spawnable.Pool<EnemyBullet>.Instance.Count == 0)
+						Spawnable.Pool<EnemyBullet>.Instance.Populate();
 				}
-				else if (type == typeof(ArmorCapsule) && Spawnable.Pool<ArmorCapsule>.Count == 0) {
-					Spawnable.Pool<ArmorCapsule>.Populate();
+				else if (type == typeof(ArmorCapsule) && Spawnable.Pool<ArmorCapsule>.Instance.Count == 0) {
+					Spawnable.Pool<ArmorCapsule>.Instance.Populate();
 				}
-				else if (type == typeof(BulletCapsule) && Spawnable.Pool<BulletCapsule>.Count == 0) {
-					Spawnable.Pool<BulletCapsule>.Populate();
+				else if (type == typeof(BulletCapsule) && Spawnable.Pool<BulletCapsule>.Instance.Count == 0) {
+					Spawnable.Pool<BulletCapsule>.Instance.Populate();
 				}
-				else if (type == typeof(HealthCapsule) && Spawnable.Pool<HealthCapsule>.Count == 0) {
-					Spawnable.Pool<HealthCapsule>.Populate();
+				else if (type == typeof(HealthCapsule) && Spawnable.Pool<HealthCapsule>.Instance.Count == 0) {
+					Spawnable.Pool<HealthCapsule>.Instance.Populate();
 				}
-				else if (type == typeof(PowerUpCapsule) && Spawnable.Pool<PowerUpCapsule>.Count == 0) {
-					Spawnable.Pool<PowerUpCapsule>.Populate();
+				else if (type == typeof(PowerUpCapsule) && Spawnable.Pool<PowerUpCapsule>.Instance.Count == 0) {
+					Spawnable.Pool<PowerUpCapsule>.Instance.Populate();
 				}
 
 				/* If a recursion happened then the rest patterns have already
