@@ -130,4 +130,47 @@ public class GameStateTests : PatternsTestBase
 		Assert.True(gameState.RoundWon,
 			"The round should be won when the last enemy dies by the last bullet.");
 	}
+
+	[UnityTest]
+	public IEnumerator GameOverWhenOutOfBullets() {
+		GameState gameState = GameState.Create(0);
+		Camera camera = new GameObject("Camera").AddComponent<Camera>();
+		Player player = Player.Create(ammo: 1, gameState: gameState, camera: camera);
+
+		/* Create an enemy to not trigger the victory condition.
+		 * Game manager will create the spawner as needed from the pattern file. */
+		string[] data = new string[] {
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+			"",
+			"<spawnerconfiguration>",
+			"\t<level>",
+			"\t\t<spawnable type=\"Crasher\">",
+			"\t\t\t<pattern>",
+			"\t\t\t\t<limit>1</limit>",
+			"\t\t\t\t<rate>0</rate>",
+			"\t\t\t\t<delay>0</delay>",
+			"\t\t\t\t<maxDistance>100</maxDistance>",
+			"\t\t\t\t<minDistance>100</minDistance>",
+			"\t\t\t</pattern>",
+			"\t\t</spawnable>",
+			"\t</level>",
+			"</spawnerconfiguration>"
+		};
+		File.WriteAllLines(file, data);
+
+		GameManager gameManager = GameManager.Create(player, gameState, file);
+
+		/* Disable enemy's AI to avoid accidentaly colliding with the bullet. */
+		yield return new WaitUntil(() => Enemy.ActiveCount == 1);
+		Object.FindObjectOfType<Crasher>().AiEnabled = false;
+
+		bool gameOvered = false;
+		gameState.OnGameOver += () => gameOvered = true;
+
+		player.Shoot();
+		yield return new WaitUntil(() => gameOvered);
+
+		Assert.Zero(player.Ammo, "Player did not run out of ammo.");
+		Assert.True(gameState.GameOver, "Game state is not game-over.");
+	}
 }
