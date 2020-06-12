@@ -57,6 +57,7 @@ namespace ShootAR
 					uiCanvas: new GameObject("UI"),
 					pauseCanvas: new GameObject("PauseScreen"),
 					bulletCount: new GameObject("Ammo").AddComponent<Text>(),
+					bulletPlus: new GameObject("Ammo Reward").AddComponent<Text>(),
 					messageOnScreen: new GameObject("Message").AddComponent<Text>(),
 					score: new GameObject("Score").AddComponent<Text>(),
 					roundIndex: new GameObject("Level").AddComponent<Text>(),
