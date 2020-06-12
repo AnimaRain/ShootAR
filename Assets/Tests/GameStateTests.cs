@@ -67,7 +67,7 @@ public class GameStateTests : PatternsTestBase
 		} while (capsuleSpawner is null);
 		yield return new WaitUntil(() => capsuleSpawner.SpawnCount > 0);
 		BulletCapsule capsule = Object.FindObjectOfType<BulletCapsule>();
-		capsule.Speed = 0f;
+		capsule.StopMoving();
 		capsule.transform.Translate(new Vector3(10f, 10f, 10f));
 		camera.transform.LookAt(capsule.transform);
 
