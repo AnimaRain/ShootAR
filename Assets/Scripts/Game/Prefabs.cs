@@ -9,5 +9,6 @@ namespace ShootAR {
 		public const string POWER_UP_CAPSULE = "Prefabs/Capsules/PowerUpCapsule";
 		public const string BULLET_CAPSULE = "Prefabs/Capsules/BulletCapsule";
 		public const string BULLET = "Prefabs/Bullet";
+		public const string PORTAL = "Prefabs/Particles/Portal";
 	}
 }

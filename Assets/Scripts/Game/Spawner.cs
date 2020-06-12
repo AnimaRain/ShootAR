@@ -65,7 +65,6 @@ namespace ShootAR
 		private AudioSource audioPlayer;
 		private static GameState gameState;
 #pragma warning disable CS0649
-		[SerializeField] private GameObject portal;
 		[SerializeField] private AudioClip spawnSfx;
 #pragma warning restore CS0649
 
@@ -207,9 +206,8 @@ namespace ShootAR
 						-transform.localPosition);
 
 				//Spawn special effects
-				if (portal != null)
-					Instantiate(portal,
-						transform.localPosition, transform.localRotation);
+				if (Spawnable.Pool<Portal>.Instance.Count > 0)
+					InstantiateSpawnable<Portal>();
 				if (spawnSfx != null)
 					audioPlayer.Play();
 
@@ -520,14 +518,19 @@ namespace ShootAR
 				}
 
 				// Populating pools
-				if (type == typeof(Crasher) && Spawnable.Pool<Crasher>.Instance.Count == 0) {
-					Spawnable.Pool<Crasher>.Instance.Populate();
-				}
-				else if (type == typeof(Drone) && Spawnable.Pool<Drone>.Instance.Count == 0) {
-					Spawnable.Pool<Drone>.Instance.Populate();
+				if (type.IsSubclassOf(typeof(Enemy))) {
+					if (type == typeof(Crasher) && Spawnable.Pool<Crasher>.Instance.Count == 0) {
+						Spawnable.Pool<Crasher>.Instance.Populate();
+					}
+					else if (type == typeof(Drone) && Spawnable.Pool<Drone>.Instance.Count == 0) {
+						Spawnable.Pool<Drone>.Instance.Populate();
 
-					if (Spawnable.Pool<EnemyBullet>.Instance.Count == 0)
-						Spawnable.Pool<EnemyBullet>.Instance.Populate();
+						if (Spawnable.Pool<EnemyBullet>.Instance.Count == 0)
+							Spawnable.Pool<EnemyBullet>.Instance.Populate();
+					}
+
+					if (Spawnable.Pool<Portal>.Instance.Count == 0)
+						Spawnable.Pool<Portal>.Instance.Populate();
 				}
 				else if (type == typeof(ArmorCapsule) && Spawnable.Pool<ArmorCapsule>.Instance.Count == 0) {
 					Spawnable.Pool<ArmorCapsule>.Instance.Populate();

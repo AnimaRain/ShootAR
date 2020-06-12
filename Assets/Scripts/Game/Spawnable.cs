@@ -58,8 +58,7 @@ namespace ShootAR
 			public int Count { get => objectStack.Count; }
 
 			/// <summary>
-			/// Fill the appropriate pool with copies of
-			/// <paramref name="referenceObject"/>.
+			/// Fill the pool with copies of <paramref name="referenceObject"/>.
 			/// </summary>
 			/// <param name="referenceObject"></param>
 			/// <param name="lot">how many objects to add to the pool</param>
@@ -75,7 +74,7 @@ namespace ShootAR
 			}
 
 			/// <summary>
-			/// Fill the appropriate pool with copies of the object loaded from Resources.
+			/// Fill the pool with copies of the object loaded from Resources.
 			/// Which file is loaded is determined by the type of the pool.
 			/// </summary>
 			/// <param name="lot">how many objects to add to the pool</param>
@@ -97,6 +96,8 @@ namespace ShootAR
 					prefab = Prefabs.ENEMY_BULLET;
 				else if (typeof(T) == typeof(Bullet))
 					prefab = Prefabs.BULLET;
+				else if (typeof(T) == typeof(Portal))
+					prefab = Prefabs.PORTAL;
 
 				Populate(
 					Resources.Load<T>(prefab),
