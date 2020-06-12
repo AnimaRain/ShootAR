@@ -929,7 +929,6 @@ MonoBehaviour:
   ui: {fileID: 1310314011}
   backgroundTexture: {fileID: 183891069}
   player: {fileID: 1143016213}
-  prefabs: {fileID: 0}
 --- !u!4 &540221806
 Transform:
   m_ObjectHideFlags: 0
@@ -1169,7 +1168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.3191527, g: 0.3539574, b: 0.41509432, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
