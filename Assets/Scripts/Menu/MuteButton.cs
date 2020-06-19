@@ -11,9 +11,9 @@ namespace ShootAR.Menu
 		private Image image;
 
 		public void ToggleSound() {
-			Configuration.SoundMuted = !Configuration.SoundMuted;
+			Configuration.Instance.SoundMuted = !Configuration.Instance.SoundMuted;
 
-			if (Configuration.SoundMuted) {
+			if (Configuration.Instance.SoundMuted) {
 				image.material = soundOffIcon;
 				AudioListener.volume = 0.0f;
 			}
@@ -26,7 +26,7 @@ namespace ShootAR.Menu
 		private void Start() {
 			GetComponent<Button>().onClick.AddListener(ToggleSound);
 			image = GetComponent<Image>();
-			image.material = Configuration.SoundMuted ? soundOffIcon : soundOnIcon;
+			image.material = Configuration.Instance.SoundMuted ? soundOffIcon : soundOnIcon;
 		}
 	}
 

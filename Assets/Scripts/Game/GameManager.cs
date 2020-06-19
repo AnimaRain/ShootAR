@@ -152,7 +152,7 @@ namespace ShootAR
 
 			/* The round index is assigned an initial value diminished by 1,
 			 * since AdvanceLevel will add it back. */
-			gameState.Level = Configuration.StartingLevel - 1;
+			gameState.Level = Configuration.Instance.StartingLevel - 1;
 			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
 													 * Inspector */
 			Spawnable.Pool<Bullet>.Instance.Populate(10);
@@ -279,7 +279,7 @@ namespace ShootAR
 
 		private void OnGameOver() {
 			if (ui != null) {
-				var survivedRounds = gameState.Level - Configuration.StartingLevel;
+				var survivedRounds = gameState.Level - Configuration.Instance.StartingLevel;
 				ui.MessageOnScreen.text =
 					$"Game Over\n\n" +
 					$"Rounds Survived : {survivedRounds}";

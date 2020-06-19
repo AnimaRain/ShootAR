@@ -12,7 +12,7 @@ namespace ShootAR.Menu
 			internal set {
 				roundToPlay = Mathf.Clamp(value, 1, 999);
 				labelOnUI.text = roundToPlay.ToString();
-				Configuration.StartingLevel = roundToPlay;
+				Configuration.Instance.StartingLevel = roundToPlay;
 			}
 		}
 
