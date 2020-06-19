@@ -17,6 +17,7 @@ namespace ShootAR.Menu
 		[SerializeField] private GameObject creditsMenu;
 		[SerializeField] private GameObject startMenu;
 		[SerializeField] private GameObject roundMenu;
+		[SerializeField] private GameObject highscoreMenu;
 		[SerializeField] private AudioClip select;
 		[SerializeField] private AudioClip back;
 		[SerializeField] private MuteButton muteButton;
@@ -58,6 +59,12 @@ namespace ShootAR.Menu
 			mainMenu.SetActive(false);
 			subMenu.SetActive(true);
 			creditsMenu.SetActive(true);
+		}
+
+		public void ToHighscores() {
+			mainMenu.SetActive(false);
+			subMenu.SetActive(true);
+			highscoreMenu.SetActive(true);
 		}
 
 		public void ToMainMenu() {
