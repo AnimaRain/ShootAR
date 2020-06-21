@@ -7,9 +7,9 @@ namespace ShootAR
 	{
 		[SerializeField] private Text scoreLabel;
 
-		public int Score { get; private set; }
+		public long Score { get; private set; }
 
-		public static ScoreManager Create(Text scoreLabel = null, int score = 0) {
+		public static ScoreManager Create(Text scoreLabel = null, long score = 0) {
 			var o = new GameObject(nameof(ScoreManager)).AddComponent<ScoreManager>();
 			o.Score = score;
 			o.scoreLabel = scoreLabel;

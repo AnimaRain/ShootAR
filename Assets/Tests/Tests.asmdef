@@ -1,6 +1,6 @@
 {
     "name": "Tests",
-    "references": ["Main"],
+    "references": ["Main", "Menu"],
     "optionalUnityReferences": [
         "TestAssemblies"
     ],

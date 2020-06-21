@@ -435,7 +435,7 @@ MonoBehaviour:
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 45859777}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -4127,6 +4127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1375839745}
   - component: {fileID: 1375839746}
+  - component: {fileID: 1375839747}
   m_Layer: 5
   m_Name: High-scores
   m_TagString: Untagged
@@ -4171,6 +4172,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375839744}
   m_CullTransparentMesh: 0
+--- !u!114 &1375839747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375839744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8339215e52ae13d6936a04a9d067812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rows:
+  - {fileID: 748562737}
+  - {fileID: 377769278}
+  - {fileID: 1093870111}
+  - {fileID: 1762252980}
+  - {fileID: 46379384}
+  - {fileID: 576512188}
+  - {fileID: 204991251}
+  - {fileID: 1120473686}
+  - {fileID: 839775347}
+  - {fileID: 1469231212}
 --- !u!1 &1387456275
 GameObject:
   m_ObjectHideFlags: 0
