@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ShootAR
@@ -43,6 +45,8 @@ namespace ShootAR
 			get { return roundIndex; }
 			set { roundIndex = value; }
 		}
+
+		[SerializeField] private NameAsker nameAsker;
 
 		public static UIManager Create(
 				GameObject uiCanvas, GameObject pauseCanvas,
@@ -100,6 +104,36 @@ namespace ShootAR
 #if DEBUG
 			Debug.Log("UIMANAGER:: TimeScale: " + Time.timeScale);
 #endif
+		}
+
+		/// <summary>
+		/// Returns player's input through a callback.
+		///
+		/// Waits until player inputs a name through the ui,
+		/// and uses that name inside <paramref name="nameReturn"/>.
+		/// </summary>
+		/// <param name="nameReturn">
+		/// the callback inside where the name input is used
+		/// </param>
+		///
+		/// <example>
+		/// Ask a name from the player (in this case, the passed callback
+		/// function just assigns the returned name to out local variable):
+		/// <code>
+		/// string playerName = "";
+		/// StartCoroutine(ui.AskName(name => playerName = name));
+		/// </code>
+		/// We can now use the returned name however we want:
+		/// <code>
+		/// highscores.AddScore(playerName, score);
+		/// </code>
+		/// </example>
+		public IEnumerator AskName(Action<string> nameReturn) {
+			nameAsker.gameObject.SetActive(true); // set nameAsker in motion
+
+			yield return new WaitWhile(() => nameAsker.PendingQuery);
+
+			nameReturn(nameAsker.InputName);
 		}
 	}
 }

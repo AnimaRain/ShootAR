@@ -68,6 +68,7 @@ namespace ShootAR.Menu
 		}
 
 		public void ToMainMenu() {
+			highscoreMenu.SetActive(false);
 			creditsMenu.SetActive(false);
 			startMenu.SetActive(false);
 			roundMenu.SetActive(false);

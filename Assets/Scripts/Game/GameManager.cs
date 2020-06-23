@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace ShootAR
 {
@@ -30,6 +31,8 @@ namespace ShootAR
 		[SerializeField] private RawImage backgroundTexture;
 		[SerializeField] private Player player;
 		private Stack<Spawner> stashedSpawners;
+
+		private bool readyToRestart = false;
 
 		public static GameManager Create(
 			Player player, GameState gameState,
@@ -135,7 +138,9 @@ namespace ShootAR
 			fireButton?
 				.onClick.AddListener(() => {
 					if (gameState.GameOver) {
-						SceneManager.LoadScene(1);
+						if (readyToRestart) {
+							SceneManager.LoadScene(1);
+						}
 					}
 					else if (gameState.RoundWon) {
 						ui.MessageOnScreen.text = "";
@@ -290,6 +295,38 @@ namespace ShootAR
 				spawners.ForEach(spawner => {
 					spawner.StopSpawning();
 				});
+			}
+
+			// Check for highscore
+			ScoreList highscores = ScoreList.LoadScores();
+			if (!highscores.Exists(scoreManager.Score)) {
+				// make sure the game does not restart before recording the score
+				readyToRestart = false;
+
+				/* Player is asked for their name asynchronusly.
+				 * When the name has been submitted, the score is added to the
+				 * table and the table is saved to file. */
+				StartCoroutine(
+					ui.AskName(name => {
+						highscores.AddScore(name, scoreManager.Score);
+
+						using (BinaryWriter writer = new BinaryWriter(
+							new FileInfo(Path.Combine(
+								Application.persistentDataPath,
+								ScoreList.HIGHSCORE_FILE
+							))
+							.OpenWrite()
+						)) {
+							for (int i = 0; i < ScoreList.POSITIONS; i++) {
+								(string, long) score = highscores.Get(i);
+								writer.Write(score.Item1 ?? ""); // write name
+								writer.Write(score.Item2); // write points
+							}
+						}
+
+						readyToRestart = true;
+					})
+				);
 			}
 
 			ClearScene();

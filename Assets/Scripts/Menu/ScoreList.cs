@@ -6,6 +6,9 @@ namespace ShootAR {
 		/// <summary>Maximum number of positions in list</summary>
 		public const int POSITIONS = 10;
 
+		/// <summary>Path to highscores file</summary>
+		public const string HIGHSCORE_FILE = "highscores";
+
 		private string[] name = new string[POSITIONS];
 		private long[] score = new long[POSITIONS];
 
@@ -49,11 +52,10 @@ namespace ShootAR {
 
 		/// <summary>Load high-score table from file.</summary>
 		public static ScoreList LoadScores() {
-			const string highscoreFile = "highscores";
-			string file = Path.Combine(Application.persistentDataPath, highscoreFile);
+			string file = Path.Combine(Application.persistentDataPath, HIGHSCORE_FILE);
 
 			if (!File.Exists(file))
-				LocalFiles.CopyResourceToPersistentData("highscores-null", highscoreFile);
+				LocalFiles.CopyResourceToPersistentData("highscores-null", HIGHSCORE_FILE);
 
 			ScoreList scores = new ScoreList();
 
@@ -70,6 +72,17 @@ namespace ShootAR {
 			}
 
 			return scores;
+		}
+
+		public bool Exists(long score) {
+			bool answer = false;
+
+			foreach (long s in this.score) if (s == score) {
+				answer = true;
+				break;
+			}
+
+			return answer;
 		}
 	}
 }
