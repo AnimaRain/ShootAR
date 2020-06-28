@@ -158,8 +158,7 @@ namespace ShootAR
 			/* The round index is assigned an initial value diminished by 1,
 			 * since AdvanceLevel will add it back. */
 			gameState.Level = Configuration.Instance.StartingLevel - 1;
-			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
-													 * Inspector */
+
 			Spawnable.Pool<Bullet>.Instance.Populate(10);
 			AdvanceLevel();
 
@@ -234,24 +233,33 @@ namespace ShootAR
 
 			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
 
+			int totalEnemies = 0;
 			foreach (var group in spawnerGroups) {
 				group.Value.ForEach(spawner => {
 					spawner.StartSpawning();
 
-					/* Player should always have enough ammo to play the next
-					 * round. If they already have more than enough, they get
-					 * points. */
-					int totalEnemies = 0;
 					if (group.Key.IsSubclassOf(typeof(Enemy))) {
 						totalEnemies += spawner.SpawnLimit;
 
-						int difference = player.Ammo - totalEnemies;
-						if (difference > 0)
-							scoreManager.AddScore(difference * 10);
-						else if (difference < 0)
-							player.Ammo += -difference;
 					}
 				});
+			}
+
+			/* Player should always have enough ammo to play the next
+			 * round. If they already have more than enough, they get
+			 * points. */
+			int difference = player.Ammo - totalEnemies;
+			if (difference > 0)
+				scoreManager.AddScore(difference * 10);
+			else if (difference < 0) {
+				/* If it is before the 1st round, give player more bullets
+				 * so they are allowed to miss shots. */
+				const float bonusBullets = 0.55f;
+				if (gameState.Level == 1) {
+					difference = (int)(difference * bonusBullets);
+				}
+
+				player.Ammo += -difference;
 			}
 
 			gameState.RoundWon = false;
