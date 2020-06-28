@@ -25,7 +25,7 @@ namespace ShootAR
 		private int health;
 		[Range(0, 999), SerializeField]
 		private int ammo;
-		[SerializeField] private float bulletSpeed;
+
 		private float nextFire;
 		private float nextDamage;
 
@@ -93,8 +93,8 @@ namespace ShootAR
 			}
 		}
 
-		public bool HasArmor { get; set; }
-		public bool CanShoot { get; set; }
+		public bool HasArmor { get; set; } = false;
+		public bool CanShoot { get; set; } = true;
 
 		public static Player Create(
 			int health = MAXIMUM_HEALTH, Camera camera = null,
@@ -147,7 +147,6 @@ namespace ShootAR
 			audioSource = GetComponent<AudioSource>();
 			if (bulletCount != null)
 				bulletCount.text = Ammo.ToString();
-			CanShoot = true;
 			UpdateHealthUI();
 		}
 
