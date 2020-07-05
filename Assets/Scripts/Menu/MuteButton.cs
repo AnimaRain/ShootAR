@@ -10,16 +10,19 @@ namespace ShootAR.Menu
 		[SerializeField] private Material soundOnIcon;
 		private Image image;
 
+		private float lastValue;
+
 		public void ToggleSound() {
 			Configuration.Instance.SoundMuted = !Configuration.Instance.SoundMuted;
 
 			if (Configuration.Instance.SoundMuted) {
 				image.material = soundOffIcon;
+				lastValue = AudioListener.volume;
 				AudioListener.volume = 0.0f;
 			}
 			else {
 				image.material = soundOnIcon;
-				AudioListener.volume = 1.0f;
+				AudioListener.volume = lastValue;
 			}
 		}
 

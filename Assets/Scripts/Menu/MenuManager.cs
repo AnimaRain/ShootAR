@@ -7,6 +7,7 @@ namespace ShootAR.Menu
 	/// Most functions of this class are assigned as events on buttons
 	/// through the Inspector in the Editor.
 	/// </remarks>
+	[RequireComponent(typeof(AudioSource))]
 	public class MenuManager : MonoBehaviour
 	{
 
@@ -32,7 +33,7 @@ namespace ShootAR.Menu
 		private void Start() {
 			Application.runInBackground = false;
 
-			sfx = gameObject.AddComponent<AudioSource>();
+			sfx = gameObject.GetComponent<AudioSource>();
 		}
 
 		public void ToStartMenu() {
