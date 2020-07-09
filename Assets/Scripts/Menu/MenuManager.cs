@@ -17,11 +17,10 @@ namespace ShootAR.Menu
 		[SerializeField] private GameObject subMenu;
 		[SerializeField] private GameObject creditsMenu;
 		[SerializeField] private GameObject startMenu;
-		[SerializeField] private GameObject roundMenu;
+		[SerializeField] private GameObject waveEditorMenu;
 		[SerializeField] private GameObject highscoreMenu;
 		[SerializeField] private AudioClip select;
 		[SerializeField] private AudioClip back;
-		[SerializeField] private MuteButton muteButton;
 
 
 		private void Awake() {
@@ -48,10 +47,10 @@ namespace ShootAR.Menu
 			SceneManager.LoadScene(1);
 		}
 
-		public void ToRoundSelect() {
+		public void ToWaveEditor() {
 			mainMenu.SetActive(false);
 			subMenu.SetActive(true);
-			roundMenu.SetActive(true);
+			waveEditorMenu.SetActive(true);
 
 			sfx.PlayOneShot(select, 1.2F);
 		}
@@ -72,7 +71,7 @@ namespace ShootAR.Menu
 			highscoreMenu.SetActive(false);
 			creditsMenu.SetActive(false);
 			startMenu.SetActive(false);
-			roundMenu.SetActive(false);
+			waveEditorMenu.SetActive(false);
 			subMenu.SetActive(false);
 			mainMenu.SetActive(true);
 
