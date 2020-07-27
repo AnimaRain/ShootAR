@@ -101,6 +101,7 @@ namespace ShootAR
 					LocalFiles.CopyResourceToPersistentData(
 							SPAWN_PATTERN_FILE_NAME, SPAWN_PATTERN_FILE);
 				}
+				else throw new UnityException("Default spawn pattern file not found!");
 			}
 #endif
 			/* Do not use elif here. While testing
@@ -155,9 +156,7 @@ namespace ShootAR
 			stashedSpawners = new Stack<Spawner>(2);
 			spawnerGroups = new Dictionary<Type, List<Spawner>>();
 
-			/* The round index is assigned an initial value diminished by 1,
-			 * since AdvanceLevel will add it back. */
-			gameState.Level = Configuration.Instance.StartingLevel - 1;
+			gameState.Level = 0;
 
 			Spawnable.Pool<Bullet>.Instance.Populate(10);
 			AdvanceLevel();
@@ -294,10 +293,9 @@ namespace ShootAR
 
 		private void OnGameOver() {
 			if (ui != null) {
-				var survivedRounds = gameState.Level - Configuration.Instance.StartingLevel;
 				ui.MessageOnScreen.text =
 					$"Game Over\n\n" +
-					$"Rounds Survived : {survivedRounds}";
+					$"Rounds Survived : {gameState.Level}";
 			}
 
 			// Stop all spawners from spawning

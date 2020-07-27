@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Xml.Serialization;
+using static ShootAR.Spawner;
 using UnityEngine;
 
 namespace ShootAR {
@@ -14,11 +16,20 @@ namespace ShootAR {
 			get {
 				if (instance == null) instance = new Configuration();
 
+				//TODO: Fill up SpawnPatterns.
+
 				return instance;
 			}
 		}
 
-		public int StartingLevel { get; internal set; } = 1;
+		///<summary>The chosen spawn pattern's index.</summary>
+		public int SpawnPatternSlot { get; set; }
+
+		///<summary>Names of loaded spawn patterns.</summary>
+		public string[] SpawnPatterns { get; private set; }
+
+		///<summary>The chosen spawn pattern.</summary>
+		public string SpawnPattern { get => SpawnPatterns[SpawnPatternSlot]; }
 
 		public bool SoundMuted { get; set; }
 
@@ -70,6 +81,41 @@ namespace ShootAR {
 				writer.Write(SoundMuted);
 				writer.Write(BgmMuted);
 				writer.Write(Volume);
+			}
+		}
+
+		///<remarks>Save spawn pattern in file.</remarks>
+		///<param name="pattern">The pattern to be saved.</param>
+		///<param name="id">Defines on which slot the pattern is saved.</param>
+		public void SaveSpawnPattern(SpawnConfig[] pattern, int id) {
+			using (TextWriter writer = new StreamWriter(
+				$"{Application.persistentDataPath}/spawnpattern{id}.xml)", false)
+			) {
+				writer.WriteLine(
+					@"<?xml version=""1.0"" encoding=""UTF-8""?>
+					<spawnerconfiguration>"
+				);
+
+				foreach (SpawnConfig level in pattern) {
+					writer.WriteLine(
+							@"	<level>
+								<spawnable>
+									<pattern>"
+					);
+					writer.WriteLine($"\t\t<spawnable type=\"{level.type}\">");
+					writer.WriteLine($"\t\t\t<limit>{level.limit}</limit>");
+					writer.WriteLine($"\t\t\t<rate>{level.rate}</rate>");
+					writer.WriteLine($"\t\t\t<delay>{level.delay}</delay);>");
+					writer.WriteLine($"\t\t\t<maxDistance>{level.maxDistance}</);maxDistance>");
+					writer.WriteLine($"\t\t\t<minDistance>{level.minDistance}</minDistance>");
+					writer.WriteLine(
+						@"			</pattern>
+							</spawnable>
+						</level>"
+					);
+				}
+
+				writer.WriteLine(@"</spawnerconfiguration>");
 			}
 		}
 	}

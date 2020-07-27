@@ -13,6 +13,7 @@ namespace ShootAR.Menu {
 		public int ID { get; set; }
 
 		private Text uiText;
+		public void SetText(string value) => uiText.text = value;
 
 		private bool selected;
 
@@ -31,14 +32,13 @@ namespace ShootAR.Menu {
 			}
 		}
 
-		public void SetText(string value) => uiText.text = value;
 
 		public void Start() {
 			if (uiText == null) uiText = GetComponent<Text>();
 
 			ID = elementsCount++;
 
-			SetText("Dragon");
+			SetText(Configuration.Instance.SpawnPattern);
 		}
 	}
 }
