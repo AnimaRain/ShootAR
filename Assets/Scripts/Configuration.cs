@@ -50,7 +50,7 @@ namespace ShootAR {
 		}
 
 		public delegate void BgmMutedHandler();
-		public event BgmMutedHandler OnBgmMuted;
+		public event BgmMutedHandler OnBgmToggle;
 
 		private bool bgmMuted = false;
 		public bool BgmMuted {

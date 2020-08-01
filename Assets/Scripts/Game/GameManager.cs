@@ -159,6 +159,9 @@ namespace ShootAR
 			gameState.Level = 0;
 
 			Spawnable.Pool<Bullet>.Instance.Populate(10);
+
+			AudioListener.volume = Configuration.Instance.SoundMuted ? 0f : Configuration.Instance.Volume;
+
 			AdvanceLevel();
 
 			GC.Collect();

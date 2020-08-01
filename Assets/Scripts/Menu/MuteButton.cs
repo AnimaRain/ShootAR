@@ -10,19 +10,29 @@ namespace ShootAR.Menu
 		[SerializeField] private Material soundOnIcon;
 		private Image image;
 
-		private float lastValue;
+		///<remarks>Needed for changing the icon of bgm button as well if needed.</remarks>
+		[SerializeField] private MuteBgm bgmButton;
+
+		///<remarks>Needed for raising the volume of bgm if needed.</remarks>
+		[SerializeField] private BgmManager bgmManager;
 
 		public void ToggleSound() {
 			Configuration.Instance.SoundMuted = !Configuration.Instance.SoundMuted;
 
 			if (Configuration.Instance.SoundMuted) {
 				image.material = soundOffIcon;
-				lastValue = AudioListener.volume;
+				Configuration.Instance.Volume = AudioListener.volume;
 				AudioListener.volume = 0.0f;
+
+				// If sound is muted, also mute the music.
+				if (!Configuration.Instance.BgmMuted) bgmButton.ToggleMusic();
 			}
 			else {
 				image.material = soundOnIcon;
-				AudioListener.volume = lastValue;
+				AudioListener.volume = Configuration.Instance.Volume;
+
+				// Also raise music's volume.
+				if (!Configuration.Instance.BgmMuted) bgmManager.Toggle();
 			}
 		}
 

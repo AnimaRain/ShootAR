@@ -32,6 +32,8 @@ namespace ShootAR.Menu
 		private void Start() {
 			Application.runInBackground = false;
 
+			AudioListener.volume = Configuration.Instance.SoundMuted ? 0f : Configuration.Instance.Volume;
+
 			sfx = gameObject.GetComponent<AudioSource>();
 		}
 
