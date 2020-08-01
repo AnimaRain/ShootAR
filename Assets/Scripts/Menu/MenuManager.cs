@@ -79,10 +79,14 @@ namespace ShootAR.Menu
 		}
 
 		public void QuitApp() {
+			if (Configuration.Instance.UnsavedChanges)
+				Configuration.Instance.SaveSettings();
+
+			Application.Quit();
+
 #if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 #endif
-			Application.Quit();
 		}
 	}
 }

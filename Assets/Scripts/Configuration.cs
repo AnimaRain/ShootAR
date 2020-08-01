@@ -9,21 +9,28 @@ namespace ShootAR {
 	/// to all scenes and between game sessions.
 	/// </summary>
 	public class Configuration {
-		private const string CONFIG_FILE = "config";
-
 		private static Configuration instance;
 		public static Configuration Instance {
 			get {
 				if (instance == null) instance = new Configuration();
 
-				//TODO: Fill up SpawnPatterns.
-
 				return instance;
 			}
 		}
 
+		private uint spawnPatternSlot;
 		///<summary>The chosen spawn pattern's index.</summary>
-		public int SpawnPatternSlot { get; set; }
+		public uint SpawnPatternSlot {
+			get => spawnPatternSlot;
+
+			set {
+				if (value > sizeof(uint))
+					throw new UnityException("Slot index set to a out-of-range number.");
+
+				spawnPatternSlot = value;
+				UnsavedChanges = true;
+			}
+		}
 
 		///<summary>Names of loaded spawn patterns.</summary>
 		public string[] SpawnPatterns { get; private set; }
@@ -31,60 +38,120 @@ namespace ShootAR {
 		///<summary>The chosen spawn pattern.</summary>
 		public string SpawnPattern { get => SpawnPatterns[SpawnPatternSlot]; }
 
-		public bool SoundMuted { get; set; }
+		private bool soundMuted = false;
+
+		public bool SoundMuted {
+			get => soundMuted;
+
+			set {
+				soundMuted = value;
+				UnsavedChanges = true;
+			}
+		}
 
 		public delegate void BgmMutedHandler();
 		public event BgmMutedHandler OnBgmMuted;
 
-		private bool bgmMuted;
+		private bool bgmMuted = false;
 		public bool BgmMuted {
 			get => bgmMuted;
 
 			set {
 				bgmMuted = value;
+				UnsavedChanges = true;
 
-				OnBgmMuted?.Invoke();
+				OnBgmToggle?.Invoke();
 			}
 		}
 
-		public float Volume { get; set; }
+		private float volume = 1f;
+
+		public float Volume {
+			get => volume;
+
+			set {
+				volume = value;
+				UnsavedChanges = true;
+			}
+		}
+
+		///<summary>
+		/// True when any settings have changed and have not been saved yet.
+		///</summary>
+		public bool UnsavedChanges { get; private set; } = false;
+
+		private const string CONFIG_FILE = "config";
+		private const string PATTERNS_DIR = "spawnpatterns";
+		private const string PATTERN_NAMES = "patternnames";
+
+		private FileInfo configFile;
+
+		/// <summary>The directory where spawn patterns are stored.</summary>
+		private DirectoryInfo patternsDir;
+
+		/// <summary>File containing names of spawn patterns.</summary>
+		private FileInfo patternNames;
 
 		///<summary>Constructor that extracts values from config file</summary>
-		///<remarks>The order data is read must be the same as in <see cref="SaveSettings()"/>.</remarks>
 		private Configuration() {
-			FileInfo configFile = new FileInfo(Path.Combine(
+			patternsDir = new DirectoryInfo(Path.Combine(
+				Application.persistentDataPath,
+				PATTERNS_DIR
+			));
+
+			if (!patternsDir.Exists)
+				patternsDir.Create();
+
+			patternNames = new FileInfo(Path.Combine(
+				Application.persistentDataPath,
+				PATTERN_NAMES
+			));
+
+			if (patternNames.Exists) {
+				// Read names of spawn patterns from file and fill up SpawnPatterns.
+				using (BinaryReader reader = new BinaryReader(patternNames.OpenRead())) {
+					uint nameCount = reader.ReadUInt32();
+
+					for (uint i = 0; i < nameCount; i++) {
+						SpawnPatterns[i] = reader.ReadString();
+					}
+				}
+			}
+
+			configFile = new FileInfo(Path.Combine(
 				Application.persistentDataPath,
 				CONFIG_FILE
 			));
 
-			if (!configFile.Exists) {
-				LocalFiles.CopyResourceToPersistentData(CONFIG_FILE, CONFIG_FILE);
+			if (configFile.Exists) {
+				using (BinaryReader reader = new BinaryReader(configFile.OpenRead())) {
+					/* The order that the data are read must be the same as the
+					 * the order they are stored. */
+					SoundMuted = reader.ReadBoolean();
+					BgmMuted = reader.ReadBoolean();
+					Volume = reader.ReadSingle();
+					SpawnPatternSlot = reader.ReadUInt32();
+				}
 			}
-
-			using (BinaryReader reader = new BinaryReader(configFile.OpenRead())) {
-				SoundMuted = reader.ReadBoolean();
-				BgmMuted = reader.ReadBoolean();
-				Volume = reader.ReadSingle();
-			}
+			else SaveSettings();
 		}
 
-		///<remarks>The order data is written must be the same as in <see cref="Configuration()"/>.</remarks>
 		public void SaveSettings() {
-			FileInfo configFile = new FileInfo(Path.Combine(
-				Application.persistentDataPath,
-				CONFIG_FILE
-			));
-
-			configFile.Delete();
+			if (configFile.Exists) configFile.Delete();
 
 			using (BinaryWriter writer = new BinaryWriter(configFile.OpenWrite())) {
+				/* The order the data is written must be the same as
+				 * the order the constructor reads them. */
 				writer.Write(SoundMuted);
 				writer.Write(BgmMuted);
 				writer.Write(Volume);
+				writer.Write(SpawnPatternSlot);
 			}
+
+			UnsavedChanges = false;
 		}
 
-		///<remarks>Save spawn pattern in file.</remarks>
+		///<summary>Save spawn pattern in file.</summary>
 		///<param name="pattern">The pattern to be saved.</param>
 		///<param name="id">Defines on which slot the pattern is saved.</param>
 		public void SaveSpawnPattern(SpawnConfig[] pattern, int id) {

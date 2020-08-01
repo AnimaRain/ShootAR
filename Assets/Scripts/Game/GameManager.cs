@@ -211,11 +211,17 @@ namespace ShootAR
 		}
 
 		private void OnApplicationQuit() {
+			if (Configuration.Instance.UnsavedChanges)
+				Configuration.Instance.SaveSettings();
+
 #if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 #endif
+		}
 
-			Configuration.Instance.SaveSettings();
+		public void OnApplicationPause() {
+			if (Configuration.Instance.UnsavedChanges)
+				Configuration.Instance.SaveSettings();
 		}
 
 
