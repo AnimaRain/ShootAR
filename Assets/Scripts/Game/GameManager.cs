@@ -15,10 +15,7 @@ namespace ShootAR
 	{
 		private const int   CAPSULE_BONUS_POINTS = 50,
 							ROUND_AMMO_REWARD = 6;
-		private const string SPAWN_PATTERN_FILE_NAME = "spawnpatterns",
-							 SPAWN_PATTERN_FILE = SPAWN_PATTERN_FILE_NAME + ".xml";
 
-		private string spawnPatternUri;
 		[SerializeField] private AudioClip victoryMusic;
 		private Dictionary<Type, List<Spawner>> spawnerGroups;
 		[SerializeField] private ScoreManager scoreManager;
@@ -36,7 +33,6 @@ namespace ShootAR
 
 		public static GameManager Create(
 			Player player, GameState gameState,
-			string spawnPatternUri,
 			ScoreManager scoreManager = null,
 			AudioClip victoryMusic = null, AudioSource sfx = null,
 			Button fireButton = null, RawImage background = null,
@@ -46,7 +42,6 @@ namespace ShootAR
 
 			o.player = player;
 			o.gameState = gameState;
-			o.spawnPatternUri = spawnPatternUri;
 			o.scoreManager = scoreManager;
 			o.victoryMusic = victoryMusic;
 			o.audioPlayer = sfx;
@@ -72,8 +67,7 @@ namespace ShootAR
 		}
 
 		private void Awake() {
-#if UNITY_ANDROID
-#if !UNITY_EDITOR
+#if UNITY_ANDROID && !UNITY_EDITOR
 			if (!SystemInfo.supportsGyroscope) {
 				exitTap = true;
 				const string error = "This device does not have Gyroscope";
@@ -94,16 +88,6 @@ namespace ShootAR
 			}
 #endif
 
-			if (spawnPatternUri is null || spawnPatternUri == "") {
-				spawnPatternUri = Path.Combine(
-						Application.persistentDataPath, SPAWN_PATTERN_FILE);
-				if (!File.Exists(spawnPatternUri)) {
-					LocalFiles.CopyResourceToPersistentData(
-							SPAWN_PATTERN_FILE_NAME, SPAWN_PATTERN_FILE);
-				}
-				else throw new UnityException("Default spawn pattern file not found!");
-			}
-#endif
 			/* Do not use elif here. While testing
 			 * using Unity Remote 5, it does not use
 			 * the camera on the phone and it has to
@@ -239,7 +223,7 @@ namespace ShootAR
 
 			// Configuring spawners
 			Stack<Spawner.SpawnConfig>[] patterns
-				= Spawner.ParseSpawnPattern(spawnPatternUri);
+				= Spawner.ParseSpawnPattern(Configuration.Instance.SpawnPatternFile);
 
 			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
 

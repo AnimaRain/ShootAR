@@ -167,16 +167,48 @@ namespace ShootAR.TestTools
 	public class PatternsTestBase : TestBase
 	{
 		protected const string PATTERN_FILE = "patternstestfile.xml";
+
 		///<summary>pattern file's full path</summary>
 		protected string file;
 
+		protected FileInfo patternNames;
+		protected FileInfo patternNamesBackup;
+
 		[SetUp]
 		public void FileSetUp() {
-			file = Path.Combine(Application.persistentDataPath, PATTERN_FILE);
+			file = Path.Combine(
+				Application.persistentDataPath,
+				Configuration.PATTERNS_DIR,
+				PATTERN_FILE
+			);
+
+			/* The file's name need to be included in a spesific file in order
+			 * to be able to be read later. */
+			patternNames = new FileInfo(Path.Combine(
+				Application.persistentDataPath, Configuration.PATTERN_NAMES));
+
+			// Back up that special file, if it already exists, to be restored later.
+			if (patternNames.Exists) {
+				patternNamesBackup = patternNames.CopyTo($"{patternNames.FullName}~");
+
+				patternNames.Delete();
+			}
+
+			// Write file's name into the special file.
+			using (BinaryWriter writer = new BinaryWriter(patternNames.OpenWrite())) {
+				writer.Write(1U); // one string in file
+				writer.Write(PATTERN_FILE.TrimEnd(".xml".ToCharArray()));
+			}
 		}
 
 		[TearDown]
 		public void DeletePatternFile() {
+			if (patternNamesBackup != null && patternNamesBackup.Exists) {
+				patternNamesBackup.CopyTo(patternNames.FullName, true);
+				patternNamesBackup.Delete();
+			}
+			else patternNames.Delete();
+
 			if (File.Exists(file))
 				File.Delete(file);
 

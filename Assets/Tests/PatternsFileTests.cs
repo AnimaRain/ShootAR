@@ -9,7 +9,7 @@ public class PatternsFileTests : PatternsTestBase
 {
 	[Test]
 	public void CopyFileToPermDataPath() {
-		const string patternFileBasename = "spawnpatterns";
+		const string patternFileBasename = "DefaultSpawnPattern";
 		const string patternFile = patternFileBasename + "-test.xml";
 		string targetFile = Path.Combine(Application.persistentDataPath, patternFile);
 

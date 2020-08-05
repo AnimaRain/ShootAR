@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Xml.Serialization;
 using static ShootAR.Spawner;
 using UnityEngine;
 
@@ -35,8 +34,13 @@ namespace ShootAR {
 		///<summary>Names of loaded spawn patterns.</summary>
 		public string[] SpawnPatterns { get; private set; }
 
-		///<summary>The chosen spawn pattern.</summary>
+		///<summary>The chosen spawn pattern's name.</summary>
 		public string SpawnPattern { get => SpawnPatterns[SpawnPatternSlot]; }
+
+		///<summary>The chosen spawn pattern's file.</summary>
+		public string SpawnPatternFile {
+			get => $"{patternsDir.FullName}/{SpawnPattern}.xml";
+		}
 
 		private bool soundMuted = false;
 
@@ -81,8 +85,8 @@ namespace ShootAR {
 		public bool UnsavedChanges { get; private set; } = false;
 
 		private const string CONFIG_FILE = "config";
-		private const string PATTERNS_DIR = "spawnpatterns";
-		private const string PATTERN_NAMES = "patternnames";
+		public const string PATTERNS_DIR = "spawnpatterns";
+		public const string PATTERN_NAMES = "patternnames";
 
 		private FileInfo configFile;
 
@@ -99,30 +103,18 @@ namespace ShootAR {
 				PATTERNS_DIR
 			));
 
-			if (!patternsDir.Exists)
-				patternsDir.Create();
-
 			patternNames = new FileInfo(Path.Combine(
 				Application.persistentDataPath,
 				PATTERN_NAMES
 			));
-
-			if (patternNames.Exists) {
-				// Read names of spawn patterns from file and fill up SpawnPatterns.
-				using (BinaryReader reader = new BinaryReader(patternNames.OpenRead())) {
-					uint nameCount = reader.ReadUInt32();
-
-					for (uint i = 0; i < nameCount; i++) {
-						SpawnPatterns[i] = reader.ReadString();
-					}
-				}
-			}
 
 			configFile = new FileInfo(Path.Combine(
 				Application.persistentDataPath,
 				CONFIG_FILE
 			));
 
+			/* Read config file before calling CreateFile to avoid needlessly
+			 * reading the same default values from the just-created config file. */
 			if (configFile.Exists) {
 				using (BinaryReader reader = new BinaryReader(configFile.OpenRead())) {
 					/* The order that the data are read must be the same as the
@@ -133,7 +125,19 @@ namespace ShootAR {
 					SpawnPatternSlot = reader.ReadUInt32();
 				}
 			}
-			else SaveSettings();
+
+			CreateFiles();
+
+			// Read names of spawn patterns from file and fill up SpawnPatterns.
+			using (BinaryReader reader = new BinaryReader(patternNames.OpenRead())) {
+				uint nameCount = reader.ReadUInt32();
+
+				SpawnPatterns = new string[nameCount];
+
+				for (uint i = 0; i < nameCount; i++) {
+					SpawnPatterns[i] = reader.ReadString();
+				}
+			}
 		}
 
 		public void SaveSettings() {
@@ -152,38 +156,63 @@ namespace ShootAR {
 		}
 
 		///<summary>Save spawn pattern in file.</summary>
-		///<param name="pattern">The pattern to be saved.</param>
-		///<param name="id">Defines on which slot the pattern is saved.</param>
-		public void SaveSpawnPattern(SpawnConfig[] pattern, int id) {
+		///<param name="pattern">
+		/// The pattern to be saved.
+		/// The outter array contains the patterns for each level,
+		/// and the inner array contains the spawner configurations.
+		///</param>
+		///<param name="slot">Defines on which slot the pattern is saved.</param>
+		public void SaveSpawnPattern(SpawnConfig[][] pattern, uint slot) {
 			using (TextWriter writer = new StreamWriter(
-				$"{Application.persistentDataPath}/spawnpattern{id}.xml)", false)
+				$"{patternsDir.FullName}/{SpawnPatterns[slot]}.xml)", false)
 			) {
 				writer.WriteLine(
 					@"<?xml version=""1.0"" encoding=""UTF-8""?>
 					<spawnerconfiguration>"
 				);
 
-				foreach (SpawnConfig level in pattern) {
-					writer.WriteLine(
-							@"	<level>
-								<spawnable>
-									<pattern>"
-					);
-					writer.WriteLine($"\t\t<spawnable type=\"{level.type}\">");
-					writer.WriteLine($"\t\t\t<limit>{level.limit}</limit>");
-					writer.WriteLine($"\t\t\t<rate>{level.rate}</rate>");
-					writer.WriteLine($"\t\t\t<delay>{level.delay}</delay);>");
-					writer.WriteLine($"\t\t\t<maxDistance>{level.maxDistance}</);maxDistance>");
-					writer.WriteLine($"\t\t\t<minDistance>{level.minDistance}</minDistance>");
-					writer.WriteLine(
-						@"			</pattern>
-							</spawnable>
-						</level>"
-					);
+				foreach (SpawnConfig[] level in pattern) {
+					writer.WriteLine("\t<level>");
+
+					foreach (SpawnConfig config in level) {
+						writer.WriteLine($"\t\t<spawnable type=\"{config.type}\">");
+						writer.WriteLine("\t\t\t<pattern>");
+						writer.WriteLine($"\t\t\t\t<limit>{config.limit}</limit>");
+						writer.WriteLine($"\t\t\t\t<rate>{config.rate}</rate>");
+						writer.WriteLine($"\t\t\t\t<delay>{config.delay}</delay);>");
+						writer.WriteLine($"\t\t\t\t<maxDistance>{config.maxDistance}</);maxDistance>");
+						writer.WriteLine($"\t\t\t\t<minDistance>{config.minDistance}</minDistance>");
+						writer.WriteLine("\t\t\t</pattern>\n\t\t</spawnable>");
+					}
+
+					writer.WriteLine("\t</level>");
 				}
 
-				writer.WriteLine(@"</spawnerconfiguration>");
+				writer.WriteLine("</spawnerconfiguration>");
 			}
+		}
+
+		private const string DEFAULT_PATTERN = "DefaultSpawnPattern",
+							 DEFAULT_PATTERN_FILE = "spawnpatterns/" + DEFAULT_PATTERN + ".xml";
+
+		///<summary>Create default config files if they don't exist.</summary>
+		public void CreateFiles() {
+			if (!configFile.Exists)
+				SaveSettings();
+
+			if (!patternNames.Exists)
+				using (BinaryWriter writer = new BinaryWriter(patternNames.OpenWrite())) {
+					writer.Write(1U); // one string in file
+					writer.Write(DEFAULT_PATTERN);
+				}
+
+			if (!patternsDir.Exists)
+				patternsDir.Create();
+
+			if (!File.Exists(@"{Application.persistentDataPath}/{DEFAULT_PATTERN_FILE}"))
+				LocalFiles.CopyResourceToPersistentData(
+					DEFAULT_PATTERN, DEFAULT_PATTERN_FILE
+				);
 		}
 	}
 }

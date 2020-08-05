@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 namespace ShootAR.Menu
 {
@@ -30,6 +31,8 @@ namespace ShootAR.Menu
 		}
 
 		private void Start() {
+			Configuration.Instance.CreateFiles();
+
 			Application.runInBackground = false;
 
 			AudioListener.volume = Configuration.Instance.SoundMuted ? 0f : Configuration.Instance.Volume;
