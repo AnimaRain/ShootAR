@@ -8,11 +8,12 @@ namespace ShootAR.Menu {
 		private static Color unselectedBackground = new Color(0.32f, 0.35f, 0.42f, 0.25f);
 		private static Color selectedBackground = new Color(0.54f, 0.44f, 0.32f, 0.25f);
 
-		private static int elementsCount = 0;
+		// Used to auto-generate id number for each element.
+		private static uint elementsCount = 0;
 
-		public int ID { get; set; }
+		public uint Id { get; set; }
 
-		private Text uiText;
+		[SerializeField] private Text uiText;
 		public void SetText(string value) => uiText.text = value;
 
 		private bool selected;
@@ -27,18 +28,18 @@ namespace ShootAR.Menu {
 
 				if (value) {
 					GetComponentInParent<ListSelectionController>()
-						.ChangeSelection(ID);
+						.ChangeSelection(Id);
 				}
 			}
 		}
 
 
 		public void Start() {
-			if (uiText == null) uiText = GetComponent<Text>();
-
-			ID = elementsCount++;
-
-			SetText(Configuration.Instance.SpawnPattern);
+			Id = elementsCount++;
+			/* Do not initialize Id on declaration, because Unity does
+			unexpected things and "elementCount++" gets executed one
+			additional time, resulting with elementCount being one number
+			higher than expected. */
 		}
 	}
 }

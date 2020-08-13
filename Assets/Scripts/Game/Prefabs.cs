@@ -10,5 +10,6 @@ namespace ShootAR {
 		public const string BULLET_CAPSULE = "Prefabs/Capsules/BulletCapsule";
 		public const string BULLET = "Prefabs/Bullet";
 		public const string PORTAL = "Prefabs/Particles/Portal";
+		public const string PATTERN_LIST_CONTENT = "Prefabs/SpawnableListContent";
 	}
 }

@@ -23,9 +23,6 @@ namespace ShootAR {
 			get => spawnPatternSlot;
 
 			set {
-				if (value > sizeof(uint))
-					throw new UnityException("Slot index set to a out-of-range number.");
-
 				spawnPatternSlot = value;
 				UnsavedChanges = true;
 			}
@@ -138,6 +135,12 @@ namespace ShootAR {
 					SpawnPatterns[i] = reader.ReadString();
 				}
 			}
+
+			/* If for some reason a pattern got deleted outside the game and
+			 * that would cause the slot number to be referencing a non-existing
+			 * file, return the index to default to avoid any problems. */
+			 if (SpawnPatternSlot >= SpawnPatterns.Length)
+				SpawnPatternSlot = 0;
 		}
 
 		public void SaveSettings() {
