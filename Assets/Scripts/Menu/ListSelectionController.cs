@@ -2,21 +2,21 @@
 using System;
 
 namespace ShootAR.Menu {
+
 	public class ListSelectionController : MonoBehaviour
 	{
 		private ListElement selected;
 
 		public void Start() {
 			// Populate list with patterns from directory.
+			var itemTemplate = Resources.Load<GameObject>(Prefabs.PATTERN_LIST_CONTENT);
 			foreach(string name in Configuration.Instance.SpawnPatterns) {
-				GameObject newContent = Instantiate(
-					Resources.Load<GameObject>(Prefabs.PATTERN_LIST_CONTENT)
-				);
+				GameObject newListItem = Instantiate(itemTemplate);
 
 				// Put in correct place under gameobject hierarchy.
-				newContent.transform.SetParent(transform, false);
+				newListItem.transform.SetParent(transform, false);
 
-				newContent.GetComponent<ListElement>().SetText(name);
+				newListItem.GetComponent<ListElement>().SetText(name);
 			}
 
 			// Fetch from configurations' file which pattern is selected.

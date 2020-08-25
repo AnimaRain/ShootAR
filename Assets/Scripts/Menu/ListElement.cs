@@ -34,7 +34,7 @@ namespace ShootAR.Menu {
 		}
 
 
-		public void Start() {
+		public void Awake() {
 			Id = elementsCount++;
 			/* Do not initialize Id on declaration, because Unity does
 			unexpected things and "elementCount++" gets executed one

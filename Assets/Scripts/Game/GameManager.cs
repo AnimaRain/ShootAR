@@ -312,11 +312,7 @@ namespace ShootAR
 						highscores.AddScore(name, scoreManager.Score);
 
 						using (BinaryWriter writer = new BinaryWriter(
-							new FileInfo(Path.Combine(
-								Application.persistentDataPath,
-								ScoreList.HIGHSCORE_FILE
-							))
-							.OpenWrite()
+							Configuration.Instance.Highscores.OpenWrite()
 						)) {
 							for (int i = 0; i < ScoreList.POSITIONS; i++) {
 								(string, long) score = highscores.Get(i);

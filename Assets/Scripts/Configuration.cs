@@ -17,6 +17,9 @@ namespace ShootAR {
 			}
 		}
 
+		private delegate void SlotChangedHandler();
+		private event SlotChangedHandler OnSlotChanged;
+
 		private uint spawnPatternSlot;
 		///<summary>The chosen spawn pattern's index.</summary>
 		public uint SpawnPatternSlot {
@@ -25,6 +28,8 @@ namespace ShootAR {
 			set {
 				spawnPatternSlot = value;
 				UnsavedChanges = true;
+
+				OnSlotChanged?.Invoke();
 			}
 		}
 
@@ -84,6 +89,7 @@ namespace ShootAR {
 		private const string CONFIG_FILE = "config";
 		public const string PATTERNS_DIR = "spawnpatterns";
 		public const string PATTERN_NAMES = "patternnames";
+		public const string HIGHSCORES_DIR = "highscores";
 
 		private FileInfo configFile;
 
@@ -92,6 +98,14 @@ namespace ShootAR {
 
 		/// <summary>File containing names of spawn patterns.</summary>
 		private FileInfo patternNames;
+
+		/// <summary>The directory where high-scores are stored.</summary>
+		private DirectoryInfo highscoresDir;
+
+		private FileInfo highscores;
+
+		/// <summary>File where high-scores are stored.</summary>
+		public FileInfo Highscores { get; private set; }
 
 		///<summary>Constructor that extracts values from config file</summary>
 		private Configuration() {
@@ -108,6 +122,11 @@ namespace ShootAR {
 			configFile = new FileInfo(Path.Combine(
 				Application.persistentDataPath,
 				CONFIG_FILE
+			));
+
+			highscoresDir = new DirectoryInfo(Path.Combine(
+				Application.persistentDataPath,
+				HIGHSCORES_DIR
 			));
 
 			/* Read config file before calling CreateFile to avoid needlessly
@@ -133,6 +152,14 @@ namespace ShootAR {
 
 				for (uint i = 0; i < nameCount; i++) {
 					SpawnPatterns[i] = reader.ReadString();
+
+					/* Create non-existing highscores file for each pattern. */
+					string scores = $"{highscoresDir.FullName}/{SpawnPatterns[i]}";
+					if (!File.Exists(scores)) {
+						LocalFiles.CopyResourceToPersistentData(
+							"highscores-null", scores
+						);
+					}
 				}
 			}
 
@@ -141,6 +168,27 @@ namespace ShootAR {
 			 * file, return the index to default to avoid any problems. */
 			 if (SpawnPatternSlot >= SpawnPatterns.Length)
 				SpawnPatternSlot = 0;
+
+
+			Highscores = new FileInfo(Path.Combine(
+				highscoresDir.FullName,
+				SpawnPattern
+			));
+
+			/* When slot is changed, also change reference to the correct
+			highscores file. */
+			OnSlotChanged += () => {
+				Highscores = new FileInfo(Path.Combine(
+					highscoresDir.FullName,
+					SpawnPattern
+				));
+
+				if (!Highscores.Exists) {
+					LocalFiles.CopyResourceToPersistentData(
+						"highscores-null", Highscores.FullName
+					);
+				}
+			};
 		}
 
 		public void SaveSettings() {
@@ -212,10 +260,13 @@ namespace ShootAR {
 			if (!patternsDir.Exists)
 				patternsDir.Create();
 
-			if (!File.Exists(@"{Application.persistentDataPath}/{DEFAULT_PATTERN_FILE}"))
+			if (patternsDir.GetFiles().Length == 0)
 				LocalFiles.CopyResourceToPersistentData(
 					DEFAULT_PATTERN, DEFAULT_PATTERN_FILE
 				);
+
+			if (!highscoresDir.Exists)
+				highscoresDir.Create();
 		}
 	}
 }
