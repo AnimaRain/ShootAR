@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.UI;
 
 namespace ShootAR.Menu {
@@ -11,7 +10,13 @@ namespace ShootAR.Menu {
 		// Used to auto-generate id number for each element.
 		private static uint elementsCount = 0;
 
-		public uint Id { get; set; }
+		public uint Id { get; private set; }
+
+		/// <summary>Properly decrement <see cref="Id"/>.</summary>
+		/// <remarks>
+		/// <see cref="Id"/> can not be set, and is only allowed to be decremented by one.
+		/// </remarks>
+		public uint DecrementId() => --Id;
 
 		[SerializeField] private Text uiText;
 		public void SetText(string value) => uiText.text = value;
@@ -40,6 +45,10 @@ namespace ShootAR.Menu {
 			unexpected things and "elementCount++" gets executed one
 			additional time, resulting with elementCount being one number
 			higher than expected. */
+		}
+
+		public void OnDestroy() {
+			elementsCount--;
 		}
 	}
 }

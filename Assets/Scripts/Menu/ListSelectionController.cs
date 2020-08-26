@@ -20,19 +20,18 @@ namespace ShootAR.Menu {
 			}
 
 			// Fetch from configurations' file which pattern is selected.
-			ChangeSelection(Configuration.Instance.SpawnPatternSlot);
+			selected = Array.Find(
+				GetComponentsInChildren<ListElement>(),
+				element => element.Id == Configuration.Instance.SpawnPatternSlot
+			);
 
-			/* Change background color of the selected item on the list.
-			(This will cause ChangeSelection to be called again, but its
-			initial check will cause it to return early anyway.) */
+			// Change background color of the selected item on the list.
 			selected.Selected = true;
 		}
 
 		public void ChangeSelection(uint id) {
-			if (selected?.Id == id) return;
-
 			// Unselect the previous selected
-			if (selected != null)
+			if (selected != null && selected.Id != id)
 				selected.Selected = false;
 
 			selected = Array.Find(
@@ -41,6 +40,45 @@ namespace ShootAR.Menu {
 			);
 
 			Configuration.Instance.SpawnPatternSlot = id;
+		}
+
+		public void DeleteSelected() {
+			// Do not allow deleting last item on list.
+			if (Configuration.Instance.SpawnPatterns.Length == 1) return;
+
+			var deleted = selected; // the item to be deleted
+
+			// Switch selection to an existing item on the list.
+			if (Configuration.Instance.SpawnPatternSlot != 0) {
+				ChangeSelection(Configuration.Instance.SpawnPatternSlot - 1);
+			}
+			else {
+				ChangeSelection(1);
+			}
+
+			// Move all items in the list after the deleted one spot up.
+			foreach (ListElement item in GetComponentsInChildren<ListElement>())
+				if (item.Id > deleted.Id) item.DecrementId();
+
+			// Temporarily set the to-be-deleted item as selected
+			// so it will get deleted by DeletePattern().
+			var newSelected = selected;
+			selected = deleted;
+
+			// Remove item from list.
+			/* (Don't use Destroy() here, because the object does not get destroyed
+			in time, and results in a null reference being used later.) */
+			DestroyImmediate(selected.gameObject);
+
+			/* Deleting the pattern recreates the list, ruining existing
+			references to objects, so all functions that require them must
+			run before, and new references to be created for after. */
+			Configuration.Instance.DeletePattern();
+
+			// Reset selected.
+			selected = newSelected;
+
+			selected.Selected = true;
 		}
 	}
 }

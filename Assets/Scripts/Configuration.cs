@@ -102,8 +102,6 @@ namespace ShootAR {
 		/// <summary>The directory where high-scores are stored.</summary>
 		private DirectoryInfo highscoresDir;
 
-		private FileInfo highscores;
-
 		/// <summary>File where high-scores are stored.</summary>
 		public FileInfo Highscores { get; private set; }
 
@@ -267,6 +265,39 @@ namespace ShootAR {
 
 			if (!highscoresDir.Exists)
 				highscoresDir.Create();
+		}
+
+		///<summary>Delete selected pattern.</summary>
+		public void DeletePattern() {
+			File.Delete(SpawnPatternFile);
+
+			// Remove pattern's name from list
+
+			patternNames.Delete();
+
+			string deleted = SpawnPattern;
+
+			using(BinaryWriter w = new BinaryWriter(patternNames.OpenWrite())) {
+				w.Write(SpawnPatterns.Length - 1);
+
+				foreach (var pattern in SpawnPatterns) {
+					if (pattern == deleted) continue;
+
+					w.Write(pattern);
+				}
+			}
+
+			using(BinaryReader r = new BinaryReader(patternNames.OpenRead())) {
+				uint count = r.ReadUInt32();
+				SpawnPatterns = new string[count];
+
+				for (uint i = 0U; i < count; i++) {
+					SpawnPatterns[i] = r.ReadString();
+				}
+			}
+
+			// Delete paired highscores file
+			Highscores.Delete();
 		}
 	}
 }
