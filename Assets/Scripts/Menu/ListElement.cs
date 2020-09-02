@@ -8,15 +8,15 @@ namespace ShootAR.Menu {
 		private static Color selectedBackground = new Color(0.54f, 0.44f, 0.32f, 0.25f);
 
 		// Used to auto-generate id number for each element.
-		private static uint elementsCount = 0;
+		private static int elementsCount = 0;
 
-		public uint Id { get; private set; }
+		public int Id { get; private set; }
 
 		/// <summary>Properly decrement <see cref="Id"/>.</summary>
 		/// <remarks>
 		/// <see cref="Id"/> can not be set, and is only allowed to be decremented by one.
 		/// </remarks>
-		public uint DecrementId() => --Id;
+		public int DecrementId() => --Id;
 
 		[SerializeField] private Text uiText;
 		public void SetText(string value) => uiText.text = value;

@@ -29,7 +29,7 @@ namespace ShootAR.Menu {
 			selected.Selected = true;
 		}
 
-		public void ChangeSelection(uint id) {
+		public void ChangeSelection(int id) {
 			// Unselect the previous selected
 			if (selected != null && selected.Id != id)
 				selected.Selected = false;

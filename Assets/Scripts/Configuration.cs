@@ -20,9 +20,9 @@ namespace ShootAR {
 		private delegate void SlotChangedHandler();
 		private event SlotChangedHandler OnSlotChanged;
 
-		private uint spawnPatternSlot;
+		private int spawnPatternSlot;
 		///<summary>The chosen spawn pattern's index.</summary>
-		public uint SpawnPatternSlot {
+		public int SpawnPatternSlot {
 			get => spawnPatternSlot;
 
 			set {
@@ -136,7 +136,7 @@ namespace ShootAR {
 					SoundMuted = reader.ReadBoolean();
 					BgmMuted = reader.ReadBoolean();
 					Volume = reader.ReadSingle();
-					SpawnPatternSlot = reader.ReadUInt32();
+					SpawnPatternSlot = reader.ReadInt32();
 				}
 			}
 
@@ -144,11 +144,11 @@ namespace ShootAR {
 
 			// Read names of spawn patterns from file and fill up SpawnPatterns.
 			using (BinaryReader reader = new BinaryReader(patternNames.OpenRead())) {
-				uint nameCount = reader.ReadUInt32();
+				int nameCount = reader.ReadInt32();
 
 				SpawnPatterns = new string[nameCount];
 
-				for (uint i = 0; i < nameCount; i++) {
+				for (int i = 0; i < nameCount; i++) {
 					SpawnPatterns[i] = reader.ReadString();
 
 					/* Create non-existing highscores file for each pattern. */
@@ -211,7 +211,7 @@ namespace ShootAR {
 		/// and the inner array contains the spawner configurations.
 		///</param>
 		///<param name="slot">Defines on which slot the pattern is saved.</param>
-		public void SaveSpawnPattern(SpawnConfig[][] pattern, uint slot) {
+		public void SaveSpawnPattern(SpawnConfig[][] pattern, int slot) {
 			using (TextWriter writer = new StreamWriter(
 				$"{patternsDir.FullName}/{SpawnPatterns[slot]}.xml)", false)
 			) {
@@ -251,7 +251,7 @@ namespace ShootAR {
 
 			if (!patternNames.Exists)
 				using (BinaryWriter writer = new BinaryWriter(patternNames.OpenWrite())) {
-					writer.Write(1U); // one string in file
+					writer.Write(1); // one string in file
 					writer.Write(DEFAULT_PATTERN);
 				}
 
@@ -288,10 +288,10 @@ namespace ShootAR {
 			}
 
 			using(BinaryReader r = new BinaryReader(patternNames.OpenRead())) {
-				uint count = r.ReadUInt32();
+				int count = r.ReadInt32();
 				SpawnPatterns = new string[count];
 
-				for (uint i = 0U; i < count; i++) {
+				for (int i = 0; i < count; i++) {
 					SpawnPatterns[i] = r.ReadString();
 				}
 			}

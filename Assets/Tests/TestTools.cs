@@ -196,7 +196,7 @@ namespace ShootAR.TestTools
 
 			// Write file's name into the special file.
 			using (BinaryWriter writer = new BinaryWriter(patternNames.OpenWrite())) {
-				writer.Write(1U); // one string in file
+				writer.Write(1); // one string in file
 				writer.Write(PATTERN_FILE.TrimEnd(".xml".ToCharArray()));
 			}
 		}
