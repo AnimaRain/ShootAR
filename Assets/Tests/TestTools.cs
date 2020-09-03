@@ -189,7 +189,7 @@ namespace ShootAR.TestTools
 
 			// Back up that special file, if it already exists, to be restored later.
 			if (patternNames.Exists) {
-				patternNamesBackup = patternNames.CopyTo($"{patternNames.FullName}~");
+				patternNamesBackup = patternNames.CopyTo($"{patternNames.FullName}-{Random.value}~");
 
 				patternNames.Delete();
 			}
