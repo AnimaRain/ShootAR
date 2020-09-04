@@ -80,11 +80,11 @@ class Blop {
 }
 ```
 * Use `readonly`/`const` modifier when field is not supposed to change value.
-* Do **not** use non–`readonly` `static` members.
+* Do **not** use nonâ€“`readonly` `static` members.
 
 ### Formatting conventions:
 * The width of indentation is 4 characters. Tabs are preferred over spaces, but spaces can be
-used after tabs to fine–tune the indentation.
+used after tabs to fineâ€“tune the indentation.
 * Write only one statement per line.
 ```C#
 // Instead of this
@@ -100,7 +100,7 @@ DoSomethingElse();
 private float MaxDistanceToSpawn, MinDistanceToSpawn;
 ```
 * Add at least one blank line between property definitions and method definitions.
-* If the statement is broken in multiple lines, the continuation lines after the first line–break must
+* If the statement is broken in multiple lines, the continuation lines after the first lineâ€“break must
 be indented by at least two extra tabs.
 * Qualified names can be broken before a dot (.), if they are too long for a single line.
 ```C#
@@ -110,7 +110,7 @@ var fieldWithALongName = LongNamedNamespace.ClassWithAnAlsoLongName
 objectWithALongLongLongLongLongLongLongName.
         .TheMethodWeNeedToCall();
 ```
-* Brackets are not required for one–line blocks.
+* Brackets are not required for oneâ€“line blocks.
 ```C#
 for (a = 0; a < 10; a++)
     if (true)
@@ -172,7 +172,7 @@ private void SomeFunction(Image image, Box box){
 ```
 * An element's name should **not** reflect its type. **Do NOT use Hungarian notation!** The only exception accepted where
 the name reflects the type is, for example, `Button FireButton`, where the property's name could not have a more fitting name.
-But naming an object after its class–type is OK. For example, `private GameManager gameManager;` is fine.
+But naming an object after its classâ€“type is OK. For example, `private GameManager gameManager;` is fine.
 * Name constants in all uppercase and separate words with an underscore ( _ )
 ```C#
 private const MAXIMUM_HEALTH = 100;

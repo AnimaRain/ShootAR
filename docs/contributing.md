@@ -66,7 +66,7 @@ without making the code more complicated than it should be.
 #### Creating a branch
 Create a branch branching out of the *master* branch, where you will be storing your changes.
 Create the branch through a GUI, like Visual Studio or Git GUI, or use git: (do `git checkout master`
-if you are not in *master*) `git checkout --branch <branch-name>`, where *\<branch-name\>* is the name
+if you are not in *master*) `git checkout -b <branch-name>`, where *\<branch-name\>* is the name
 of your branch. Give the branch a good descriptive name. If you want, `git push` the branch to the server.
 
 #### Writing commits
@@ -109,27 +109,27 @@ To avoid making the same mistake as in the commit in the link, avoid automatical
 commit and take a more manual and investigative approach. Use `git add --all` only when you are absolutely sure of
 the changes made.
 
-If you did not break up your problem and made unrelated small fixes along the way, keep track of them;
-when you are done, unfix them and then add the files to the commit, i.e. `git add --all`, and then redo
-the fixes. Now you can `git commit` without including the small fixes and then `git add --all` and
-`git commit` again to commit the small fixes. Note that those small fixes might be better to be split up
-in more than one commit, depending on the situation. You do not have to use this exact technique as long
-as the result is the same.<br/>
-(In the example `git add --all` is used, presuming that we are only dealing with files that we know what changes were made to.)
+If you did not break up your problem and made unrelated small fixes along the way, please separate
+them into smaller, cohesive commits. `git add --interactive` or `git add --patch` can help to make the
+process easier; for more information on how to use the command, type `git help add`.
 
 You are not required to squash your commits. **This project is all about learning.** This also applies when it is
 too late to amend the previous commit and you have to make a commit just to fix a missed typo. **It's fine! Humans
 make mistakes.** By keeping commits visible, one can learn from previous mistakes, helps better understanding the
 intentions of the coder, and it is easier to find the point at which a mistake was made.
 
+When there are changes in file *ProjectSettings/ProjectSettings.asset*, before committing, make sure
+that *AndroidKeystoreName* and *AndroidKeyaliasName* are empty; if they are not, open the file in an
+editor and delete their values.
+
 #### Push to upstream
-Before uploading anything read the [license section](/README.md#license). Also, if you have intention of uploading anything
+Before uploading anything, read the [license section](/README.md#license). Also, if you have intention of uploading anything
 that has been made by a third party, make sure that you have their permission and that there is no conflicts with
 the license and principles of this project. They should, also, be credited. Make sure that none of the files to be
 uploaded contain any personal info, either yours or an other's, or any information regarding security, like passwords
 or keys.
 
 Make sure that the code is passing all tests. Then push all commits to the upstream branch, `git push`
-or if there is no upstream branch set, `git push --set-upstream original <your-branch-name>`.
+or if there is no upstream branch set, `git push --set-upstream origin <your-branch-name>`.
 [Create a pull request](https://github.com/AnimaRain/ShootAR/pulls) in which what change will be
 made must be described clearly. Await review by an administrator.
