@@ -4,43 +4,49 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class CapsuleTests
+public class CapsuleTests : ShootAR.TestTools.TestBase
 {
 
 	[UnityTest]
 	public IEnumerator CapsuleGivesBullets() {
 		//Set up Test
 		Player player = Player.Create();
-		Capsule capsule =
-			Capsule.Create(Capsule.CapsuleType.Bullet, 0, player);
+		BulletCapsule capsule =
+			BulletCapsule.Create(0, player);
 
-		yield return null;
+		yield return new WaitForSecondsRealtime(5f);
 		//Perform Test
-		capsule.GivePowerUp();
+		capsule.Destroy();
 
 		//Assert
 		Assert.Greater(player.Ammo, 0);
 	}
 
-	//UNDONE:
-	/* Tests for conditional-capsule
+	/*UNDONE: Tests for conditional-capsule
 	 * e.g. Capsules that appears after performing a combo, killing a couple of
 	 * enemies in row without missing.
 	 * 
 	 * Maybe this belongs elsewhere. Maybe in spawners...
 	 * ...or in an other game-logic system?
-	 * 
+	 */
 	[UnityTest]
-	public IEnumerator BonusCapsuleAppearsAfterKillingXEnemiesConsecutively()
-	{
+	[Ignore("Not yet implemented")]
+	public IEnumerator BonusCapsuleAppearsAfterKillingXEnemiesConsecutively() {
 		yield return null;
 	}
-	*/
 
-	[TearDown]
-	public void ClearEnvironment() {
-		var objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects)
-			Object.Destroy(o.gameObject);
+	[UnityTest]
+	public IEnumerator CapsuleDestroyedByBullet() {
+		var capsule = BulletCapsule.Create(0, Player.Create());
+		var bullet = Bullet.Create(0);
+
+		capsule.gameObject.SetActive(true);
+		bullet.gameObject.SetActive(true);
+
+		yield return new WaitUntil(
+			() => Spawnable.Pool<BulletCapsule>.Count > 0
+		);
+
+		Assert.AreSame(capsule, Spawnable.Pool<BulletCapsule>.RequestObject());
 	}
 }

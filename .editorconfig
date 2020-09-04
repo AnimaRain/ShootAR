@@ -76,7 +76,7 @@ csharp_indent_block_contents = true
 csharp_indent_braces = false
 csharp_indent_case_contents = true
 csharp_indent_case_contents_when_block = false
-csharp_indent_switch_labels = true
+csharp_indent_switch_labels = false
 csharp_indent_labels = one_less_than_current
 # New line preferences 
 csharp_new_line_before_open_brace = types
@@ -96,7 +96,7 @@ csharp_space_between_method_declaration_parameter_list_parentheses = false
 csharp_space_between_method_call_empty_parameter_list_parentheses = false 
 csharp_space_after_keywords_in_control_flow_statements = true 
 csharp_space_between_parentheses = false
-csharp_space_around_declaration_statements = false
+csharp_space_around_declaration_statements = ignore
 csharp_space_before_open_square_brackets = false
 csharp_space_between_empty_square_brackets = false
 csharp_space_between_square_brackets = false
@@ -104,7 +104,7 @@ csharp_space_after_colon_in_inheritance_clause = true
 csharp_space_before_colon_in_inheritance_clause = true 
 csharp_space_after_comma = true
 csharp_space_after_dot = false
-csharp_space_after_semicolon_in_for_statement = false
+csharp_space_after_semicolon_in_for_statement = true
 csharp_space_around_binary_operators = before_and_after 
 # Wrapping preferences 
 csharp_preserve_single_line_blocks = true 

@@ -11,12 +11,12 @@ namespace ShootAR
 		[SerializeField] private Text messageOnScreen;
 		[SerializeField] private Text score;
 		[SerializeField] private Text roundIndex;
-		[SerializeField] private Button pauseToMenuButton;
 		[SerializeField] private GameState gameState;
 		private AudioSource sfx;
-		[SerializeField]
-		private AudioClip pauseSfx;
-
+		[SerializeField] private AudioClip pauseSfx;
+#pragma warning disable CS0649
+		[SerializeField] private Button pauseToMenuButton;
+#pragma warning restore CS0649
 
 		public Text BulletCount {
 			get { return bulletCount; }

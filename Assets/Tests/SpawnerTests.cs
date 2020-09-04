@@ -6,14 +6,33 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-internal class SpawnerTests
+internal class SpawnerTests : TestBase
 {
+	[UnityTest]
+	public IEnumerator SpawnerFetchesFromPool() {
+		Spawner spawner = Spawner.Create(
+			objectToSpawn: typeof(BulletCapsule),
+			spawnLimit: 1,
+			initialDelay: 0,
+			spawnRate: 1,
+			maxDistanceToSpawn: 50,
+			minDistanceToSpawn: 20
+		);
+		Spawnable.Pool<BulletCapsule>
+				.Populate(BulletCapsule.Create(0, Player.Create()));
+
+		spawner.StartSpawning();
+		yield return new WaitWhile(() => spawner.IsSpawning);
+
+		Assert.Less(Spawnable.Pool<BulletCapsule>.Count, Spawnable.GLOBAL_SPAWN_LIMIT,
+				"Pool population is not diminishing.");
+	}
 
 	[UnityTest]
 	public IEnumerator SpawnerStopsWhenLimitReached() {
-
+		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create());
 		Spawner spawner = Spawner.Create(
-			objectToSpawn: TestEnemy.Create(),
+			objectToSpawn: typeof(Crasher),
 			spawnLimit: 5,
 			spawnRate: 1,
 			maxDistanceToSpawn: 10f,
@@ -30,46 +49,46 @@ internal class SpawnerTests
 
 	[UnityTest]
 	public IEnumerator SpawnerSpawnsTheCorrectNumberOfObjects() {
+		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create());
 		Spawner spawner = Spawner.Create(
-			objectToSpawn: TestEnemy.Create(),
-			spawnLimit: 5,
-			spawnRate: 1,
-			maxDistanceToSpawn: 10f,
-			minDistanceToSpawn: 3f,
-			initialDelay: 0f
-		);
+					objectToSpawn: typeof(Crasher),
+					spawnLimit: 5,
+					spawnRate: 1,
+					maxDistanceToSpawn: 10f,
+					minDistanceToSpawn: 3f,
+					initialDelay: 0f
+				);
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
 
-		int numberOfSpawned = Object.FindObjectsOfType<TestEnemy>().Length - 1;
+		int numberOfSpawned = Object.FindObjectsOfType<TestEnemy>().Length;
 		Assert.AreEqual(5, numberOfSpawned, "Should spawn 5 objects.");
 	}
 
 	[UnityTest]
 	public IEnumerator SpawnerCanStopSpawning() {
-		//Arrange
-		Spawner spawner = Spawner.Create(TestEnemy.Create(),
+		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create());
+		Spawner spawner = Spawner.Create(typeof(Crasher),
 			spawnLimit: 5, spawnRate: 1, initialDelay: 0f,
 			maxDistanceToSpawn: 10f, minDistanceToSpawn: 3f);
 
 		const int testLimit = 3;    //the # of spawns after which spawning will stop
 
-		//Act
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.SpawnCount < testLimit);
 		spawner.StopSpawning();
 
-		//Assert
-		int numberOfSpawned = Object.FindObjectsOfType<TestEnemy>().Length - 1;
+		int numberOfSpawned = Object.FindObjectsOfType<TestEnemy>().Length;
 		Assert.AreEqual(testLimit, numberOfSpawned,
 				$"Spawning should be interrupted after spawning {testLimit} objects.");
 	}
 
 	[UnityTest]
 	public IEnumerator SpawnerStopsSpawningAtGameOver() {
+		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create());
 		GameState gameState = GameState.Create(0);
-		Spawner spawner = Spawner.Create(TestEnemy.Create(), 99, 0f, 1f, 5f, 3f, gameState);
+		Spawner spawner = Spawner.Create(typeof(Crasher), 99, 0f, 1f, 5f, 3f, gameState);
 
 		spawner.StartSpawning();
 		yield return new WaitUntil(() => spawner.SpawnCount == 3);
@@ -86,17 +105,18 @@ internal class SpawnerTests
 		 * I feel confident enough that things workout, though.*/
 
 		var prefab = TestEnemy.Create();
-		Spawner spawner = Spawner.Create(prefab, 20, 0f, 0f, 5f, 3f);
+		Spawnable.Pool<Crasher>.Populate(prefab);
+		Spawner spawner = Spawner.Create(typeof(Crasher), 20, 0f, 0f, 5f, 3f);
 
 		spawner.StartSpawning();
 		yield return new WaitWhile(() => spawner.IsSpawning);
 		Object.Destroy(prefab.gameObject);
+		yield return new WaitForFixedUpdate();
+
 		Enemy[] enemies = Object.FindObjectsOfType<Enemy>();
 		foreach (var enemy in enemies) {
-			if (enemy == spawner.ObjectToSpawn)
-				continue;
-
 			var distance = enemy.transform.position.magnitude;
+
 			Assert.GreaterOrEqual(distance, spawner.MinDistanceToSpawn,
 				"Objects should not be spawned below the minimum distance.");
 			Assert.LessOrEqual(distance, spawner.MaxDistanceToSpawn,
@@ -107,7 +127,8 @@ internal class SpawnerTests
 	[UnityTest]
 	public IEnumerator SpawnerShouldNotBeRestartedWhileRunning() {
 		Spawner spawner = Spawner.Create(
-			TestEnemy.Create(), 100, 100f, 100f, 100f, 1f);
+			typeof(Crasher), 100, 100f, 100f, 100f, 1f);
+		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create());
 		UnityException error = null;
 
 		yield return null;
@@ -133,9 +154,7 @@ internal class SpawnerTests
 	 * In order to maintain the performance as well as the playability of the
 	 * game in acceptable levels, there should be an upper limit of how many
 	 * <see cref="Spawnable"/>s of any kind can be spawned by the spawners.
-	 * </remarks>
-	 * <seealso cref="Enemy"/>
-	 * <seealso cref="Capsule"/> */
+	 * </remarks> */
 	[UnityTest]
 	public IEnumerator SpawnersHaveAGlobalSpawningLimit() {
 		int limit = 100;    // Should be used only for the following check
@@ -146,8 +165,9 @@ internal class SpawnerTests
 				$"global spawn limit ({Spawnable.GLOBAL_SPAWN_LIMIT})."
 			);
 
+		Spawnable.Pool<Crasher>.Populate(TestEnemy.Create());
 		Spawner spawner = Spawner.Create(
-			objectToSpawn: TestEnemy.Create(),
+			objectToSpawn: typeof(Crasher),
 			spawnLimit: limit,
 			initialDelay: 0f,
 			spawnRate: 0f,
@@ -164,13 +184,5 @@ internal class SpawnerTests
 		Assert.LessOrEqual(spawner.SpawnCount, Spawnable.GLOBAL_SPAWN_LIMIT,
 			"Spawners must respect the global spawn limit."
 		);
-	}
-
-	[TearDown]
-	public void ClearTestEnvironment() {
-		GameObject[] objects = Object.FindObjectsOfType<GameObject>();
-		foreach (var o in objects) {
-			Object.Destroy(o.gameObject);
-		}
 	}
 }

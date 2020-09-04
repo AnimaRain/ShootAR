@@ -17,18 +17,16 @@ namespace ShootAR
 		private int health;
 		[Range(0, 999), SerializeField]
 		private int ammo;
+		[SerializeField] private float bulletSpeed;
 		private float nextFire;
 		private float nextDamage;
 
 		[SerializeField] private GameState gameState;
-		/// <summary>
-		/// The <see cref="Bullet"/> prefab that gets instantiated when the player shoots.
-		/// </summary>
-		/// <seealso cref="Shoot"/>
-		[SerializeField] private Bullet bullet;
 		private AudioSource audioSource;
+#pragma warning disable CS0649
 		[SerializeField] private AudioClip shotSfx;
 		[SerializeField] private UnityEngine.UI.Text bulletCount;
+#pragma warning restore CS0649
 
 		/// <summary>
 		/// Player's health.
@@ -48,17 +46,15 @@ namespace ShootAR
 		private void UpdateHealthUI() {
 			if (healthIndicator[0] == null) return;
 
-			for (int i = 0;i < MAXIMUM_HEALTH;i++) {
+			for (int i = 0; i < MAXIMUM_HEALTH; i++) {
 				healthIndicator[i].SetActive(i < health);
 			}
 		}
 
 		/// <summary>
 		/// The ammount of bullets the player has.
+		/// Setting this also sets the bullet count on the UI.
 		/// </summary>
-		/// <remarks>
-		/// Setting this, also sets the bullet count on the UI.
-		/// </remarks>
 		public int Ammo {
 			get { return ammo; }
 			set {
@@ -73,23 +69,18 @@ namespace ShootAR
 
 		public static Player Create(
 			int health = MAXIMUM_HEALTH, Camera camera = null,
-			Bullet bullet = null, int ammo = 0, GameState gameState = null) {
+			int ammo = 0, GameState gameState = null) {
 			var o = new GameObject(nameof(Player)).AddComponent<Player>();
 
 			var healthUI = new GameObject("HealthUI").transform;
-			for (int i = 0;i < MAXIMUM_HEALTH;i++) {
+			for (int i = 0; i < MAXIMUM_HEALTH; i++) {
 				o.healthIndicator[i] = new GameObject("HealthIndicator");
 				o.healthIndicator[i].transform.parent = healthUI;
 			}
 			o.Health = health;
 			o.Ammo = ammo;
-			o.bullet = bullet;
 			o.gameState = gameState;
 			if (camera != null) camera.tag = "MainCamera";
-			else if (bullet != null) {
-				Debug.LogWarning("No reference to main camera. Shooting" +
-					" functions will raise error if used.");
-			}
 
 			return o;
 		}
@@ -103,10 +94,16 @@ namespace ShootAR
 		/// </returns>
 		public Bullet Shoot() {
 			if (CanShoot && Ammo > 0 && Time.time >= nextFire) {
+				Bullet bullet = Spawnable.Pool<Bullet>.RequestObject();
+				if (bullet is null) return null;
+
 				Ammo--;
 				nextFire = Time.time + SHOT_COOLDOWN;
 				if (shotSfx != null) audioSource.PlayOneShot(shotSfx);
-				return Instantiate(bullet, Vector3.zero, Camera.main.transform.rotation);
+				bullet.transform.position = Vector3.zero;
+				bullet.transform.rotation = Camera.main.transform.rotation;
+				bullet.gameObject.SetActive(true);
+				return bullet;
 			}
 
 			return null;

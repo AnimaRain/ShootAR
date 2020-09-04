@@ -6,21 +6,49 @@ namespace ShootAR.Enemies
 	[RequireComponent(typeof(CapsuleCollider))]
 	public class Drone : Pyoopyoo
 	{
-		[SerializeField] protected const float ShootDelay = 5f;
+		protected const float SHOOT_DELAY = 5f;
+
 		/// <summary>
 		/// The point in time that the next shot is allowed.
 		/// </summary>
 		protected float nextShot;
 
+		protected static float? prefabSpeed = null;
+		protected static int? prefabPoints = null,
+							 prefabDamage = null;
+
+		public override void ResetState() {
+			Speed = (float)prefabSpeed;
+			PointsValue = (int)prefabPoints;
+			Damage = (int)prefabDamage;
+		}
+
+		protected override void Awake() {
+			base.Awake();
+
+			Drone prefab = Resources.Load<Drone>(Prefabs.DRONE);
+			if (prefabSpeed is null)
+				prefabSpeed = prefab.Speed;
+			if (prefabPoints is null)
+				prefabPoints = prefab.PointsValue;
+			if (prefabDamage is null)
+				prefabDamage = prefab.Damage;
+		}
+
 		protected void FixedUpdate() {
 			if (!gameState.GameOver) {
-				if (lastBullet == null && Time.time > nextShot) {
+				if (Time.time > nextShot) {
 					Shoot();
-					nextShot = Time.time + ShootDelay;
+					nextShot = Time.time + SHOOT_DELAY;
 				}
 
-				//OrbitAround();
+				//TODO: OrbitAround();
 			}
+		}
+
+		public override void Destroy() {
+			base.Destroy();
+			ReturnToPool<Drone>();
 		}
 	}
 }

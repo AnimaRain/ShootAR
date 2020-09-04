@@ -7,7 +7,9 @@ namespace ShootAR.Enemies
 	/// </summary>
 	public abstract class Boopboop : Enemy
 	{
-		protected virtual void OnTriggerEnter(Collider other) {
+		protected override void OnTriggerEnter(Collider other) {
+			base.OnTriggerEnter(other);
+
 			var target = other.GetComponent<Player>();
 			if (target != null) Attack(target);
 		}

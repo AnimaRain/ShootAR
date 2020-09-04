@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	"spawnerconfiguration" is the root, followed by "level", followed by the
+	type of Spawnable, followed by "pattern", followed by the spawner
+	configuration.
+	
+	Each level node groups the patterns that will be used for that level.
+	
+	The Spawnable types are: "Crasher", "Drone", "PowerUpCapsule",
+	"BulletCapsule", "HealthCapsule", "ArmorCapsule".
+	
+	For each pattern a spawner will be created using those settings.
+	To create more than one spawner of the same type with the same settings
+	without creating an identical pattern, use the "repeat" attribute:
+	repeat="#" where # the number of times to go through this pattern. If # is
+	less than 2 or the attribute is ommited then it defaults to repeat=1.
+	
+	Spawner configuration:
+	- limit: # of objects to spawn
+	- rate: how many seconds to wait before each spawn
+	- delay: how many seconds to wait before the first spawn
+			(mind the additional wait time from "rate")
+	- maxDistance: the maximum distance away from player allowed to spawn
+	- minDistance: the minimum distance away from player allowed to spawn
+-->
+
+<spawnerconfiguration>
+	<level>
+		<spawnable type="Crasher">
+			<pattern>
+				<limit>12</limit>
+				<rate>3</rate>
+				<delay>3</delay>
+				<maxDistance>50</maxDistance>
+				<minDistance>30</minDistance>
+			</pattern>
+		</spawnable>
+		<spawnable type="Drone">
+			<pattern>
+				<limit>9</limit>
+				<rate>4</rate>
+				<delay>4</delay>
+				<maxDistance>60</maxDistance>
+				<minDistance>40</minDistance>
+			</pattern>
+		</spawnable>
+		<spawnable type="BulletCapsule">
+			<pattern>
+				<limit>3</limit>
+				<rate>15</rate>
+				<delay>30</delay>
+				<maxDistance>20</maxDistance>
+				<minDistance>15</minDistance>
+			</pattern>
+		</spawnable>
+	</level>
+	<level>
+		<spawnable type="Crasher">
+			<pattern repeat="2">
+				<limit>13</limit>
+				<rate>3</rate>
+				<delay>3</delay>
+				<maxDistance>50</maxDistance>
+				<minDistance>30</minDistance>
+			</pattern>
+		</spawnable>
+		<spawnable type="BulletCapsule">
+			<pattern>
+				<limit>2</limit>
+				<rate>15</rate>
+				<delay>0</delay>
+				<maxDistance>30</maxDistance>
+				<minDistance>15</minDistance>
+			</pattern>
+		</spawnable>
+	</level>
+	<level>
+		<spawnable type="Drone">
+			<pattern repeat="3">
+				<limit>9</limit>
+				<rate>4</rate>
+				<delay>4</delay>
+				<maxDistance>60</maxDistance>
+				<minDistance>40</minDistance>
+			</pattern>
+		</spawnable>
+	</level>
+</spawnerconfiguration>

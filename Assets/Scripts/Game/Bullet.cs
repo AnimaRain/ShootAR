@@ -5,6 +5,8 @@ namespace ShootAR
 	[RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
 	public class Bullet : Spawnable
 	{
+		public const float  MAX_TRAVEL_DISTANCE = 70f;
+
 		/// <summary>
 		/// Total count of spawned bullets during the current round.
 		/// </summary>
@@ -14,6 +16,8 @@ namespace ShootAR
 		/// </summary>
 		public static int ActiveCount { get; private set; }
 
+		private static float? bulletPrefabSpeed = null;
+
 		public static Bullet Create(float speed) {
 			var o = new GameObject(nameof(Bullet)).AddComponent<Bullet>();
 
@@ -21,32 +25,49 @@ namespace ShootAR
 			o.GetComponent<SphereCollider>().isTrigger = true;
 			o.Speed = speed;
 
-			// When the bullet gets created, it starts moving. This is
-			// a solution that currently works. After Player.Shoot() gets called
-			// the new bullet must be set active. Mind that Bullet.Create() is
-			// intended for test purposes only.
 			o.gameObject.SetActive(false);
 			return o;
 		}
 
-		protected void Start() {
-			transform.rotation = Camera.main.transform.rotation;
-			transform.position = Vector3.zero;
+		protected void Awake() {
+			if (bulletPrefabSpeed is null)
+				bulletPrefabSpeed = Resources.Load<Bullet>(Prefabs.BULLET).Speed;
+		}
+		protected override void Start() {
+			base.Start();
+
+			transform.rotation =
+					Camera.main?.transform.rotation
+					?? new Quaternion(0, 0, 0, 0);
+		}
+
+		private void OnEnable() {
 			GetComponent<Rigidbody>().velocity = transform.forward * Speed;
 
 			Count++;
 			ActiveCount++;
 		}
 
-		protected void OnTriggerEnter(Collider col) {
-			if (col.GetComponent<Enemies.Enemy>() || col.GetComponent<Capsule>()) {
-				Destroy(col.gameObject);
-				Destroy(gameObject);
-			}
+		private void OnDisable() {
+			ActiveCount--;
 		}
 
-		protected void OnDestroy() {
-			ActiveCount--;
+		private void LateUpdate() {
+			if (transform.position.magnitude >= MAX_TRAVEL_DISTANCE) Destroy();
+		}
+
+		protected new void OnTriggerEnter(Collider other) {
+			if (other.GetComponent<Enemies.Enemy>()
+					|| other.GetComponent<Capsule>())
+				Destroy();
+		}
+
+		public override void ResetState() {
+			Speed = (float)bulletPrefabSpeed;
+		}
+
+		public override void Destroy() {
+			ReturnToPool<Bullet>();
 		}
 	}
 }

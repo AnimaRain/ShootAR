@@ -31,21 +31,12 @@ namespace ShootAR.Enemies
 		[SerializeField] protected GameObject explosion;
 		protected AudioSource sfx;
 		[SerializeField] protected static ScoreManager score;
-		/**<summary>
-		 * When true, cancel special effects on death.
-		 * </summary>
-		 * <remarks>
-		 * A use case is to avoid error because explosions are created on quiting.
-		 * </remarks> */
-		private bool noDeathSfx;
 
-		protected void Awake() {
-			ActiveCount++;
-
+		protected virtual void Awake() {
 			if (score == null) score = FindObjectOfType<ScoreManager>();
 		}
 
-		protected virtual void Start() {
+		protected override void Start() {
 			sfx = GetComponent<AudioSource>();
 			/* If the AudioSource component on all enemy prefabs are distinctively
 			 * configured, either through scripts or the inspector, and you are
@@ -57,16 +48,17 @@ namespace ShootAR.Enemies
 			sfx.maxDistance = 10f;
 		}
 
-		protected virtual void OnApplicationQuit() {
-			noDeathSfx = true;
+		protected virtual void OnEnable() {
+			ActiveCount++;
 		}
 
-		protected virtual void OnDestroy() {
-			if (gameState != null && !gameState.GameOver) {
-				score?.AddScore(PointsValue);
-				if (explosion != null && !noDeathSfx)
-					Instantiate(explosion, transform.position, transform.rotation);
-			}
+		public override void Destroy() {
+			score?.AddScore(PointsValue);
+			if (explosion != null)
+				Instantiate(explosion, transform.position, transform.rotation);
+		}
+
+		protected virtual void OnDisable() {
 			ActiveCount--;
 		}
 

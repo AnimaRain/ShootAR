@@ -30,7 +30,8 @@ internal class MovementBehaviourTests
 	}
 
 	// TODO: Fix this test
-	/*[UnityTest]
+	[UnityTest]
+	[Ignore("Needs to be fixed.")]
 	public IEnumerator OrbitCalculationValid()
 	{
 		//Arrange
@@ -39,7 +40,8 @@ internal class MovementBehaviourTests
 		OrbitTester orbiter = Object.Instantiate(
 			new GameObject("TestObject").AddComponent<OrbitTester>());
 		orbiter.transform.Translate(startingPoint);
-		orbiter.Speed = 100f;
+		/*FIXME: Fix this line
+		 * orbiter.Speed = 100f; */
 		var oCollider = orbiter.gameObject.AddComponent<SphereCollider>();
 		oCollider.radius = 1f;
 
@@ -55,14 +57,15 @@ internal class MovementBehaviourTests
 			UnityEngine.TestTools.Utils.Vector3EqualityComparer.Instance.Equals(
 			endPoint.transform.position, endPoint.recordedPosition),
 			"Points (5, 5, 5) and (-5,-5,-5) are both part of the orbit path.");
-	}*/
+	}
 
 	// UNDONE: Write the following test
-	/*[UnityTest]
+	[UnityTest]
+	[Ignore("Not yet written")]
 	public IEnumerator FollowOrbitWhileMoving()
 	{
 		yield return null;
-	}*/
+	}
 
 	[TearDown]
 	public void CleanUp() {

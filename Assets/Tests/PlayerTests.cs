@@ -5,19 +5,18 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-internal class PlayerTest
+internal class PlayerTest : TestBase
 {
 	[UnityTest]
 	public IEnumerator PlayerCanShoot() {
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
-			bullet: Bullet.Create(50f),
 			ammo: 10);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(50f), 1);
 
 		yield return null;
 		Bullet shotBullet = player.Shoot();
-		shotBullet?.gameObject.SetActive(true);
 
 		Assert.IsNotNull(shotBullet,
 			"Player must be able to fire bullets.");
@@ -40,7 +39,7 @@ internal class PlayerTest
 	[UnityTest]
 	public IEnumerator GameOverWhenHealthDepleted() {
 		GameState gameState = GameState.Create(0);
-		Player player = Player.Create(1, null, null, 0, gameState);
+		Player player = Player.Create(1, null, 0, gameState);
 
 		player.Health = 0;
 		yield return null;
@@ -81,12 +80,11 @@ internal class PlayerTest
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject().AddComponent<Camera>(),
-			bullet: Bullet.Create(1),
 			ammo: initialAmmoAmount);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(1), 1);
 
 		yield return null;
 		var bullet = player.Shoot();
-		bullet.gameObject.SetActive(true);
 
 		Assert.Less(player.Ammo, initialAmmoAmount,
 			"After shooting, player should have one less bullet.");
@@ -97,8 +95,8 @@ internal class PlayerTest
 		Player player = Player.Create(
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
-			bullet: Bullet.Create(0),
 			ammo: 0);
+		Spawnable.Pool<Bullet>.Populate(Bullet.Create(0f));
 
 		yield return null;
 		var firedBullet = player.Shoot();
@@ -123,12 +121,20 @@ internal class PlayerTest
 			"Second hit must not damage player, since there is a cooldown.");
 	}
 
-	[TearDown]
-	public void ClearTestEnvironment() {
-		GameObject[] objects = Object.FindObjectsOfType<GameObject>();
+	[UnityTest]
+	public IEnumerator BulletsAreDestroyedAfterTravelingTooFar() {
+		Bullet prefab = Bullet.Create(100f);
+		Spawnable.Pool<Bullet>.Populate(prefab, 1);
+		Object.Destroy(prefab.gameObject);
 
-		foreach (GameObject o in objects) {
-			Object.Destroy(o.gameObject);
-		}
+		Bullet shotBullet = Spawnable.Pool<Bullet>.RequestObject();
+		shotBullet.gameObject.SetActive(true);
+		yield return new WaitUntil(
+						() => shotBullet.transform.position.magnitude
+								>= Bullet.MAX_TRAVEL_DISTANCE);
+		yield return new WaitForFixedUpdate();
+
+		Assert.AreEqual(1, Spawnable.Pool<Bullet>.Count,
+				"Bullet has not returned to the pool.");
 	}
 }
