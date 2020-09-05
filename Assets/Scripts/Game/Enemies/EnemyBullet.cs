@@ -8,7 +8,7 @@ namespace ShootAR.Enemies
 		private const int DEFAULT_POINTS = 5;
 
 		private static float? prefabSpeed = null;
-		private static int? prefabPointValue = null;
+		private static ulong? prefabPointValue = null;
 
 		protected override void Awake() {
 			base.Awake();
@@ -32,7 +32,7 @@ namespace ShootAR.Enemies
 		public override void ResetState() {
 			base.ResetState();
 			Speed = (float)prefabSpeed;
-			PointsValue = (int)prefabPointValue;
+			PointsValue = (ulong)prefabPointValue;
 		}
 
 		public override void Attack(){

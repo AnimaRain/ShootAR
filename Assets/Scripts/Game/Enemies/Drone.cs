@@ -21,13 +21,13 @@ namespace ShootAR.Enemies
 		protected float nextMove;
 
 		protected static float? prefabSpeed = null;
-		protected static int? prefabPoints = null,
-							 prefabDamage = null;
+		protected static ulong? prefabPoints = null;
+		protected static int? prefabDamage = null;
 
 		public override void ResetState() {
 			base.ResetState();
 			Speed = (float)prefabSpeed;
-			PointsValue = (int)prefabPoints;
+			PointsValue = (ulong)prefabPoints;
 			Damage = (int)prefabDamage;
 		}
 

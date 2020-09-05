@@ -22,7 +22,7 @@ namespace ShootAR.TestTools
 		public static TestEnemy Create(
 				float speed = default(float),
 				int damage = default(int),
-				int pointsValue = default(int),
+				ulong pointsValue = default(int),
 				float x = 0, float y = 0, float z = 0) {
 			var o = new GameObject(nameof(TestEnemy)).AddComponent<TestEnemy>();
 			o.Speed = speed;
@@ -91,7 +91,7 @@ namespace ShootAR.TestTools
 				Orbit orbit,
 				float speed = default,
 				int damage = default,
-				int pointsValue = default) {
+				ulong pointsValue = default) {
 			var o = new GameObject(nameof(OrbitTester)).AddComponent<OrbitTester>();
 
 			o.Orbit = orbit;

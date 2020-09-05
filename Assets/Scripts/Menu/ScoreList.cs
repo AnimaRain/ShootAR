@@ -7,7 +7,7 @@ namespace ShootAR {
 		public const int POSITIONS = 10;
 
 		private string[] name = new string[POSITIONS];
-		private long[] score = new long[POSITIONS];
+		private ulong[] score = new ulong[POSITIONS];
 
 		/// <summary>Add score to appropriate position</summary>
 		/// <param name="score">score to add to list</param>
@@ -16,7 +16,7 @@ namespace ShootAR {
 		/// True if added to list.
 		/// False if <paramref name="score"/> lower than all scores.
 		/// </returns>
-		public bool AddScore(string name, long score) {
+		public bool AddScore(string name, ulong score) {
 			// Immediately return if score lower than all scores.
 			if (score < this.score[POSITIONS - 1]) return false;
 
@@ -45,7 +45,7 @@ namespace ShootAR {
 		/// </summary>
 		/// <param name="position">The position of the score</param>
 		/// <returns>A tuple with the score's information</returns>
-		public (string, long) Get(int position) => (name[position], score[position]);
+		public (string, ulong) Get(int position) => (name[position], score[position]);
 
 		/// <summary>Load high-score table from file.</summary>
 		public static ScoreList LoadScores() {
@@ -58,7 +58,7 @@ namespace ShootAR {
 				for (int i = 0; i < 10; i++) {
 					scores.AddScore(
 						reader.ReadString(),
-						reader.ReadInt64()
+						reader.ReadUInt64()
 					);
 				}
 			}
@@ -66,10 +66,10 @@ namespace ShootAR {
 			return scores;
 		}
 
-		public bool Exists(long score) {
+		public bool Exists(ulong score) {
 			bool answer = false;
 
-			foreach (long s in this.score) if (s == score) {
+			foreach (ulong s in this.score) if (s == score) {
 				answer = true;
 				break;
 			}

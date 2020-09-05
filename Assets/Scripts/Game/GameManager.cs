@@ -242,7 +242,7 @@ namespace ShootAR
 			/* Player should always have enough ammo to play the next
 			 * round. If they already have more than enough, they get
 			 * points. */
-			int difference = player.Ammo - totalEnemies;
+			ulong difference = (ulong)(player.Ammo - totalEnemies);
 			if (difference > 0)
 				scoreManager.AddScore(difference * 10);
 			else if (difference < 0) {
@@ -250,10 +250,10 @@ namespace ShootAR
 				 * so they are allowed to miss shots. */
 				const float bonusBullets = 0.55f;
 				if (gameState.Level == 1) {
-					difference = (int)(difference * bonusBullets);
+					difference *=  (ulong)bonusBullets;
 				}
 
-				player.Ammo += -difference;
+				player.Ammo += (difference < int.MaxValue) ? -(int)difference : int.MaxValue;
 			}
 
 			gameState.RoundWon = false;
@@ -267,7 +267,7 @@ namespace ShootAR
 			// Be merciful. Player deserves some points for the unused capsules.
 			if (gameState.RoundWon) {
 				Capsule[] capsules = FindObjectsOfType<Capsule>();
-				scoreManager?.AddScore(capsules.Length * CAPSULE_BONUS_POINTS);
+				scoreManager?.AddScore((ulong)(capsules.Length * CAPSULE_BONUS_POINTS));
 				foreach (var c in capsules) c.Destroy();
 			}
 
@@ -315,7 +315,7 @@ namespace ShootAR
 							Configuration.Instance.Highscores.OpenWrite()
 						)) {
 							for (int i = 0; i < ScoreList.POSITIONS; i++) {
-								(string, long) score = highscores.Get(i);
+								(string, ulong) score = highscores.Get(i);
 								writer.Write(score.Item1 ?? ""); // write name
 								writer.Write(score.Item2); // write points
 							}
