@@ -13,7 +13,7 @@ internal class PlayerTest : TestBase
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
 			ammo: 10);
-		Spawnable.Pool<Bullet>.Populate(Bullet.Create(50f), 1);
+		Spawnable.Pool<Bullet>.Instance.Populate(Bullet.Create(50f), 1);
 
 		yield return null;
 		Bullet shotBullet = player.Shoot();
@@ -81,7 +81,7 @@ internal class PlayerTest : TestBase
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject().AddComponent<Camera>(),
 			ammo: initialAmmoAmount);
-		Spawnable.Pool<Bullet>.Populate(Bullet.Create(1), 1);
+		Spawnable.Pool<Bullet>.Instance.Populate(Bullet.Create(1), 1);
 
 		yield return null;
 		var bullet = player.Shoot();
@@ -96,7 +96,7 @@ internal class PlayerTest : TestBase
 			health: Player.MAXIMUM_HEALTH,
 			camera: new GameObject("Camera").AddComponent<Camera>(),
 			ammo: 0);
-		Spawnable.Pool<Bullet>.Populate(Bullet.Create(0f));
+		Spawnable.Pool<Bullet>.Instance.Populate(Bullet.Create(0f));
 
 		yield return null;
 		var firedBullet = player.Shoot();
@@ -124,17 +124,17 @@ internal class PlayerTest : TestBase
 	[UnityTest]
 	public IEnumerator BulletsAreDestroyedAfterTravelingTooFar() {
 		Bullet prefab = Bullet.Create(100f);
-		Spawnable.Pool<Bullet>.Populate(prefab, 1);
+		Spawnable.Pool<Bullet>.Instance.Populate(prefab, 1);
 		Object.Destroy(prefab.gameObject);
 
-		Bullet shotBullet = Spawnable.Pool<Bullet>.RequestObject();
+		Bullet shotBullet = Spawnable.Pool<Bullet>.Instance.RequestObject();
 		shotBullet.gameObject.SetActive(true);
 		yield return new WaitUntil(
 						() => shotBullet.transform.position.magnitude
 								>= Bullet.MAX_TRAVEL_DISTANCE);
 		yield return new WaitForFixedUpdate();
 
-		Assert.AreEqual(1, Spawnable.Pool<Bullet>.Count,
+		Assert.AreEqual(1, Spawnable.Pool<Bullet>.Instance.Count,
 				"Bullet has not returned to the pool.");
 	}
 }

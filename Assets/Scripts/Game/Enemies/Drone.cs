@@ -107,8 +107,8 @@ namespace ShootAR.Enemies
 		public override void Attack() => Shoot();
 
 		protected override void Shoot() {
-			EnemyBullet bullet = Pool<EnemyBullet>.RequestObject();
-			if (bullet is null) return;
+			EnemyBullet bullet = Pool<EnemyBullet>.Instance.RequestObject();
+			if (bullet == null) return;
 
 			bullet.transform.position = bulletSpawnPoint.position;
 			bullet.transform.rotation = bulletSpawnPoint.rotation;

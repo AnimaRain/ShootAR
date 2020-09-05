@@ -57,6 +57,7 @@ namespace ShootAR
 					uiCanvas: new GameObject("UI"),
 					pauseCanvas: new GameObject("PauseScreen"),
 					bulletCount: new GameObject("Ammo").AddComponent<Text>(),
+					bulletPlus: new GameObject("Ammo Reward").AddComponent<Text>(),
 					messageOnScreen: new GameObject("Message").AddComponent<Text>(),
 					score: new GameObject("Score").AddComponent<Text>(),
 					roundIndex: new GameObject("Level").AddComponent<Text>(),
@@ -134,18 +135,6 @@ namespace ShootAR
 			fireButton?
 				.onClick.AddListener(() => {
 					if (gameState.GameOver) {
-						/* Because pools are static they require to be manually
-						 * emptied when the scene is reloaded or else bugs will
-						 * occur. Not all pools are required to be emptied, but
-						 * this way it is easier to manage.*/
-						Spawnable.Pool<BulletCapsule>.Empty();
-						Spawnable.Pool<ArmorCapsule>.Empty();
-						Spawnable.Pool<HealthCapsule>.Empty();
-						Spawnable.Pool<PowerUpCapsule>.Empty();
-						Spawnable.Pool<Crasher>.Empty();
-						Spawnable.Pool<Drone>.Empty();
-						Spawnable.Pool<Bullet>.Empty();
-
 						SceneManager.LoadScene(1);
 					}
 					else if (gameState.RoundWon) {
@@ -166,7 +155,7 @@ namespace ShootAR
 			gameState.Level = Configuration.StartingLevel - 1;
 			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
 													 * Inspector */
-			Spawnable.Pool<Bullet>.Populate(10);
+			Spawnable.Pool<Bullet>.Instance.Populate(10);
 			AdvanceLevel();
 
 			GC.Collect();
@@ -215,7 +204,6 @@ namespace ShootAR
 			 * restarted when the scene loads again; else, after the
 			 * scene reloads, the feedback will be blank. */
 			cam.Stop();
-			gameState.GameOver = true;
 			ClearScene();
 		}
 
@@ -295,6 +283,13 @@ namespace ShootAR
 				ui.MessageOnScreen.text =
 					$"Game Over\n\n" +
 					$"Rounds Survived : {survivedRounds}";
+			}
+
+			// Stop all spawners from spawning
+			foreach (List<Spawner> spawners in spawnerGroups.Values) {
+				spawners.ForEach(spawner => {
+					spawner.StopSpawning();
+				});
 			}
 
 			ClearScene();

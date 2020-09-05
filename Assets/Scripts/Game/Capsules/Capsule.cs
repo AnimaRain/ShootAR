@@ -8,6 +8,8 @@ namespace ShootAR
 	{
 		protected const float DEFAULT_SPEED = 15F;
 
+		public bool IsMoving { get; protected set; } = true;
+
 		private Vector3 rotation;
 		private AudioSource pickUpSfx;
 
@@ -41,8 +43,11 @@ namespace ShootAR
 		private void Update() {
 			//rotation
 			transform.Rotate(rotation * Time.deltaTime);
-			//orbit
-			transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
+
+			if (IsMoving) {
+				//orbit
+				transform.RotateAround(Vector3.zero, Vector3.up, Speed * Time.deltaTime);
+			}
 		}
 
 		public override void Destroy() {
@@ -51,5 +56,9 @@ namespace ShootAR
 		}
 
 		protected abstract void GivePowerUp();
+
+		public void StartMoving() => IsMoving = true;
+
+		public void StopMoving() => IsMoving = false;
 	}
 }

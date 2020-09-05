@@ -8,6 +8,7 @@ namespace ShootAR
 		[SerializeField] private GameObject uiCanvas;
 		[SerializeField] private GameObject pauseCanvas;
 		[SerializeField] private Text bulletCount;
+		[SerializeField] private Text bulletPlus;
 		[SerializeField] private Text messageOnScreen;
 		[SerializeField] private Text score;
 		[SerializeField] private Text roundIndex;
@@ -21,6 +22,11 @@ namespace ShootAR
 		public Text BulletCount {
 			get { return bulletCount; }
 			set { bulletCount = value; }
+		}
+
+		public Text BulletPlus {
+			get { return bulletPlus; }
+			set { bulletPlus = value; }
 		}
 
 		public Text MessageOnScreen {
@@ -40,7 +46,8 @@ namespace ShootAR
 
 		public static UIManager Create(
 				GameObject uiCanvas, GameObject pauseCanvas,
-				Text bulletCount, Text messageOnScreen,
+				Text bulletCount, Text bulletPlus,
+				Text messageOnScreen,
 				Text score, Text roundIndex,
 				AudioSource sfx, AudioClip pauseSfx,
 				GameState gameState) {
@@ -49,6 +56,7 @@ namespace ShootAR
 			o.uiCanvas = uiCanvas;
 			o.pauseCanvas = pauseCanvas;
 			o.bulletCount = bulletCount;
+			o.bulletPlus = bulletPlus;
 			o.MessageOnScreen = messageOnScreen;
 			o.Score = score;
 			o.RoundIndex = roundIndex;

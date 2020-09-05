@@ -152,15 +152,15 @@ namespace ShootAR.TestTools
 				Object.Destroy(o.gameObject);
 			}
 
-			Spawnable.Pool<BulletCapsule>.Empty();
-			Spawnable.Pool<ArmorCapsule>.Empty();
-			Spawnable.Pool<HealthCapsule>.Empty();
-			Spawnable.Pool<PowerUpCapsule>.Empty();
-			Spawnable.Pool<Bullet>.Empty();
-			Spawnable.Pool<EnemyBullet>.Empty();
-			Spawnable.Pool<Crasher>.Empty();
-			Spawnable.Pool<Drone>.Empty();
-			Spawnable.Pool<TestEnemy>.Empty();
+			Spawnable.Pool<BulletCapsule>.Instance.Empty();
+			Spawnable.Pool<ArmorCapsule>.Instance.Empty();
+			Spawnable.Pool<HealthCapsule>.Instance.Empty();
+			Spawnable.Pool<PowerUpCapsule>.Instance.Empty();
+			Spawnable.Pool<Bullet>.Instance.Empty();
+			Spawnable.Pool<EnemyBullet>.Instance.Empty();
+			Spawnable.Pool<Crasher>.Instance.Empty();
+			Spawnable.Pool<Drone>.Instance.Empty();
+			Spawnable.Pool<TestEnemy>.Instance.Empty();
 		}
 	}
 

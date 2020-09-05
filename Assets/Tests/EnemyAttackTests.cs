@@ -29,7 +29,7 @@ public class EnemyAttackTests : TestBase {
 			new Vector3(10f, 10f, 5f), new Quaternion()
 		);
 
-		Spawnable.Pool<EnemyBullet>.Populate(
+		Spawnable.Pool<EnemyBullet>.Instance.Populate(
 			Resources.Load<EnemyBullet>("Prefabs/Enemies/EnemyBullet"),
 			lot: 2
 		);
