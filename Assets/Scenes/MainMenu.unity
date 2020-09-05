@@ -361,7 +361,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -129.98, y: -5.909973}
+  m_AnchoredPosition: {x: -118.8, y: -5.909973}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &45859777
@@ -715,7 +715,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -70.8, y: -5.909973}
+  m_AnchoredPosition: {x: -63.48, y: -5.909973}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &99348647
@@ -730,8 +730,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5319330c6a516d956ab9c3b8f5b992f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicOffIcon: {fileID: 2100000, guid: 61dc8dadc160ab745ade34d690eaf521, type: 2}
-  musicOnIcon: {fileID: 2100000, guid: 0ec6a9ce78d6c134d9e9bd51d9fa78e4, type: 2}
+  musicOffIcon: {fileID: 2100000, guid: a7bddc0aa37a41fdfa840e7aaee363e6, type: 2}
+  musicOnIcon: {fileID: 2100000, guid: b0eb8f1b64a43f74fa414c2a16d243dc, type: 2}
 --- !u!114 &99348648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,7 +798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 28e994b1d19a6c140a6cdb4d8471cf48, type: 2}
+  m_Material: {fileID: 2100000, guid: b0eb8f1b64a43f74fa414c2a16d243dc, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -5098,7 +5098,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainPanel: {fileID: 1753912203}
-  subPanel: {fileID: 0}
 --- !u!1 &1896308706
 GameObject:
   m_ObjectHideFlags: 0
