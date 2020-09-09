@@ -315,7 +315,7 @@ namespace ShootAR
 							Configuration.Instance.Highscores.OpenWrite()
 						)) {
 							for (int i = 0; i < ScoreList.POSITIONS; i++) {
-								(string, ulong) score = highscores.Get(i);
+								(string, ulong) score = highscores[i];
 								writer.Write(score.Item1 ?? ""); // write name
 								writer.Write(score.Item2); // write points
 							}

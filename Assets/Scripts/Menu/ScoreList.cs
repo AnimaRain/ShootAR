@@ -45,7 +45,7 @@ namespace ShootAR {
 		/// </summary>
 		/// <param name="position">The position of the score</param>
 		/// <returns>A tuple with the score's information</returns>
-		public (string, ulong) Get(int position) => (name[position], score[position]);
+		public (string, ulong) this[int position] => (name[position], score[position]);
 
 		/// <summary>Load high-score table from file.</summary>
 		public static ScoreList LoadScores() {
