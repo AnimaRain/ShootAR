@@ -32,6 +32,9 @@ namespace ShootAR
 		///<summary>If true, there is no cool-down between shots.</summary>
 		public bool MachineGun { get; set; }
 
+		///<summary>Whether bullets keep travelling after colliding.</summary>
+		public bool PiercingBullets { get; set; }
+
 		[SerializeField] private GameState gameState;
 		private AudioSource audioSource;
 #pragma warning disable CS0649

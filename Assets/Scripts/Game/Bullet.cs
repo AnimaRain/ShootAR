@@ -18,6 +18,8 @@ namespace ShootAR
 
 		private static float? bulletPrefabSpeed = null;
 
+		private static Player player;
+
 		public static Bullet Create(float speed) {
 			var o = new GameObject(nameof(Bullet)).AddComponent<Bullet>();
 
@@ -33,10 +35,13 @@ namespace ShootAR
 			if (bulletPrefabSpeed is null)
 				bulletPrefabSpeed = Resources.Load<Bullet>(Prefabs.BULLET).Speed;
 		}
+
 		protected void Start() {
 			transform.rotation =
 					Camera.main?.transform.rotation
 					?? new Quaternion(0, 0, 0, 0);
+
+			if (player == null) player = FindObjectOfType<Player>();
 		}
 
 		private void OnEnable() {
@@ -59,7 +64,9 @@ namespace ShootAR
 			if ((o = other.GetComponent<Enemies.Enemy>()) != null
 			|| (o = other.GetComponent<Capsule>()) != null) {
 				o.Destroy();
-				Destroy();
+
+				// A bullets dies on collision; an upgraded bullet continues on.
+				if (!player.PiercingBullets) Destroy();
 			}
 		}
 
