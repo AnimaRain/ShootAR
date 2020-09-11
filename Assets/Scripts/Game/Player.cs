@@ -29,6 +29,9 @@ namespace ShootAR
 		private float nextFire;
 		private float nextDamage;
 
+		///<summary>If true, there is no cool-down between shots.</summary>
+		public bool MachineGun { get; set; }
+
 		[SerializeField] private GameState gameState;
 		private AudioSource audioSource;
 #pragma warning disable CS0649
@@ -127,7 +130,7 @@ namespace ShootAR
 		/// a reference to the bullet fired or null if conditions are not met
 		/// </returns>
 		public Bullet Shoot() {
-			if (CanShoot && Ammo > 0 && Time.time >= nextFire) {
+			if (CanShoot && Ammo > 0 && (MachineGun || Time.time >= nextFire)) {
 				Bullet bullet = Spawnable.Pool<Bullet>.Instance.RequestObject();
 				if (bullet is null) return null;
 
