@@ -12,6 +12,9 @@ namespace ShootAR
 		private const float SHOT_COOLDOWN = 0.50f;
 		private const float DAMAGE_COOLDOWN = 1f;
 
+		///<summary>How much time upgrades last.</summary>
+		private const float UPGRADE_DURATION = 5f;
+
 		/// <summary>
 		/// For how many seconds the amount of restored
 		/// bullets will float above the counter.
@@ -102,6 +105,8 @@ namespace ShootAR
 		public bool HasArmor { get; set; } = false;
 		public bool CanShoot { get; set; } = true;
 
+		private float machineGunTimer, piercingBulletsTimer;
+
 		public static Player Create(
 			int health = MAXIMUM_HEALTH, Camera camera = null,
 			int ammo = 0, GameState gameState = null) {
@@ -156,6 +161,11 @@ namespace ShootAR
 			UpdateHealthUI();
 		}
 
+		public void Update() {
+			if (machineGunTimer > 0f) machineGunTimer -= Time.deltaTime;
+			if (piercingBulletsTimer > 0f) piercingBulletsTimer -= Time.deltaTime;
+		}
+
 		/// <summary>
 		/// Player's health is reduced by <paramref name="damage"/>.
 		/// If health vanishes, GameOver state is set.
@@ -184,8 +194,6 @@ namespace ShootAR
 			MachineGun,
 			PiercingBullets
 		}
-
-		private float machineGunTimer, piercingBulletsTimer;
 
 		public void PowerUp(WeaponUpgrade upgrade) {
 			switch(upgrade) {
