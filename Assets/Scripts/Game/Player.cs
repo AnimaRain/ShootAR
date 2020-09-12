@@ -179,5 +179,27 @@ namespace ShootAR
 				Destroy(h.gameObject);
 			}
 		}
+
+		public enum WeaponUpgrade {
+			MachineGun,
+			PiercingBullets
+		}
+
+		private float machineGunTimer, piercingBulletsTimer;
+
+		public void PowerUp(WeaponUpgrade upgrade) {
+			switch(upgrade) {
+
+			case WeaponUpgrade.MachineGun:
+				MachineGun = true;
+				machineGunTimer = UPGRADE_DURATION;
+				break;
+
+			case WeaponUpgrade.PiercingBullets:
+				PiercingBullets = true;
+				piercingBulletsTimer = UPGRADE_DURATION;
+				break;
+			}
+		}
 	}
 }

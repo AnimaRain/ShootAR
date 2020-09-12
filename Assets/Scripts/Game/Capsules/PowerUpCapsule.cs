@@ -12,7 +12,12 @@ namespace ShootAR
 		}
 
 		protected override void GivePowerUp() {
-			throw new System.NotImplementedException();
+			player.PowerUp(
+				(Player.WeaponUpgrade)Random.Range(
+					0,
+					System.Enum.GetNames(typeof(Player.WeaponUpgrade)).Length
+				)
+			);
 		}
 
 		public override void Destroy() {
