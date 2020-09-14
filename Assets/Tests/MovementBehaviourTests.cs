@@ -32,8 +32,7 @@ internal class MovementBehaviourTests
 	// TODO: Fix this test
 	[UnityTest]
 	[Ignore("Needs to be fixed.")]
-	public IEnumerator OrbitCalculationValid()
-	{
+	public IEnumerator OrbitCalculationValid() {
 		//Arrange
 		Vector3 startingPoint = new Vector3(5f, 5f, 5f);
 
@@ -62,8 +61,7 @@ internal class MovementBehaviourTests
 	// UNDONE: Write the following test
 	[UnityTest]
 	[Ignore("Not yet written")]
-	public IEnumerator FollowOrbitWhileMoving()
-	{
+	public IEnumerator FollowOrbitWhileMoving() {
 		yield return null;
 	}
 
