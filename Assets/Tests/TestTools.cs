@@ -22,7 +22,7 @@ namespace ShootAR.TestTools
 		public static TestEnemy Create(
 				float speed = default(float),
 				int damage = default(int),
-				int pointsValue = default(int),
+				ulong pointsValue = default(int),
 				float x = 0, float y = 0, float z = 0) {
 			var o = new GameObject(nameof(TestEnemy)).AddComponent<TestEnemy>();
 			o.Speed = speed;
@@ -91,7 +91,7 @@ namespace ShootAR.TestTools
 				Orbit orbit,
 				float speed = default,
 				int damage = default,
-				int pointsValue = default) {
+				ulong pointsValue = default) {
 			var o = new GameObject(nameof(OrbitTester)).AddComponent<OrbitTester>();
 
 			o.Orbit = orbit;
@@ -167,16 +167,48 @@ namespace ShootAR.TestTools
 	public class PatternsTestBase : TestBase
 	{
 		protected const string PATTERN_FILE = "patternstestfile.xml";
+
 		///<summary>pattern file's full path</summary>
 		protected string file;
 
+		protected FileInfo patternNames;
+		protected FileInfo patternNamesBackup;
+
 		[SetUp]
 		public void FileSetUp() {
-			file = Path.Combine(Application.persistentDataPath, PATTERN_FILE);
+			file = Path.Combine(
+				Application.persistentDataPath,
+				Configuration.PATTERNS_DIR,
+				PATTERN_FILE
+			);
+
+			/* The file's name need to be included in a spesific file in order
+			 * to be able to be read later. */
+			patternNames = new FileInfo(Path.Combine(
+				Application.persistentDataPath, Configuration.PATTERN_NAMES));
+
+			// Back up that special file, if it already exists, to be restored later.
+			if (patternNames.Exists) {
+				patternNamesBackup = patternNames.CopyTo($"{patternNames.FullName}-{Random.value}~");
+
+				patternNames.Delete();
+			}
+
+			// Write file's name into the special file.
+			using (BinaryWriter writer = new BinaryWriter(patternNames.OpenWrite())) {
+				writer.Write(1); // one string in file
+				writer.Write(PATTERN_FILE.TrimEnd(".xml".ToCharArray()));
+			}
 		}
 
 		[TearDown]
 		public void DeletePatternFile() {
+			if (patternNamesBackup != null && patternNamesBackup.Exists) {
+				patternNamesBackup.CopyTo(patternNames.FullName, true);
+				patternNamesBackup.Delete();
+			}
+			else patternNames.Delete();
+
 			if (File.Exists(file))
 				File.Delete(file);
 

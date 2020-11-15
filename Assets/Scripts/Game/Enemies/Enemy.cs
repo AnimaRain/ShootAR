@@ -9,11 +9,11 @@ namespace ShootAR.Enemies
 	[RequireComponent(typeof(AudioSource))]
 	public abstract class Enemy : Spawnable
 	{
-		[SerializeField] private int pointsValue;
+		[SerializeField] private ulong pointsValue;
 		/// <summary>
 		/// The amount of points added to the player's score when destroyed.
 		/// </summary>
-		public int PointsValue {
+		public ulong PointsValue {
 			get { return pointsValue; }
 			protected set { pointsValue = value; }
 		}

@@ -6,8 +6,8 @@ namespace ShootAR.Enemies
 	public class Crasher : Boopboop
 	{
 		private static float? prefabSpeed = null;
-		private static int? prefabPoints = null,
-		                    prefabDamage = null;
+		private static ulong? prefabPoints = null;
+		private static int? prefabDamage = null;
 
 		protected override void Awake() {
 			base.Awake();
@@ -25,7 +25,7 @@ namespace ShootAR.Enemies
 		public override void ResetState() {
 			base.ResetState();
 			Speed = (float)prefabSpeed;
-			PointsValue = (int)prefabPoints;
+			PointsValue = (ulong)prefabPoints;
 			Damage = (int)prefabDamage;
 		}
 

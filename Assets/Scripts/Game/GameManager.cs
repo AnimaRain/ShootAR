@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 namespace ShootAR
 {
@@ -14,10 +15,7 @@ namespace ShootAR
 	{
 		private const int   CAPSULE_BONUS_POINTS = 50,
 							ROUND_AMMO_REWARD = 6;
-		private const string SPAWN_PATTERN_FILE_NAME = "spawnpatterns",
-							 SPAWN_PATTERN_FILE = SPAWN_PATTERN_FILE_NAME + ".xml";
 
-		private string spawnPatternUri;
 		[SerializeField] private AudioClip victoryMusic;
 		private Dictionary<Type, List<Spawner>> spawnerGroups;
 		[SerializeField] private ScoreManager scoreManager;
@@ -31,9 +29,10 @@ namespace ShootAR
 		[SerializeField] private Player player;
 		private Stack<Spawner> stashedSpawners;
 
+		private bool readyToRestart = false;
+
 		public static GameManager Create(
 			Player player, GameState gameState,
-			string spawnPatternUri,
 			ScoreManager scoreManager = null,
 			AudioClip victoryMusic = null, AudioSource sfx = null,
 			Button fireButton = null, RawImage background = null,
@@ -43,7 +42,6 @@ namespace ShootAR
 
 			o.player = player;
 			o.gameState = gameState;
-			o.spawnPatternUri = spawnPatternUri;
 			o.scoreManager = scoreManager;
 			o.victoryMusic = victoryMusic;
 			o.audioPlayer = sfx;
@@ -69,8 +67,7 @@ namespace ShootAR
 		}
 
 		private void Awake() {
-#if UNITY_ANDROID
-#if !UNITY_EDITOR
+#if UNITY_ANDROID && !UNITY_EDITOR
 			if (!SystemInfo.supportsGyroscope) {
 				exitTap = true;
 				const string error = "This device does not have Gyroscope";
@@ -91,15 +88,6 @@ namespace ShootAR
 			}
 #endif
 
-			if (spawnPatternUri is null || spawnPatternUri == "") {
-				spawnPatternUri = Path.Combine(
-						Application.persistentDataPath, SPAWN_PATTERN_FILE);
-				if (!File.Exists(spawnPatternUri)) {
-					LocalFiles.CopyResourceToPersistentData(
-							SPAWN_PATTERN_FILE_NAME, SPAWN_PATTERN_FILE);
-				}
-			}
-#endif
 			/* Do not use elif here. While testing
 			 * using Unity Remote 5, it does not use
 			 * the camera on the phone and it has to
@@ -135,7 +123,9 @@ namespace ShootAR
 			fireButton?
 				.onClick.AddListener(() => {
 					if (gameState.GameOver) {
-						SceneManager.LoadScene(1);
+						if (readyToRestart) {
+							SceneManager.LoadScene(1);
+						}
 					}
 					else if (gameState.RoundWon) {
 						ui.MessageOnScreen.text = "";
@@ -150,12 +140,12 @@ namespace ShootAR
 			stashedSpawners = new Stack<Spawner>(2);
 			spawnerGroups = new Dictionary<Type, List<Spawner>>();
 
-			/* The round index is assigned an initial value diminished by 1,
-			 * since AdvanceLevel will add it back. */
-			gameState.Level = Configuration.StartingLevel - 1;
-			player.Ammo += gameState.Level * 15;    /* initial Ammo value set in
-													 * Inspector */
+			gameState.Level = 0;
+
 			Spawnable.Pool<Bullet>.Instance.Populate(10);
+
+			AudioListener.volume = Configuration.Instance.SoundMuted ? 0f : Configuration.Instance.Volume;
+
 			AdvanceLevel();
 
 			GC.Collect();
@@ -208,9 +198,17 @@ namespace ShootAR
 		}
 
 		private void OnApplicationQuit() {
+			if (Configuration.Instance.UnsavedChanges)
+				Configuration.Instance.SaveSettings();
+
 #if UNITY_EDITOR
 			UnityEditor.EditorApplication.isPlaying = false;
 #endif
+		}
+
+		public void OnApplicationPause() {
+			if (Configuration.Instance.UnsavedChanges)
+				Configuration.Instance.SaveSettings();
 		}
 
 
@@ -225,28 +223,37 @@ namespace ShootAR
 
 			// Configuring spawners
 			Stack<Spawner.SpawnConfig>[] patterns
-				= Spawner.ParseSpawnPattern(spawnPatternUri);
+				= Spawner.ParseSpawnPattern(Configuration.Instance.SpawnPatternFile);
 
 			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
 
+			int totalEnemies = 0;
 			foreach (var group in spawnerGroups) {
 				group.Value.ForEach(spawner => {
 					spawner.StartSpawning();
 
-					/* Player should always have enough ammo to play the next
-					 * round. If they already have more than enough, they get
-					 * points. */
-					int totalEnemies = 0;
 					if (group.Key.IsSubclassOf(typeof(Enemy))) {
 						totalEnemies += spawner.SpawnLimit;
 
-						int difference = player.Ammo - totalEnemies;
-						if (difference > 0)
-							scoreManager.AddScore(difference * 10);
-						else if (difference < 0)
-							player.Ammo += -difference;
 					}
 				});
+			}
+
+			/* Player should always have enough ammo to play the next
+			 * round. If they already have more than enough, they get
+			 * points. */
+			ulong difference = (ulong)(player.Ammo - totalEnemies);
+			if (difference > 0)
+				scoreManager.AddScore(difference * 10);
+			else if (difference < 0) {
+				/* If it is before the 1st round, give player more bullets
+				 * so they are allowed to miss shots. */
+				const float bonusBullets = 0.55f;
+				if (gameState.Level == 1) {
+					difference *=  (ulong)bonusBullets;
+				}
+
+				player.Ammo += (difference < int.MaxValue) ? -(int)difference : int.MaxValue;
 			}
 
 			gameState.RoundWon = false;
@@ -260,7 +267,7 @@ namespace ShootAR
 			// Be merciful. Player deserves some points for the unused capsules.
 			if (gameState.RoundWon) {
 				Capsule[] capsules = FindObjectsOfType<Capsule>();
-				scoreManager?.AddScore(capsules.Length * CAPSULE_BONUS_POINTS);
+				scoreManager?.AddScore((ulong)(capsules.Length * CAPSULE_BONUS_POINTS));
 				foreach (var c in capsules) c.Destroy();
 			}
 
@@ -279,10 +286,9 @@ namespace ShootAR
 
 		private void OnGameOver() {
 			if (ui != null) {
-				var survivedRounds = gameState.Level - Configuration.StartingLevel;
 				ui.MessageOnScreen.text =
 					$"Game Over\n\n" +
-					$"Rounds Survived : {survivedRounds}";
+					$"Rounds Survived : {gameState.Level}";
 			}
 
 			// Stop all spawners from spawning
@@ -290,6 +296,34 @@ namespace ShootAR
 				spawners.ForEach(spawner => {
 					spawner.StopSpawning();
 				});
+			}
+
+			// Check for highscore
+			ScoreList highscores = ScoreList.LoadScores();
+			if (!highscores.Exists(scoreManager.Score)) {
+				// make sure the game does not restart before recording the score
+				readyToRestart = false;
+
+				/* Player is asked for their name asynchronusly.
+				 * When the name has been submitted, the score is added to the
+				 * table and the table is saved to file. */
+				StartCoroutine(
+					ui.AskName(name => {
+						highscores.AddScore(name, scoreManager.Score);
+
+						using (BinaryWriter writer = new BinaryWriter(
+							Configuration.Instance.Highscores.OpenWrite()
+						)) {
+							for (int i = 0; i < ScoreList.POSITIONS; i++) {
+								(string, ulong) score = highscores[i];
+								writer.Write(score.Item1 ?? ""); // write name
+								writer.Write(score.Item2); // write points
+							}
+						}
+
+						readyToRestart = true;
+					})
+				);
 			}
 
 			ClearScene();

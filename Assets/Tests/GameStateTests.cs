@@ -48,7 +48,7 @@ public class GameStateTests : PatternsTestBase
 
 		File.WriteAllLines(file, data);
 
-		GameManager.Create(player, gameState, file);
+		GameManager.Create(player, gameState);
 
 		yield return new WaitForFixedUpdate();
 		player.Ammo = 1;
@@ -112,7 +112,7 @@ public class GameStateTests : PatternsTestBase
 
 		File.WriteAllLines(file, data);
 
-		GameManager.Create(player, gameState, file);
+		GameManager.Create(player, gameState);
 
 		yield return new WaitForFixedUpdate();
 		yield return new WaitUntil(() => Object.FindObjectOfType<Spawner>()
@@ -158,7 +158,7 @@ public class GameStateTests : PatternsTestBase
 		};
 		File.WriteAllLines(file, data);
 
-		GameManager gameManager = GameManager.Create(player, gameState, file);
+		GameManager gameManager = GameManager.Create(player, gameState);
 
 		/* Disable enemy's AI to avoid accidentaly colliding with the bullet. */
 		yield return new WaitUntil(() => Enemy.ActiveCount == 1);
