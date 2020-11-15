@@ -38,7 +38,10 @@ namespace ShootAR.TestTools
 			GetComponent<Rigidbody>().useGravity = false;
 		}
 
-		public new void ResetState() { }
+		public new void ResetState() {
+			StopMoving();
+			CanMove = true;
+		}
 
 		public new void Destroy() {
 			ReturnToPool<TestEnemy>();
@@ -80,6 +83,41 @@ namespace ShootAR.TestTools
 		}
 	}
 
+	internal class OrbitTester : TestEnemy
+	{
+		public Orbit Orbit { get; set; }
+
+		public static OrbitTester Create(
+				Orbit orbit,
+				float speed = default,
+				int damage = default,
+				int pointsValue = default) {
+			var o = new GameObject(nameof(OrbitTester)).AddComponent<OrbitTester>();
+
+			o.Orbit = orbit;
+			o.Speed = speed;
+			o.Damage = damage;
+			o.PointsValue = pointsValue;
+			o.transform.position = orbit.direction + orbit.centerPoint;
+			o.gameObject.SetActive(false);
+			return o;
+		}
+
+		private void Update() {
+			OrbitAround(Orbit);
+			Debug.DrawRay(Orbit.centerPoint, Orbit.perpendicularAxis, Color.blue);
+			Debug.DrawLine(Orbit.direction, Orbit.centerPoint);
+			Debug.DrawLine(transform.position, Orbit.direction);
+			Debug.DrawLine(transform.position, Orbit.perpendicularAxis, Color.magenta);
+		}
+
+		public new void Destroy() {
+			ReturnToPool<OrbitTester>();
+			ActiveCount--;
+		}
+	}
+
+
 	/// <summary>
 	/// Bare bones <see cref="Spawnable"/> object for test purposes.
 	/// </summary>
@@ -114,15 +152,15 @@ namespace ShootAR.TestTools
 				Object.Destroy(o.gameObject);
 			}
 
-			Spawnable.Pool<BulletCapsule>.Empty();
-			Spawnable.Pool<ArmorCapsule>.Empty();
-			Spawnable.Pool<HealthCapsule>.Empty();
-			Spawnable.Pool<PowerUpCapsule>.Empty();
-			Spawnable.Pool<Bullet>.Empty();
-			Spawnable.Pool<EnemyBullet>.Empty();
-			Spawnable.Pool<Crasher>.Empty();
-			Spawnable.Pool<Drone>.Empty();
-			Spawnable.Pool<TestEnemy>.Empty();
+			Spawnable.Pool<BulletCapsule>.Instance.Empty();
+			Spawnable.Pool<ArmorCapsule>.Instance.Empty();
+			Spawnable.Pool<HealthCapsule>.Instance.Empty();
+			Spawnable.Pool<PowerUpCapsule>.Instance.Empty();
+			Spawnable.Pool<Bullet>.Instance.Empty();
+			Spawnable.Pool<EnemyBullet>.Instance.Empty();
+			Spawnable.Pool<Crasher>.Instance.Empty();
+			Spawnable.Pool<Drone>.Instance.Empty();
+			Spawnable.Pool<TestEnemy>.Instance.Empty();
 		}
 	}
 

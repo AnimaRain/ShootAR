@@ -1,14 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 namespace ShootAR
 {
-	[RequireComponent(typeof(AudioSource))]
+	[RequireComponent(typeof(AudioSource), typeof(CapsuleCollider))]
 	public class Player : MonoBehaviour
 	{
-		//Set here how much health the player is allowed to have.
+		/// <summary>Maximum allowed health for player</summary>
 		public const sbyte MAXIMUM_HEALTH = 6;
 		private const float SHOT_COOLDOWN = 0.50f;
 		private const float DAMAGE_COOLDOWN = 1f;
+
+		/// <summary>
+		/// For how many seconds the amount of restored
+		/// bullets will float above the counter.
+		/// </summary>
+		private const float BULLET_PLUS_FLOAT_TIME = 3f;
 
 		[SerializeField]
 		private GameObject[] healthIndicator = new GameObject[MAXIMUM_HEALTH];
@@ -25,7 +33,8 @@ namespace ShootAR
 		private AudioSource audioSource;
 #pragma warning disable CS0649
 		[SerializeField] private AudioClip shotSfx;
-		[SerializeField] private UnityEngine.UI.Text bulletCount;
+		[SerializeField] private Text bulletCount;
+		[SerializeField] private Text bulletPlus;
 #pragma warning restore CS0649
 
 		/// <summary>
@@ -58,6 +67,26 @@ namespace ShootAR
 		public int Ammo {
 			get { return ammo; }
 			set {
+				// pop up a number showing player how many bullets they got
+				if (bulletPlus != null && value - ammo > 0) {
+					bulletPlus.text = $"+{value - ammo}";
+
+					IEnumerator FadeBulletPlus() {
+						bulletPlus.gameObject.SetActive(true);
+						bulletPlus.CrossFadeAlpha(1f, 0f, true);
+
+						yield return new WaitForSecondsRealtime(BULLET_PLUS_FLOAT_TIME);
+
+						do {
+							bulletPlus.CrossFadeAlpha(0f, 5f, true);
+							yield return new WaitForFixedUpdate();
+						} while (bulletPlus.color.a != 0f);
+
+						bulletPlus.gameObject.SetActive(false);
+					}
+					StartCoroutine(FadeBulletPlus());
+				}
+
 				ammo = value;
 				if (bulletCount != null)
 					bulletCount.text = ammo.ToString();
@@ -82,6 +111,11 @@ namespace ShootAR
 			o.gameState = gameState;
 			if (camera != null) camera.tag = "MainCamera";
 
+			CapsuleCollider collider = o.GetComponent<CapsuleCollider>();
+			collider.radius = 0.5f;
+			collider.height = 1.9f;
+			collider.isTrigger = true;
+
 			return o;
 		}
 
@@ -94,7 +128,7 @@ namespace ShootAR
 		/// </returns>
 		public Bullet Shoot() {
 			if (CanShoot && Ammo > 0 && Time.time >= nextFire) {
-				Bullet bullet = Spawnable.Pool<Bullet>.RequestObject();
+				Bullet bullet = Spawnable.Pool<Bullet>.Instance.RequestObject();
 				if (bullet is null) return null;
 
 				Ammo--;

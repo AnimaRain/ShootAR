@@ -33,9 +33,7 @@ namespace ShootAR
 			if (bulletPrefabSpeed is null)
 				bulletPrefabSpeed = Resources.Load<Bullet>(Prefabs.BULLET).Speed;
 		}
-		protected override void Start() {
-			base.Start();
-
+		protected void Start() {
 			transform.rotation =
 					Camera.main?.transform.rotation
 					?? new Quaternion(0, 0, 0, 0);
@@ -56,10 +54,13 @@ namespace ShootAR
 			if (transform.position.magnitude >= MAX_TRAVEL_DISTANCE) Destroy();
 		}
 
-		protected new void OnTriggerEnter(Collider other) {
-			if (other.GetComponent<Enemies.Enemy>()
-					|| other.GetComponent<Capsule>())
+		protected void OnTriggerEnter(Collider other) {
+			Spawnable o;
+			if ((o = other.GetComponent<Enemies.Enemy>()) != null
+			|| (o = other.GetComponent<Capsule>()) != null) {
+				o.Destroy();
 				Destroy();
+			}
 		}
 
 		public override void ResetState() {

@@ -9,24 +9,20 @@ namespace ShootAR
 	{
 		public const int GLOBAL_SPAWN_LIMIT = 50;
 
-		[SerializeField] private float speed;
+		[SerializeField, Range(0f, Mathf.Infinity)] private float speed;
 		/// <summary>
 		/// The speed at which this object is moving.
 		/// </summary>
 		public float Speed {
 			get { return speed; }
-			set { speed = value; }
+			set {
+				if (value < 0)
+					throw new UnityException("Speed can not be a negative number.");
+
+				speed = value;
+			}
 		}
 
-		/// <summary>
-		/// Reference to the object holding the game state.
-		/// </summary>
-		protected static GameState gameState;
-
-		protected virtual void Start() {
-			if (gameState is null)
-				gameState = FindObjectOfType<GameState>();
-		}
 		/// <summary>
 		/// Contains object pools that hold already instantiated objects ready
 		/// to be used when requested.
@@ -34,22 +30,39 @@ namespace ShootAR
 		/// <typeparam name="T">
 		/// The type of object to match to a pool
 		/// </typeparam>
-		public static class Pool<T> where T : Spawnable
+		public class Pool<T> where T : Spawnable
 		{
-			internal static Stack<T> objectStack = new Stack<T>(GLOBAL_SPAWN_LIMIT);
+
+			private static Pool<T> instance;
+			public static Pool<T> Instance {
+				get {
+					if (instance == null) instance = new Pool<T>();
+
+					/* after reloading scene, instance is not null but
+					 * references to objects in stack are. */
+					else if (instance.objectStack.Count > 0
+							&& instance.objectStack.Peek() == null)
+						instance.Empty();
+
+					return instance;
+				}
+			}
+
+			internal Stack<T> objectStack = new Stack<T>(GLOBAL_SPAWN_LIMIT);
+
+			private Pool() { }
 
 			/// <summary>
 			/// The number of objects available in the pool
 			/// </summary>
-			public static int Count { get => objectStack.Count; }
+			public int Count { get => objectStack.Count; }
 
 			/// <summary>
-			/// Fill the appropriate pool with copies of
-			/// <paramref name="referenceObject"/>.
+			/// Fill the pool with copies of <paramref name="referenceObject"/>.
 			/// </summary>
 			/// <param name="referenceObject"></param>
 			/// <param name="lot">how many objects to add to the pool</param>
-			public static void Populate(T referenceObject, int lot = GLOBAL_SPAWN_LIMIT) {
+			public void Populate(T referenceObject, int lot = GLOBAL_SPAWN_LIMIT) {
 				if (objectStack.Count > 0)
 					throw new UnityException("Trying to populate an already populated pool.");
 				else
@@ -61,11 +74,11 @@ namespace ShootAR
 			}
 
 			/// <summary>
-			/// Fill the appropriate pool with copies of the object loaded from Resources.
+			/// Fill the pool with copies of the object loaded from Resources.
 			/// Which file is loaded is determined by the type of the pool.
 			/// </summary>
 			/// <param name="lot">how many objects to add to the pool</param>
-			public static void Populate(int lot = GLOBAL_SPAWN_LIMIT) {
+			public void Populate(int lot = GLOBAL_SPAWN_LIMIT) {
 				string prefab = "";
 				if (typeof(T) == typeof(Crasher))
 					prefab = Prefabs.CRASHER;
@@ -83,6 +96,8 @@ namespace ShootAR
 					prefab = Prefabs.ENEMY_BULLET;
 				else if (typeof(T) == typeof(Bullet))
 					prefab = Prefabs.BULLET;
+				else if (typeof(T) == typeof(Portal))
+					prefab = Prefabs.PORTAL;
 
 				Populate(
 					Resources.Load<T>(prefab),
@@ -103,7 +118,7 @@ namespace ShootAR
 			/// <returns>
 			/// reference to an available object of type <typeparamref name="T"/>
 			/// </returns>
-			public static T RequestObject() {
+			public T RequestObject() {
 				if (objectStack.Count == 0) return null;
 
 				return objectStack.Pop();
@@ -112,7 +127,7 @@ namespace ShootAR
 			/// <summary>
 			/// Dereference all objects contained in the pool.
 			/// </summary>
-			public static void Empty() {
+			public void Empty() {
 				objectStack.Clear();
 			}
 		}
@@ -126,7 +141,7 @@ namespace ShootAR
 		/// </typeparam>
 		public void ReturnToPool<T>() where T : Spawnable {
 			gameObject.SetActive(false);
-			Pool<T>.objectStack.Push((T)this);
+			Pool<T>.Instance.objectStack.Push((T)this);
 			ResetState();
 		}
 
@@ -134,11 +149,6 @@ namespace ShootAR
 		/// Reset object to the default values.
 		/// </summary>
 		public abstract void ResetState();
-
-		protected virtual void OnTriggerEnter(Collider other) {
-			if (other.GetComponent<Bullet>())
-				Destroy();
-		}
 
 		public abstract void Destroy();
 	}
