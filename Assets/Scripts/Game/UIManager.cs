@@ -78,10 +78,11 @@ namespace ShootAR
 				sfx.clip = pauseSfx;
 				sfx.volume = 1f;
 			}
+#if DEBUG
 			else Debug.LogWarning("Pause audio-clip has not been assigned.");
+#endif
 
 			pauseToMenuButton?.onClick.AddListener(() => {
-				gameState.Paused = false;
 				UnityEngine.SceneManagement.SceneManager
 					.LoadScene(0);
 			});
@@ -94,16 +95,11 @@ namespace ShootAR
 				RoundIndex.text = "Round: " + gameState.Level;
 				uiCanvas.SetActive(false);
 				pauseCanvas.SetActive(true);
-				gameState.Paused = true;
 			}
 			else {
 				uiCanvas.SetActive(true);
 				pauseCanvas.SetActive(false);
-				gameState.Paused = false;
 			}
-#if DEBUG
-			Debug.Log("UIMANAGER:: TimeScale: " + Time.timeScale);
-#endif
 		}
 
 		/// <summary>
