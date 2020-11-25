@@ -51,8 +51,10 @@ namespace ShootAR
 		}
 
 		public override void Destroy() {
-			GivePowerUp();
-			pickUpSfx?.Play();
+			if (GrantsReward) {
+				GivePowerUp();
+				pickUpSfx?.Play();
+			}
 		}
 
 		protected abstract void GivePowerUp();

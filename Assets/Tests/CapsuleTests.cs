@@ -16,6 +16,7 @@ public class CapsuleTests : ShootAR.TestTools.TestBase
 
 		yield return new WaitForSecondsRealtime(5f);
 		//Perform Test
+		capsule.GrantsReward = true;
 		capsule.Destroy();
 
 		//Assert
