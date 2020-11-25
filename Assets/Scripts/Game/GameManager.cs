@@ -288,7 +288,7 @@ namespace ShootAR
 			if (ui != null) {
 				ui.MessageOnScreen.text =
 					$"Game Over\n\n" +
-					$"Rounds Survived : {gameState.Level}";
+					$"Rounds Survived : {gameState.Level - 1}";
 			}
 
 			// Stop all spawners from spawning
