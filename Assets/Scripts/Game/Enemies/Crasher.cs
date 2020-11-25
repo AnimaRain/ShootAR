@@ -57,8 +57,6 @@ namespace ShootAR.Enemies
 					z: Random.Range(-25f, 25f) * cameraForward.z
 				);
 			}
-
-			StopMoving();
 		}
 
 		protected void FixedUpdate() {
