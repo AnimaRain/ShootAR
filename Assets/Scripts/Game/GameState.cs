@@ -14,8 +14,6 @@ namespace ShootAR
 		public event GameOverHandler OnGameOver;
 		public delegate void RoundWonHandler();
 		public event RoundWonHandler OnRoundWon;
-		public delegate void PauseHandler();
-		public event PauseHandler OnPause;
 		public delegate void RoundStartHandler();
 		public event RoundStartHandler OnRoundStart;
 
@@ -57,17 +55,6 @@ namespace ShootAR
 					Debug.Log("Round won");
 #endif
 				}
-			}
-		}
-
-		private bool paused;
-		public bool Paused {
-			get { return paused; }
-			set {
-				paused = value;
-				Time.timeScale = value ? 0f : 1f;
-				Time.fixedDeltaTime = value ? 0f : 0.02f;   //0.02 is Unity's default
-				if (value && OnPause != null) OnPause();
 			}
 		}
 
