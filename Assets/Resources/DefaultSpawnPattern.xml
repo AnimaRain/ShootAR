@@ -36,11 +36,31 @@
 				<minDistance>30</minDistance>
 			</pattern>
 		</spawnable>
+		<spawnable type="BulletCapsule">
+			<pattern>
+				<limit>2</limit>
+				<rate>15</rate>
+				<delay>0</delay>
+				<maxDistance>30</maxDistance>
+				<minDistance>15</minDistance>
+			</pattern>
+		</spawnable>
+	</level>
+	<level>
+		<spawnable type="Crasher">
+			<pattern repeat="2">
+				<limit>13</limit>
+				<rate>3</rate>
+				<delay>3</delay>
+				<maxDistance>50</maxDistance>
+				<minDistance>30</minDistance>
+			</pattern>
+		</spawnable>
 		<spawnable type="Drone">
 			<pattern>
-				<limit>9</limit>
-				<rate>4</rate>
-				<delay>4</delay>
+				<limit>3</limit>
+				<rate>15</rate>
+				<delay>10</delay>
 				<maxDistance>60</maxDistance>
 				<minDistance>40</minDistance>
 			</pattern>
@@ -56,13 +76,13 @@
 		</spawnable>
 	</level>
 	<level>
-		<spawnable type="Crasher">
-			<pattern repeat="2">
-				<limit>13</limit>
-				<rate>3</rate>
-				<delay>3</delay>
-				<maxDistance>50</maxDistance>
-				<minDistance>30</minDistance>
+		<spawnable type="Drone">
+			<pattern repeat="3">
+				<limit>9</limit>
+				<rate>4</rate>
+				<delay>4</delay>
+				<maxDistance>60</maxDistance>
+				<minDistance>40</minDistance>
 			</pattern>
 		</spawnable>
 		<spawnable type="BulletCapsule">
@@ -72,17 +92,6 @@
 				<delay>0</delay>
 				<maxDistance>30</maxDistance>
 				<minDistance>15</minDistance>
-			</pattern>
-		</spawnable>
-	</level>
-	<level>
-		<spawnable type="Drone">
-			<pattern repeat="3">
-				<limit>9</limit>
-				<rate>4</rate>
-				<delay>4</delay>
-				<maxDistance>60</maxDistance>
-				<minDistance>40</minDistance>
 			</pattern>
 		</spawnable>
 	</level>
