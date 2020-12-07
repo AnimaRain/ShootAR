@@ -319,16 +319,18 @@ namespace ShootAR
 			 * the same <spawnable> node. */
 
 			while (!doneParsingForCurrentLevel) {
-				if (!(xmlPattern?.Read() ?? false)) {
+				if (!(xmlPattern?.Read() ?? false)) { //< Moving to next element happens here.
 					xmlPattern = XmlReader.Create(spawnPatternFilePath);
 					xmlPattern.MoveToContent();
-				}
 
-				// skip to wanted level
-				if (level > 1) {
+					// skip to wanted level
 					xmlPattern.ReadToDescendant("level");
-					for (int i = 1; i < level; i++) {
-						xmlPattern.Skip();
+					for (int i = 1; level > i; i++) {
+						if (!xmlPattern.ReadToNextSibling("level")) {
+							throw new UnityException(
+								"Not enough levels in spawn pattern."
+							);
+						}
 					}
 				}
 
@@ -421,7 +423,7 @@ namespace ShootAR
 				}
 			}
 
-			xmlPattern.Close();
+			xmlPattern.Dispose();
 
 			Stack<SpawnConfig>[] extractedPatterns = new Stack<SpawnConfig>[groupsByType.Count];
 			groupsByType.Values.CopyTo(extractedPatterns, 0);

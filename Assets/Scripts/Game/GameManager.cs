@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using System.Xml;
 
 namespace ShootAR
 {
@@ -221,9 +222,28 @@ namespace ShootAR
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
 
+			// Get how many levels are in the spawn pattern:
+			int numberOfLevels = 0;
+			using (XmlReader element = XmlReader.Create(Configuration.Instance.SpawnPatternFile)) {
+				element.MoveToContent();
+				element.ReadToDescendant("level");
+				do {
+					numberOfLevels++;
+				} while (element.ReadToNextSibling("level"));
+			}
+
+			int roundedLevel; // round index translated to level in the spawn file
+			if (gameState.Level > numberOfLevels
+				&& gameState.Level / numberOfLevels > 0)
+			{
+				roundedLevel = gameState.Level / numberOfLevels;
+			}
+			else
+				roundedLevel = gameState.Level;
+
 			// Configuring spawners
 			Stack<Spawner.SpawnConfig>[] patterns
-				= Spawner.ParseSpawnPattern(Configuration.Instance.SpawnPatternFile);
+				= Spawner.ParseSpawnPattern(Configuration.Instance.SpawnPatternFile, roundedLevel);
 
 			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
 
