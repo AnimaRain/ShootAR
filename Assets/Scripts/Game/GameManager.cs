@@ -242,10 +242,10 @@ namespace ShootAR
 				roundedLevel = gameState.Level;
 
 			// Configuring spawners
-			Stack<Spawner.SpawnConfig>[] patterns
+			Dictionary<Type, Stack<Spawner.SpawnConfig>> patterns
 				= Spawner.ParseSpawnPattern(Configuration.Instance.SpawnPatternFile, roundedLevel);
 
-			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
+			Spawner.SpawnerFactory(patterns, ref spawnerGroups, ref stashedSpawners);
 
 			int totalEnemies = 0;
 			foreach (var group in spawnerGroups) {

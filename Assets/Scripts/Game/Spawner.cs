@@ -303,7 +303,7 @@ namespace ShootAR
 		}
 
 
-		public static Stack<SpawnConfig>[] ParseSpawnPattern(string spawnPatternFilePath, int level = 1) {
+		public static Dictionary<Type, Stack<SpawnConfig>> ParseSpawnPattern(string spawnPatternFilePath, int level = 1) {
 			Type type = default;
 			int limit = default, multiplier = -1;
 			float rate = default, delay = default,
@@ -425,98 +425,81 @@ namespace ShootAR
 
 			xmlPattern.Dispose();
 
-			Stack<SpawnConfig>[] extractedPatterns = new Stack<SpawnConfig>[groupsByType.Count];
-			groupsByType.Values.CopyTo(extractedPatterns, 0);
-			return extractedPatterns;
+			return groupsByType;
 		}
 
 		public static void SpawnerFactory(
-				Stack<SpawnConfig>[] spawnPatterns, int index,
+				Dictionary<Type, Stack<SpawnConfig>> spawnPatterns,
 				ref Dictionary<Type, List<Spawner>> spawners,
 				ref Stack<Spawner> stashedSpawners) {
 
-			/* A list to keep track of which types of spawners
-			 * are in the pattern and should not be stashed away. */
-			List<Type> requiredSpawnerTypes = new List<Type>();
+			/* If spawners.Keys is used directly in foreach, the enumeration
+			stops because its values gets changed. A copy of the values is
+			used to avoid that. */
+			Type[] keys = new Type[spawners.Keys.Count];
+			spawners.Keys.CopyTo(keys, 0);
 
-			bool recursed = false;
+			/* Stash entire group of spawners when that type is not used
+			 * this round. */
+			foreach (Type type in keys) {
+				if (spawnPatterns.ContainsKey(type)) {
+					foreach (Spawner spawner in spawners[type]) {
+						stashedSpawners.Push(spawner);
+					}
+					spawners.Remove(type);
+				}
+			}
 
-			for (int id = index; id < spawnPatterns.Length; id++) {
-				Stack<SpawnConfig> pattern = spawnPatterns[id];
-				Type type = pattern.Peek().type;
-				if (!requiredSpawnerTypes.Contains(type))
-					requiredSpawnerTypes.Add(type);
+			Dictionary<Type, int> spawnersRequired = new Dictionary<Type, int>();
 
-				/* Skip indices that we don't care about.
-				 * But even if we don't care about those skipped patterns, the
-				 * type still needs to be tracked first so that the spawners
-				 * that are actually needed don't end up stashed away. */
-				if (id < index) continue;
-
+			/* Check how many spawners will be needed.
+			If spawners' list contains more spawners of a type, stash them away.
+			This step goes before parsing the actual patterns, to make sure that
+			all unused spawners are stashed and availiable to be reused when needed. */
+			foreach (Type type in spawnPatterns.Keys) {
 				if (!spawners.ContainsKey(type))
 					spawners.Add(type, new List<Spawner>(0));
 
-				int spawnersRequired = pattern.Count;
-				int spawnersAvailable = spawners[type].Count;
+				int required = spawnPatterns[type].Count - spawners[type].Count;
 
-				// If there are not enough spawners available take from stash
-				if (spawnersRequired > spawnersAvailable) {
-					// How many spawners will be taken from stash?
-					int spawnersReused;
-					if (spawnersRequired <= spawnersAvailable + stashedSpawners.Count)
-						spawnersReused = spawnersRequired - spawnersAvailable;
-					else
-						spawnersReused = stashedSpawners.Count;
+				if (required > 0)
+					spawnersRequired.Add(type, required);
 
-					for (int i = 0; i < spawnersReused; i++) {
-						spawners[type].Add(stashedSpawners.Pop());
-						spawnersRequired--;
-					}
-
-					/* If there are still not enough spawners, continue to the
-					 * rest of the patterns hoping that more spawners will be
-					 * stashed in the meantime. */
-					int recursionIndex = index + id + 1;
-					if (spawnersRequired > 0 && recursionIndex < spawnPatterns.Length) {
-						SpawnerFactory(spawnPatterns, recursionIndex,
-									   ref spawners, ref stashedSpawners);
-
-						recursed = true;
-
-						// Take spawners from stash
-						for (
-							int i = stashedSpawners.Count;
-							i != 0 && spawnersRequired > 0;
-							i--
-						) {
-							spawners[type].Add(stashedSpawners.Pop());
-							spawnersRequired--;
-						}
-					}
-
-					// If there are still not enough spawners, create new
-					while (spawnersRequired > 0) {
-						spawners[type].Add(Instantiate(
-							Resources.Load<Spawner>(Prefabs.SPAWNER)));
-
-						spawnersRequired--;
-					}
-				}
-				else if (spawnersRequired < spawnersAvailable) {
-					// Stash leftover spawners.
-
-					int firstLeftover = spawnersRequired + 1,
-						leftoversCount = spawnersAvailable - spawnersRequired;
-
-					for (int i = firstLeftover; i < leftoversCount; i++)
+				else if (required < 0) /* Stash excess spawners */ {
+					for (int i = spawners[type].Count; i < spawners[type].Count + required; i--)
 						stashedSpawners.Push(spawners[type][i]);
 
-					spawners[type].RemoveRange(firstLeftover, leftoversCount);
+					spawners[type].RemoveRange(spawners[type].Count + required, required);
+				}
+			}
+
+			// Configure spawners
+			foreach (Type type in spawnPatterns.Keys) {
+				int spawnersReused; // How many spawners will be taken from stash
+
+				// Take spawners from stash
+				if (spawnersRequired[type] <= stashedSpawners.Count)
+					spawnersReused = spawnersRequired[type];
+				else
+					spawnersReused = stashedSpawners.Count;
+
+				for (int i = 0; i < spawnersReused; i++) {
+					spawners[type].Add(stashedSpawners.Pop());
+				}
+
+				spawnersRequired[type] -= spawnersReused;
+
+				// If there are not enough stashed spawners, create new.
+				while (spawnersRequired[type] > 0) {
+					spawners[type].Add(Instantiate(
+						Resources.Load<Spawner>(Prefabs.SPAWNER)));
+
+					spawnersRequired[type]--;
 				}
 
 				// Configure spawner using the retrieved data.
 				foreach (Spawner spawner in spawners[type]) {
-					spawner.Configure(pattern.Pop());
+					spawner.Configure(spawnPatterns[type].Pop());
 				}
 
 				// Populating pools
@@ -545,21 +528,6 @@ namespace ShootAR
 				}
 				else if (type == typeof(PowerUpCapsule) && Spawnable.Pool<PowerUpCapsule>.Instance.Count == 0) {
 					Spawnable.Pool<PowerUpCapsule>.Instance.Populate();
-				}
-
-				/* If a recursion happened then the rest patterns have already
-				 * been parsed, meaning that there is no need to continue the
-				 * loop. */
-				if (recursed) return;
-			}
-
-			/* Stash entire group of spawners when that type is not used
-			 * this round. */
-			foreach (var type in requiredSpawnerTypes) {
-				if (!spawners.ContainsKey(type)) {
-					for (int i = 0; i < spawners[type].Count; i++)
-						stashedSpawners.Push(spawners[type][i]);
-					spawners.Remove(type);
 				}
 			}
 		}
