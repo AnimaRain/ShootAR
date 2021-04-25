@@ -262,18 +262,18 @@ namespace ShootAR
 			/* Player should always have enough ammo to play the next
 			 * round. If they already have more than enough, they get
 			 * points. */
-			ulong difference = (ulong)(player.Ammo - totalEnemies);
+			int difference = player.Ammo - totalEnemies;
 			if (difference > 0)
-				scoreManager.AddScore(difference * 10);
+				scoreManager.AddScore((ulong)difference * 10);
 			else if (difference < 0) {
 				/* If it is before the 1st round, give player more bullets
 				 * so they are allowed to miss shots. */
 				const float bonusBullets = 0.55f;
 				if (gameState.Level == 1) {
-					difference *=  (ulong)bonusBullets;
+					difference = (int)(difference * bonusBullets);
 				}
 
-				player.Ammo += (difference < int.MaxValue) ? -(int)difference : int.MaxValue;
+				player.Ammo += -difference;
 			}
 
 			gameState.RoundWon = false;
