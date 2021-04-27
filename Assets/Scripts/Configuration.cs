@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using static ShootAR.Spawner;
 using UnityEngine;
+using System.Xml;
 
 namespace ShootAR {
 	/// <summary>
@@ -29,6 +30,21 @@ namespace ShootAR {
 				spawnPatternSlot = value;
 				UnsavedChanges = true;
 
+				// Get how many levels are in the spawn pattern:
+				int numberOfLevels = 0;
+				using (
+					XmlReader element = XmlReader.Create(Configuration.Instance.SpawnPatternFile)
+				) {
+					element.MoveToContent();
+					element.ReadToDescendant("level");
+					do {
+						numberOfLevels++;
+					} while (element.ReadToNextSibling("level"));
+
+					NumberOfLevels = numberOfLevels;
+				}
+				// ---
+
 				OnSlotChanged?.Invoke();
 			}
 		}
@@ -43,6 +59,9 @@ namespace ShootAR {
 		public string SpawnPatternFile {
 			get => $"{patternsDir.FullName}/{SpawnPattern}.xml";
 		}
+
+		/// <summary>The total number of levels defined in the selected pattern file.</summary>
+		public int NumberOfLevels { get; private set; }
 
 		private bool soundMuted = false;
 
