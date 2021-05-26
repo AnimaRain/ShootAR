@@ -12,7 +12,10 @@ namespace ShootAR {
 		private static Configuration instance;
 		public static Configuration Instance {
 			get {
-				if (instance == null) instance = new Configuration();
+				if (instance == null) {
+					instance = new Configuration();
+					instance.Initialize();
+				}
 
 				return instance;
 			}
@@ -124,8 +127,11 @@ namespace ShootAR {
 		/// <summary>File where high-scores are stored.</summary>
 		public FileInfo Highscores { get; private set; }
 
-		///<summary>Constructor that extracts values from config file</summary>
-		private Configuration() {
+		/* Putting the initialization code in the constructor causes it to fall into a
+		recursive loop of trying to create the singleton object every time a member of the
+		instance object is called. Moving the code out of the constructor and calling it
+		after the object has already been created solves this issue. */
+		private void Initialize() {
 			patternsDir = new DirectoryInfo(Path.Combine(
 				Application.persistentDataPath,
 				PATTERNS_DIR
@@ -145,19 +151,6 @@ namespace ShootAR {
 				Application.persistentDataPath,
 				HIGHSCORES_DIR
 			));
-
-			/* Read config file before calling CreateFile to avoid needlessly
-			 * reading the same default values from the just-created config file. */
-			if (configFile.Exists) {
-				using (BinaryReader reader = new BinaryReader(configFile.OpenRead())) {
-					/* The order that the data are read must be the same as the
-					 * the order they are stored. */
-					SoundMuted = reader.ReadBoolean();
-					BgmMuted = reader.ReadBoolean();
-					Volume = reader.ReadSingle();
-					SpawnPatternSlot = reader.ReadInt32();
-				}
-			}
 
 			CreateFiles();
 
@@ -186,6 +179,16 @@ namespace ShootAR {
 			 if (SpawnPatternSlot >= SpawnPatterns.Length)
 				SpawnPatternSlot = 0;
 
+			// Read config file
+			using (BinaryReader reader = new BinaryReader(configFile.OpenRead())) {
+				/* The order that the data are read must be the same as
+				 * the order they are stored. */
+				SoundMuted = reader.ReadBoolean();
+				BgmMuted = reader.ReadBoolean();
+				Volume = reader.ReadSingle();
+				SpawnPatternSlot = reader.ReadInt32();
+			}
+
 
 			Highscores = new FileInfo(Path.Combine(
 				highscoresDir.FullName,
@@ -213,7 +216,7 @@ namespace ShootAR {
 
 			using (BinaryWriter writer = new BinaryWriter(configFile.OpenWrite())) {
 				/* The order the data is written must be the same as
-				 * the order the constructor reads them. */
+				 * the order they are read. */
 				writer.Write(SoundMuted);
 				writer.Write(BgmMuted);
 				writer.Write(Volume);

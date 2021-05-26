@@ -199,6 +199,11 @@ namespace ShootAR.TestTools
 				writer.Write(1); // one string in file
 				writer.Write(PATTERN_FILE.TrimEnd(".xml".ToCharArray()));
 			}
+
+			// Make sure the patterns directory exists.
+			DirectoryInfo patternsDir = new DirectoryInfo(Path.Combine(
+				Application.persistentDataPath, Configuration.PATTERNS_DIR));
+			if (!patternsDir.Exists) patternsDir.Create();
 		}
 
 		[TearDown]
