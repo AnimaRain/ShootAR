@@ -217,6 +217,12 @@ namespace ShootAR.TestTools
 			if (File.Exists(file))
 				File.Delete(file);
 
+			string highscoreFile = Path.Combine(
+				Application.persistentDataPath, Configuration.HIGHSCORES_DIR,
+				PATTERN_FILE
+			);
+			if (File.Exists(highscoreFile)) File.Delete(highscoreFile);
+
 			Assert.That(
 				!File.Exists(file),
 				"The file should be deleted when the test ends."
