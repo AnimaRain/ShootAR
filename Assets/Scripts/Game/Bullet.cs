@@ -58,6 +58,7 @@ namespace ShootAR
 			Spawnable o;
 			if ((o = other.GetComponent<Enemies.Enemy>()) != null
 			|| (o = other.GetComponent<Capsule>()) != null) {
+				o.GrantsReward = true; // To let the object know it was destroyed by player
 				o.Destroy();
 				Destroy();
 			}

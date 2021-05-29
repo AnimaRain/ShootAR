@@ -24,6 +24,11 @@ namespace ShootAR
 		}
 
 		/// <summary>
+		/// States if the requirements are met for rewarding player
+		/// </summary>
+		public bool GrantsReward { get; set; }
+
+		/// <summary>
 		/// Contains object pools that hold already instantiated objects ready
 		/// to be used when requested.
 		/// </summary>
@@ -140,6 +145,7 @@ namespace ShootAR
 		/// the type of pool the object will be returned to
 		/// </typeparam>
 		public void ReturnToPool<T>() where T : Spawnable {
+			GrantsReward = false;
 			gameObject.SetActive(false);
 			Pool<T>.Instance.objectStack.Push((T)this);
 			ResetState();

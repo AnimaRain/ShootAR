@@ -66,9 +66,11 @@ namespace ShootAR.Enemies
 		}
 
 		public override void Destroy() {
-			score?.AddScore(PointsValue);
-			if (explosion != null)
-				Instantiate(explosion, transform.position, transform.rotation);
+			if (GrantsReward) {
+				score?.AddScore(PointsValue);
+				if (explosion != null)
+					Instantiate(explosion, transform.position, transform.rotation);
+			}
 		}
 
 		protected virtual void OnDisable() {
