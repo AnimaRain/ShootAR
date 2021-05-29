@@ -16,7 +16,7 @@ public class PatternsFileTests : PatternsTestBase
 		LocalFiles.CopyResourceToPersistentData(patternFileBasename, patternFile);
 
 		Assert.That(File.Exists(targetFile));
-		File.Delete(patternFile);
+		File.Delete(targetFile);
 	}
 
 	[Test]

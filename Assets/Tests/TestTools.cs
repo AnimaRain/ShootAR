@@ -199,6 +199,11 @@ namespace ShootAR.TestTools
 				writer.Write(1); // one string in file
 				writer.Write(PATTERN_FILE.TrimEnd(".xml".ToCharArray()));
 			}
+
+			// Make sure the patterns directory exists.
+			DirectoryInfo patternsDir = new DirectoryInfo(Path.Combine(
+				Application.persistentDataPath, Configuration.PATTERNS_DIR));
+			if (!patternsDir.Exists) patternsDir.Create();
 		}
 
 		[TearDown]
@@ -211,6 +216,12 @@ namespace ShootAR.TestTools
 
 			if (File.Exists(file))
 				File.Delete(file);
+
+			string highscoreFile = Path.Combine(
+				Application.persistentDataPath, Configuration.HIGHSCORES_DIR,
+				PATTERN_FILE
+			);
+			if (File.Exists(highscoreFile)) File.Delete(highscoreFile);
 
 			Assert.That(
 				!File.Exists(file),

@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections;
+using System.Xml;
 
 namespace ShootAR
 {
@@ -221,11 +221,16 @@ namespace ShootAR
 			Debug.Log($"Advancing to level {gameState.Level}");
 #endif
 
-			// Configuring spawners
-			Stack<Spawner.SpawnConfig>[] patterns
-				= Spawner.ParseSpawnPattern(Configuration.Instance.SpawnPatternFile);
+			/* If the current level exceeds the total number of defined levels,
+			 * translate the index to the equivalent level in pattern file. */
+			int l = gameState.Level % Configuration.Instance.NumberOfLevels;
+			int roundedLevel = l == 0 ? Configuration.Instance.NumberOfLevels : l;
 
-			Spawner.SpawnerFactory(patterns, 0, ref spawnerGroups, ref stashedSpawners);
+			// Configuring spawners
+			Dictionary<Type, Stack<Spawner.SpawnConfig>> patterns
+				= Spawner.ParseSpawnPattern(Configuration.Instance.SpawnPatternFile, roundedLevel);
+
+			Spawner.SpawnerFactory(patterns, ref spawnerGroups, ref stashedSpawners);
 
 			int totalEnemies = 0;
 			foreach (var group in spawnerGroups) {
@@ -242,18 +247,18 @@ namespace ShootAR
 			/* Player should always have enough ammo to play the next
 			 * round. If they already have more than enough, they get
 			 * points. */
-			ulong difference = (ulong)(player.Ammo - totalEnemies);
+			int difference = player.Ammo - totalEnemies;
 			if (difference > 0)
-				scoreManager.AddScore(difference * 10);
+				scoreManager.AddScore((ulong)difference * 10);
 			else if (difference < 0) {
 				/* If it is before the 1st round, give player more bullets
 				 * so they are allowed to miss shots. */
 				const float bonusBullets = 0.55f;
 				if (gameState.Level == 1) {
-					difference *=  (ulong)bonusBullets;
+					difference = (int)(difference * bonusBullets);
 				}
 
-				player.Ammo += (difference < int.MaxValue) ? -(int)difference : int.MaxValue;
+				player.Ammo += -difference;
 			}
 
 			gameState.RoundWon = false;
